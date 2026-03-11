@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>loft line — ხის & ლითონის ავეჯი | Loft Style Furniture</title>
+  <meta name="description" content="loft line — პრემიუმ ხელნაკეთი ავეჯი ხისა და ლითონისგან. გარე ავეჯი, საოფისე ავეჯი, ლოფტ სტილის კოლექცია. უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე.">
+  <meta name="keywords" content="furniture, loft furniture, outdoor furniture, office furniture, wood metal furniture, Georgia, ავეჯი, ლოფტ">
+  <meta property="og:title" content="loft line — Modern Loft Style Furniture">
+  <meta property="og:description" content="Premium handcrafted furniture from wood and metal. Outdoor, office, and loft-style collections.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/categories.css">
+  <link rel="stylesheet" href="css/filters.css">
+  <link rel="stylesheet" href="css/products.css">
+  <link rel="stylesheet" href="css/quick-view.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar" role="banner">
+    <div class="announcement-inner">
+      <span>უფასო მიტანა ₾200+ შეკვეთაზე</span>
+      <span class="announcement-divider">•</span>
+      <span>ხელნაკეთი ხის & ლითონის ავეჯი</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+
+      <div class="header-left">
+        <a href="index.html" class="site-logo" aria-label="Loft Furniture Home">
+          <span class="logo-text">loft</span>
+          <span class="logo-sub">line</span>
+        </a>
+      </div>
+
+      <nav class="header-nav" id="desktopNav" aria-label="Main navigation">
+        <a href="#home" class="nav-link">მთავარი</a>
+        <div class="nav-item has-dropdown">
+          <a href="main-furniture.html" class="nav-link">ავეჯი</a>
+          <div class="nav-dropdown">
+            <a href="main-furniture.html">გარე ავეჯი</a>
+            <a href="office-furniture.html">საოფისე ავეჯი</a>
+            <a href="loft-collection.html">ლოფტ კოლექცია</a>
+            <a href="main-furniture.html">ხის ავეჯი</a>
+            <a href="main-furniture.html">ლითონის ავეჯი</a>
+          </div>
+        </div>
+        <a href="main-furniture.html" class="nav-link">გარე ავეჯი</a>
+        <a href="office-furniture.html" class="nav-link">საოფისე</a>
+        <a href="lighting.html" class="nav-link">განათება</a>
+        <a href="decoration.html" class="nav-link">დეკორაცია</a>
+        <a href="#contact" class="nav-link">კონტაქტი</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="language-switcher">
+          <button id="langToggle" class="lang-btn" aria-label="Switch language">EN</button>
+        </div>
+
+        <button class="header-icon-btn" aria-label="ძიება">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+
+        <button class="header-icon-btn" aria-label="ანგარიში">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 8-4 8-4s8 0 8 4"/></svg>
+        </button>
+
+        <button class="header-icon-btn cart-btn" aria-label="კალათა">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="მენიუს გახსნა" aria-controls="mobileMenu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-overlay" id="mobileMenuOverlay"></div>
+    <nav class="mobile-menu" id="mobileMenu" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="mobile-menu-header">
+        <span class="mobile-logo">loft line</span>
+        <button class="mobile-close" id="mobileMenuClose" aria-label="მენიუს დახურვა">&times;</button>
+      </div>
+      <div class="mobile-menu-links">
+        <a href="#home">მთავარი</a>
+        <a href="main-furniture.html">ავეჯი</a>
+        <a href="main-furniture.html">გარე ავეჯი</a>
+        <a href="office-furniture.html">საოფისე ავეჯი</a>
+        <a href="loft-collection.html">ლოფტ კოლექცია</a>
+        <a href="lighting.html">განათება</a>
+        <a href="decoration.html">დეკორაცია</a>
+        <a href="#about">ჩვენ შესახებ</a>
+        <a href="#contact">კონტაქტი</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-bg" id="heroBg" style="background-image:url('images/cover.png');"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="hero-tag">ხის & ლითონის ხელობა</span>
+        <h1 class="hero-title">შექმენით თქვენი<br>იდეალური სივრცე</h1>
+        <p class="hero-desc">ინდუსტრიული დიზაინი • ხელნაკეთი ავეჯი • ბუნებრივი მასალები</p>
+        <div class="hero-actions">
+          <a href="#collections" class="btn btn-primary">კოლექციის ნახვა</a>
+          <a href="#categories" class="btn btn-outline">პროდუქციის ნახვა</a>
+        </div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">
+        <span>Scroll</span>
+        <div class="hero-scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- Category Cards Section -->
+    <section class="categories-section" id="categories">
+      <div class="container">
+        <div class="section-header" data-animate>
+          <span class="section-tag">კატეგორიები</span>
+          <h2 class="section-title">აირჩიეთ თქვენი სტილი</h2>
+          <p class="section-desc">ხის სითბო და ლითონის სიმტკიცე — ყველა სივრცისთვის</p>
+        </div>
+        <div class="category-grid" data-animate-stagger>
+          <a href="main-furniture.html" class="category-card category-card--large">
+            <img src="images/chair/chair2.jpg" alt="გარე ავეჯი — ტერასა და ბაღი" loading="lazy" width="800" height="500">
+            <div class="category-card-content">
+              <h3>გარე ავეჯი</h3>
+              <p>ტერასა, ბაღი & აივანი</p>
+            </div>
+          </a>
+          <a href="office-furniture.html" class="category-card">
+            <img src="images/cover2.png" alt="საოფისე ავეჯი" loading="lazy" width="600" height="400">
+            <div class="category-card-content">
+              <h3>საოფისე ავეჯი</h3>
+              <p>მაგიდები & სკამები</p>
+            </div>
+          </a>
+          <a href="lighting.html" class="category-card">
+             <img src="images/cover4.png" alt="განათება" loading="lazy" width="600" height="400">
+            <div class="category-card-content">
+              <h3>განათება</h3>
+              <p>ინდუსტრიული ნათურები</p>
+            </div>
+          </a>
+          <a href="decoration.html" class="category-card">
+            <img src="images/cover5.png" alt="დეკორაცია" loading="lazy" width="600" height="400">
+            <div class="category-card-content">
+              <h3>დეკორაცია</h3>
+              <p>აქსესუარები & სეზონური</p>
+            </div>
+          </a>
+          <a href="loft-collection.html" class="category-card">
+            <img src="images/cover3.png" alt="ლოფტ სტილის კოლექცია" loading="lazy" width="600" height="400">
+            <div class="category-card-content">
+              <h3>ლოფტ სტილი</h3>
+              <p>ინდუსტრიული ხასიათი</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="products-section" id="collections">
+      <div class="container">
+        <div class="section-header" data-animate>
+          <span class="section-tag">პოპულარული</span>
+          <h2 class="section-title">ლოფტ კოლექცია</h2>
+          <p class="section-desc">ჩვენი საუკეთესო ხის და ლითონის ნამუშევრები</p>
+        </div>
+
+        <!-- Filter Toggle Button -->
+        <div class="filter-system">
+          <button class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterDrawer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="18" r="1.5" fill="currentColor"/></svg>
+            <span>ფილტრი</span>
+          </button>
+        </div>
+
+        <!-- Filter Drawer Overlay -->
+        <div class="filter-overlay" id="filterOverlay"></div>
+
+        <!-- Filter Drawer -->
+        <aside class="filter-drawer" id="filterDrawer" aria-hidden="true">
+          <div class="filter-drawer-header">
+            <h3 class="filter-drawer-title">ფილტრები</h3>
+            <button class="filter-drawer-close" id="filterDrawerClose" aria-label="ფილტრის დახურვა">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="filter-drawer-body">
+            <!-- Category Filter -->
+            <div class="filter-group">
+              <span class="filter-group-label">კატეგორია</span>
+              <div class="filter-checkboxes">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="category" value="indoor" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">შიდა ავეჯი</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="category" value="outdoor" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">გარე ავეჯი</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="category" value="office" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">საოფისე</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Style Filter -->
+            <div class="filter-group">
+              <span class="filter-group-label">სტილი</span>
+              <div class="filter-checkboxes">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="style" value="loft" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">ლოფტ</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="style" value="industrial" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">ინდუსტრიული</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="style" value="modern" checked>
+                  <span class="checkbox-mark"></span>
+                  <span class="checkbox-label">თანამედროვე</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Price Range Slider -->
+            <div class="filter-group filter-group--price">
+              <span class="filter-group-label">ფასი</span>
+              <div class="price-range-wrap">
+                <div class="price-display">
+                  <span class="price-value" id="priceMinDisplay">₾0</span>
+                  <span class="price-separator">—</span>
+                  <span class="price-value" id="priceMaxDisplay">₾2,000</span>
+                </div>
+                <div class="price-slider" id="priceSlider">
+                  <div class="slider-track"></div>
+                  <div class="slider-range" id="sliderRange"></div>
+                  <input type="range" class="range-input" id="rangeMin" min="0" max="2000" value="0" step="50" aria-label="მინიმალური ფასი">
+                  <input type="range" class="range-input" id="rangeMax" min="0" max="2000" value="2000" step="50" aria-label="მაქსიმალური ფასი">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-drawer-footer">
+            <button class="filter-clear" id="filterClear">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              გასუფთავება
+            </button>
+            <span class="filter-count" id="filterCount">6 პროდუქტი</span>
+            <button class="filter-apply-btn" id="filterApplyBtn">შედეგების ჩვენება</button>
+          </div>
+        </aside>
+
+        <div class="product-grid" id="productGrid" data-animate-stagger>
+          <!-- Product 1 -->
+          <article class="product-card" data-category="indoor" data-price="150" data-style="industrial">
+            <div class="product-image-wrap">
+              <span class="product-badge badge-sale">-20%</span>
+              <img src="images/table/table1.jpeg" alt="ინდუსტრიული ხის მაგიდა" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">ლოფტ კოლექცია</span>
+              <h3 class="product-name">ინდუსტრიული ხის მაგიდა</h3>
+              <p class="product-desc">მუხის ხე & შავი ლითონის ფეხები</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾160</span>
+                  <span class="product-old-price">₾200</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#c8a879;" title="მუხა"></span>
+                  <span class="material-dot" style="background:#2c2c2c;" title="ლითონი"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 2 -->
+          <article class="product-card" data-category="outdoor" data-price="250" data-style="loft">
+            <div class="product-image-wrap">
+              <img src="images/chair/chair4.jpg" alt="გარე ხის სკამი" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">გარე ავეჯი</span>
+              <h3 class="product-name">პარკის ხის სკამი</h3>
+              <p class="product-desc">თუჯის ჩარჩო</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾250</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#d4a574;" title="ნაძვი"></span>
+                  <span class="material-dot" style="background:#4a4a4a;" title="თუჯი"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 3 -->
+          <article class="product-card" data-category="office" data-price="550" data-style="modern">
+            <div class="product-image-wrap">
+              <span class="product-badge badge-new">ახალი</span>
+             <img src="images/table/table8.png" alt="საოფისე მაგიდა" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">საოფისე ავეჯი</span>
+              <h3 class="product-name">ერგონომიული სამუშაო მაგიდა</h3>
+              <p class="product-desc">ბამბუკი & ბრინჯაოს ლითონი</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾550</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#c8a879;" title="ბამბუკი"></span>
+                  <span class="material-dot" style="background:#8b6914;" title="ბრინჯაო"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 4 -->
+          <article class="product-card" data-category="indoor" data-price="340" data-stye="loft">
+            <div class="product-image-wrap">
+              <span class="product-badge badge-sale">-15%</span>
+              <img src="images/table/table4.jpeg"alt="ლოფტ ბარის სკამი" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">ლოფტ კოლექცია</span>
+              <h3 class="product-name">მაგიდა & სკამები</h3>
+              <p class="product-desc">რეციკლირებული ხე & რკინა</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾340</span>
+                  <span class="product-old-price">₾400</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#a0734a;" title="ხე"></span>
+                  <span class="material-dot" style="background:#333;" title="რკინა"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 5 -->
+          <article class="product-card" data-category="indoor" data-price="280" data-style="industrial">
+            <div class="product-image-wrap">
+              <img class="product-image" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=500&q=80" alt="ინდუსტრიული ჭაღი" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">განათება</span>
+              <h3 class="product-name">ინდუსტრიული ჭაღი</h3>
+              <p class="product-desc">შავი ლითონი & ედისონის ნათურა</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾280</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#222;" title="შავი ლითონი"></span>
+                  <span class="material-dot" style="background:#e9b949;" title="ბრინჯაო"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Product 6 -->
+          <article class="product-card" data-category="outdoor" data-price="1450" data-style="modern">
+            <div class="product-image-wrap">
+              <img src="images/table/table3.jpeg" alt="გარე სადილის კომპლექტი" loading="lazy" width="500" height="500">
+              <button class="product-quick-view" aria-label="სწრაფი ნახვა">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">გარე ავეჯი</span>
+              <h3 class="product-name">გარე სადილის მაგიდა</h3>
+              <p class="product-desc">ტიკის ხე & ალუმინის ფეხები</p>
+              <div class="product-footer">
+                <div class="product-prices">
+                  <span class="product-price">₾1,450</span>
+                </div>
+                <div class="product-materials">
+                  <span class="material-dot" style="background:#8b6c42;" title="ტიკი"></span>
+                  <span class="material-dot" style="background:#c0c0c0;" title="ალუმინი"></span>
+                </div>
+              </div>
+              <button class="add-to-cart-btn" aria-label="კალათაში დამატება">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span>კალათაში</span>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Materials / USP Banner -->
+    <section class="usp-section">
+      <div class="container">
+        <div class="usp-grid" data-animate-stagger>
+          <div class="usp-card">
+            <div class="usp-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>ხარისხის გარანტია</h3>
+            <p>5 წლიანი გარანტია ყველა ხის ავეჯზე</p>
+          </div>
+          <div class="usp-card">
+            <div class="usp-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h3>უფასო მიტანა</h3>
+            <p>₾200+ შეკვეთაზე მთელი საქართველოს მასშტაბით</p>
+          </div>
+          <div class="usp-card">
+            <div class="usp-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <h3>ხელნაკეთი</h3>
+            <p>ყველა ნაწარმი იქმნება ხელით, ინდივიდუალურად</p>
+          </div>
+          <div class="usp-card">
+            <div class="usp-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h3>ქართული წარმოება</h3>
+            <p>ადგილობრივი ოსტატების მიერ შექმნილი</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-image" data-animate="slide-left">
+            <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=800&q=80" alt="Loft Line — ხელოსნობა და ხარისხი" loading="lazy" width="800" height="600">
+          </div>
+          <div class="about-content" data-animate="slide-right">
+            <span class="section-tag">ჩვენ შესახებ</span>
+            <h2 class="section-title section-title--left">ხელოსნობა და ხარისხი</h2>
+            <p>Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.</p>
+            <p>ჩვენი კოლექციები მოიცავს გარე ავეჯს, საოფისე ავეჯს და ლოფტ სტილის უნიკალურ ნამუშევრებს. მალე შეძლებთ ასევე განათების, დეკორაციისა და სეზონური პროდუქტების შეძენას.</p>
+            <a href="#contact" class="btn btn-dark">დაგვიკავშირდით</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+      <div class="container">
+        <div class="newsletter-inner" data-animate>
+          <div class="newsletter-text">
+            <h3>გამოიწერეთ სიახლეები</h3>
+            <p>მიიღეთ ინფორმაცია ახალი კოლექციების, ფასდაკლებებისა და სეზონური შეთავაზებების შესახებ.</p>
+          </div>
+          <form class="newsletter-form" aria-label="Newsletter subscription">
+            <label for="newsletter-email" class="sr-only">ელ-ფოსტა</label>
+            <input type="email" id="newsletter-email" placeholder="თქვენი ელ-ფოსტა" required autocomplete="email">
+            <button type="submit">გამოწერა</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-text">Loft</span>
+            <span class="logo-sub">Line</span>
+          </div>
+          <p>პრემიუმ ხელნაკეთი ავეჯი ხისა და ლითონისგან. ინდუსტრიული დიზაინი, ქართული ხელოსნობა.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" aria-label="Pinterest">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.08 3.15 9.42 7.6 11.21-.1-.95-.19-2.41.04-3.45.21-.94 1.36-5.79 1.36-5.79s-.35-.7-.35-1.73c0-1.62.94-2.83 2.11-2.83.99 0 1.47.75 1.47 1.64 0 1-.64 2.5-.97 3.89-.27 1.16.58 2.1 1.72 2.1 2.07 0 3.66-2.18 3.66-5.33 0-2.79-2-4.74-4.87-4.74-3.32 0-5.27 2.49-5.27 5.07 0 1 .39 2.08.87 2.67.1.12.11.22.08.34-.09.37-.29 1.16-.33 1.32-.05.22-.17.26-.4.16-1.46-.68-2.37-2.82-2.37-4.54 0-3.69 2.68-7.08 7.73-7.08 4.06 0 7.21 2.89 7.21 6.76 0 4.03-2.54 7.28-6.07 7.28-1.19 0-2.3-.61-2.68-1.34l-.73 2.79c-.26 1.01-.97 2.28-1.45 3.05C9.58 23.82 10.76 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>ავეჯი</h4>
+          <ul>
+            <li><a href="main-furniture.html">გარე ავეჯი</a></li>
+            <li><a href="office-furniture.html">საოფისე ავეჯი</a></li>
+            <li><a href="loft-collection.html">ლოფტ კოლექცია</a></li>
+            <li><a href="main-furniture.html">ხის ავეჯი</a></li>
+            <li><a href="main-furniture.html">ლითონის ავეჯი</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>მაღაზია</h4>
+          <ul>
+            <li><a href="lighting.html">განათება</a></li>
+            <li><a href="decoration.html">დეკორაცია</a></li>
+            <li><a href="#">სეზონური</a></li>
+            <li><a href="#">ფასდაკლება</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>კომპანია</h4>
+          <ul>
+            <li><a href="#about">ჩვენ შესახებ</a></li>
+            <li><a href="#">კონტაქტი</a></li>
+            <li><a href="#">მიტანის პირობები</a></li>
+            <li><a href="#">დაბრუნების პოლიტიკა</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Loft Line. ყველა უფლება დაცულია.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Bottom Bar -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile quick navigation">
+    <a href="#home" class="bottom-bar-item active">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>მთავარი</span>
+    </a>
+    <a href="#collections" class="bottom-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>ძიება</span>
+    </a>
+    <a href="#categories" class="bottom-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>კატეგორია</span>
+    </a>
+    <a href="#" class="bottom-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>კალათა</span>
+      <span class="bottom-bar-badge">0</span>
+    </a>
+    <a href="#contact" class="bottom-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 8-4 8-4s8 0 8 4"/></svg>
+      <span>ანგარიში</span>
+    </a>
+  </nav>
+
+  <!-- ═══ Product Quick View Modal ═══ -->
+  <div class="pqv-overlay" id="pqvOverlay" aria-hidden="true" role="presentation"></div>
+  <div class="pqv-dialog" id="pqvDialog" role="dialog" aria-modal="true" aria-labelledby="pqvName" aria-hidden="true">
+    <div class="pqv-image-panel">
+      <div class="pqv-main-img-wrap">
+        <img class="pqv-main-img" id="pqvMainImg" src="" alt="" width="600" height="600">
+        <div class="pqv-img-overlay" id="pqvImgOverlay"></div>
+      </div>
+      <div class="pqv-thumbs" id="pqvThumbs"></div>
+    </div>
+    <div class="pqv-info-panel">
+      <button class="pqv-close" id="pqvClose" type="button" aria-label="დახურვა">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <span class="pqv-cat" id="pqvCat"></span>
+      <h2 class="pqv-name" id="pqvName"></h2>
+      <p class="pqv-desc" id="pqvDesc"></p>
+      <div class="pqv-price-row">
+        <span class="pqv-price" id="pqvPrice"></span>
+        <span class="pqv-old-price" id="pqvOldPrice"></span>
+      </div>
+      <div class="pqv-divider"></div>
+      <div class="pqv-color-wrap">
+        <p class="pqv-color-label">ფერი: <span id="pqvColorName">ნატ. მუხა</span></p>
+        <div class="pqv-modal-swatches" id="pqvModalSwatches"></div>
+      </div>
+      <div class="pqv-qty-wrap">
+        <p class="pqv-qty-label">რაოდენობა</p>
+        <div class="pqv-qty-row">
+          <button class="pqv-qty-btn" id="pqvQtyMinus" type="button" aria-label="შემცირება">−</button>
+          <span class="pqv-qty-num" id="pqvQtyNum">1</span>
+          <button class="pqv-qty-btn" id="pqvQtyPlus" type="button" aria-label="გაზრდა">+</button>
+        </div>
+      </div>
+      <button class="pqv-add-btn" id="pqvAddBtn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        კალათაში დამატება
+      </button>
+      <div class="pqv-payments">
+        <span class="pqv-pay-icon"><svg width="28" height="18" viewBox="0 0 38 24"><rect width="38" height="24" rx="3" fill="#1A1F71"/><text x="19" y="16" font-family="Arial" font-size="10" font-weight="bold" fill="#F7A600" text-anchor="middle">VISA</text></svg></span>
+        <span class="pqv-pay-icon"><svg width="28" height="18" viewBox="0 0 38 24"><rect width="38" height="24" rx="3" fill="#252525"/><circle cx="14" cy="12" r="7" fill="#EB001B"/><circle cx="24" cy="12" r="7" fill="#F79E1B"/><path d="M19 6.8a7 7 0 000 10.4A7 7 0 0019 6.8z" fill="#FF5F00"/></svg></span>
+        <span class="pqv-pay-icon">🔒 უსაფრთხო</span>
+      </div>
+      <div class="pqv-delivery">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span>უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე</span>
+      </div>
+      <div class="pqv-features">
+        <div class="pqv-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>5 წლის გარანტია</span>
+        </div>
+        <div class="pqv-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          <span>ხელნაკეთი</span>
+        </div>
+        <div class="pqv-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>ქართული წარმოება</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Quick View Modal -->
+
+  <script src="js/main.js" defer></script>
+  <script src="js/header-scroll.js" defer></script>
+  <script src="js/quick-view.js" defer></script>
+</body>
+</html>
