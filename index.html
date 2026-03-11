@@ -750,9 +750,23 @@
   <!-- /Quick View Modal -->
 
   <script src="js/translations.js" defer></script>
+  <script src="js/cms-loader.js" data-page="index" defer></script>
   <script src="js/auto-translate.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/header-scroll.js" defer></script>
   <script src="js/quick-view.js" defer></script>
+  <!-- Netlify Identity Widget (required for /admin login) -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function(user) {
+        if (!user) {
+          window.netlifyIdentity.on('login', function() {
+            document.location.href = '/admin/';
+          });
+        }
+      });
+    }
+  </script>
 </body>
 </html>

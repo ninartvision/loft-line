@@ -1,0 +1,47 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  netlify.toml – Loft Line Furniture Store
+#  Netlify build & deploy configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[build]
+  publish = "."       # root of the site (no build step needed – static HTML)
+  # If you later add a build step (e.g. 11ty, Hugo, Jekyll), set it here:
+  # command = "npm run build"
+
+# ── Netlify Identity + Git Gateway ────────────────────────────
+# Netlify Identity is enabled in the Netlify dashboard under:
+#   Site settings → Identity → Enable Identity
+# Git Gateway is enabled under:
+#   Site settings → Identity → Services → Enable Git Gateway
+# ──────────────────────────────────────────────────────────────
+
+# ── Redirect: /admin → /admin/ ────────────────────────────────
+[[redirects]]
+  from = "/admin"
+  to   = "/admin/"
+  status = 301
+
+# ── Security headers ──────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "camera=(), microphone=(), geolocation=()"
+
+# ── Cache static assets ───────────────────────────────────────
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -1,0 +1,21 @@
+{
+  "name_ka": "ინდუსტრიული ჭაღი",
+  "name_en": "Industrial Pendant Light",
+  "slug": "industrial-pendant-light",
+  "category": "lighting",
+  "style": "industrial",
+  "price": 280,
+  "old_price": 0,
+  "badge": "",
+  "discount_pct": 0,
+  "description_ka": "ინდუსტრიული სტილის ჭაღი. შავი ლითონის კარკასი, ედისონის ნათურით. სამზარეულოსა და სადილის ოთახისთვის იდეალური.",
+  "description_en": "Industrial-style pendant light. Black metal frame with Edison bulb. Ideal for kitchen and dining room.",
+  "materials_ka": ["შავი ლითონი", "მინა"],
+  "materials_en": ["Black Metal", "Glass"],
+  "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=500&q=80",
+  "gallery": [],
+  "available": true,
+  "featured": false,
+  "page": "lighting",
+  "date": "2026-02-15T00:00:00.000Z"
+}

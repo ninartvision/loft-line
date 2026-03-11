@@ -1,0 +1,32 @@
+{
+  "cards": [
+    {
+      "title_ka": "ხარისხის გარანტია",
+      "title_en": "Quality Guarantee",
+      "text_ka": "5 წლიანი გარანტია ყველა ხის ავეჯზე",
+      "text_en": "5-year warranty on all wood furniture",
+      "icon": "<path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/>"
+    },
+    {
+      "title_ka": "უფასო მიტანა",
+      "title_en": "Free Delivery",
+      "text_ka": "₾200+ შეკვეთაზე მთელი საქართველოს მასშტაბით",
+      "text_en": "On orders ₾200+ across all of Georgia",
+      "icon": "<rect x=\"1\" y=\"3\" width=\"15\" height=\"13\" rx=\"2\"/><path d=\"M16 8h4l3 3v5h-7V8z\"/><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"/><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"/>"
+    },
+    {
+      "title_ka": "ხელნაკეთი",
+      "title_en": "Handcrafted",
+      "text_ka": "ყველა ნაწარმი იქმნება ხელით, ინდივიდუალურად",
+      "text_en": "Every piece is crafted by hand, individually",
+      "icon": "<path d=\"M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z\"/>"
+    },
+    {
+      "title_ka": "ქართული წარმოება",
+      "title_en": "Made in Georgia",
+      "text_ka": "ადგილობრივი ოსტატების მიერ შექმნილი",
+      "text_en": "Created by local Georgian craftsmen",
+      "icon": "<path d=\"M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/>"
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+# ═══════════════════════════════════════════════════════════════
+#  Decap CMS (Netlify CMS) – Loft Line Furniture Store
+#  Admin panel: https://loftline.store/admin
+# ═══════════════════════════════════════════════════════════════
+
+backend:
+  name: git-gateway
+  branch: main          # publish branch; change to "master" if needed
+  commit_messages:
+    create:  'content: add {{collection}} "{{slug}}"'
+    update:  'content: update {{collection}} "{{slug}}"'
+    delete:  'content: delete {{collection}} "{{slug}}"'
+    uploadMedia:   'media: upload "{{path}}"'
+    deleteMedia:   'media: delete "{{path}}"'
+
+# ── Netlify Identity ──────────────────────────────────────────
+publish_mode: editorial_workflow   # Draft → Review → Published
+
+# ── Media / Image Uploads ─────────────────────────────────────
+media_folder:  "images/uploads"          # where files are saved in repo
+public_folder: "/images/uploads"         # URL path used in HTML
+
+# ── Site URL (used for preview links) ─────────────────────────
+site_url: https://loftline.store
+display_url: https://loftline.store
+logo_url: https://loftline.store/images/cover.png
+
+# ── Locale ────────────────────────────────────────────────────
+locale: "ka"
+
+# ═══════════════════════════════════════════════════════════════
+#  COLLECTIONS
+# ═══════════════════════════════════════════════════════════════
+collections:
+
+  # ── 1. PRODUCTS ─────────────────────────────────────────────
+  - name: "products"
+    label: "🛋  პროდუქტები / Products"
+    label_singular: "Product"
+    folder: "content/products"
+    create: true
+    delete: true
+    slug: "{{fields.slug}}"
+    identifier_field: name_ka
+    summary: "{{name_ka}} — ₾{{price}}"
+    sortable_fields: ["name_ka", "price", "category", "date"]
+    view_filters:
+      - label: "გარე ავეჯი"
+        field: category
+        pattern: "outdoor"
+      - label: "საოფისე ავეჯი"
+        field: category
+        pattern: "office"
+      - label: "ლოფტ კოლექცია"
+        field: category
+        pattern: "indoor"
+      - label: "განათება"
+        field: category
+        pattern: "lighting"
+      - label: "დეკორაცია"
+        field: category
+        pattern: "decoration"
+      - label: "ხელმისაწვდომი"
+        field: available
+        pattern: true
+    fields:
+      - { label: "პროდუქტის სახელი (KA)",  name: name_ka,      widget: string }
+      - { label: "Product Name (EN)",        name: name_en,      widget: string }
+      - label: "Slug (URL-safe ID)"
+        name: slug
+        widget: string
+        hint: "Only lowercase letters, numbers and hyphens. Example: industrial-oak-table"
+        pattern: ['^[a-z0-9-]+$', "Only lowercase letters, numbers and hyphens"]
+      - label: "კატეგორია / Category"
+        name: category
+        widget: select
+        options:
+          - { label: "შიდა ავეჯი (Indoor)",    value: "indoor"     }
+          - { label: "გარე ავეჯი (Outdoor)",   value: "outdoor"    }
+          - { label: "საოფისე (Office)",        value: "office"     }
+          - { label: "ლოფტ კოლექცია (Loft)",  value: "loft"       }
+          - { label: "განათება (Lighting)",     value: "lighting"   }
+          - { label: "დეკორაცია (Decoration)", value: "decoration" }
+      - label: "სტილი / Style"
+        name: style
+        widget: select
+        options:
+          - { label: "ლოფტი",          value: "loft"       }
+          - { label: "ინდუსტრიული",    value: "industrial" }
+          - { label: "თანამედროვე",   value: "modern"     }
+      - { label: "ფასი / Price (₾)",        name: price,        widget: number, value_type: float, min: 1 }
+      - { label: "ძველი ფასი / Old Price (₾) — leave 0 for none", name: old_price, widget: number, value_type: float, default: 0, required: false }
+      - label: "ბეჯი / Badge"
+        name: badge
+        widget: select
+        required: false
+        options:
+          - { label: "none",   value: ""     }
+          - { label: "ახალი",  value: "new"  }
+          - { label: "ფასდაკლება", value: "sale" }
+          - { label: "ბესტსელერი", value: "best" }
+      - { label: "ფასდაკლება % (0 = no sale)", name: discount_pct, widget: number, default: 0, required: false }
+      - { label: "აღწერა (KA)",  name: description_ka, widget: text }
+      - { label: "Description (EN)", name: description_en, widget: text }
+      - label: "მასალები / Materials"
+        name: materials_ka
+        widget: list
+        field: { label: "მასალა", name: material, widget: string }
+        hint: "ე.გ. მუხის ხე, შავი ლითონი"
+      - label: "Materials (EN)"
+        name: materials_en
+        widget: list
+        field: { label: "Material", name: material, widget: string }
+        hint: "e.g. Oak Wood, Black Metal"
+      - { label: "მთავარი სურათი / Main Image", name: image, widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads" }
+      - label: "დამატებითი სურათები / Gallery"
+        name: gallery
+        widget: list
+        required: false
+        field: { label: "სურათი", name: image, widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads" }
+      - { label: "ხელმისაწვდომია? / Available", name: available, widget: boolean, default: true }
+      - { label: "გამოჩნდეს მთ. გვ-ზე / Show on Homepage", name: featured, widget: boolean, default: false }
+      - { label: "თარიღი / Date Added", name: date, widget: datetime, default: "", required: false }
+      - label: "გვერდი / Page"
+        name: page
+        widget: select
+        hint: "On which category page should this product appear?"
+        options:
+          - { label: "მთავარი (index.html)",             value: "index"            }
+          - { label: "მთავარი ავეჯი (main-furniture)",   value: "main-furniture"   }
+          - { label: "საოფისე ავეჯი (office-furniture)", value: "office-furniture" }
+          - { label: "ლოფტ კოლექცია (loft-collection)", value: "loft-collection"  }
+          - { label: "განათება (lighting)",               value: "lighting"         }
+          - { label: "დეკორაცია (decoration)",            value: "decoration"       }
+
+  # ── 2. HOMEPAGE SECTIONS ─────────────────────────────────────
+  - name: "homepage"
+    label: "🏠  მთავარი გვერდი / Homepage"
+    files:
+
+      - label: "Hero Section"
+        name: "hero"
+        file: "content/pages/homepage-hero.json"
+        fields:
+          - { label: "ტეგი (KA)",        name: tag_ka,    widget: string, default: "ხის & ლითონის ხელობა" }
+          - { label: "Tag (EN)",          name: tag_en,    widget: string, default: "Wood & Metal Craft" }
+          - { label: "სათაური (KA)",     name: title_ka,  widget: string, default: "შექმენით თქვენი იდეალური სივრცე" }
+          - { label: "Title (EN)",        name: title_en,  widget: string, default: "Create Your Ideal Space" }
+          - { label: "აღწერა (KA)",      name: desc_ka,   widget: string, default: "ინდუსტრიული დიზაინი • ხელნაკეთი ავეჯი • ბუნებრივი მასალები" }
+          - { label: "Description (EN)", name: desc_en,   widget: string, default: "Industrial Design • Handcrafted Furniture • Natural Materials" }
+          - { label: "ღილაკი 1 ტექსტი (KA)", name: btn1_ka, widget: string, default: "კოლექციის ნახვა" }
+          - { label: "Button 1 Text (EN)",    name: btn1_en, widget: string, default: "View Collection" }
+          - { label: "ღილაკი 2 ტექსტი (KA)", name: btn2_ka, widget: string, default: "პროდუქციის ნახვა" }
+          - { label: "Button 2 Text (EN)",    name: btn2_en, widget: string, default: "Browse Products" }
+          - { label: "ფონის სურათი / Background Image", name: bg_image, widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads" }
+
+      - label: "Announcement Bar"
+        name: "announcement"
+        file: "content/pages/announcement.json"
+        fields:
+          - { label: "ტექსტი 1 (KA)", name: text1_ka, widget: string, default: "უფასო მიტანა ₾200+ შეკვეთაზე" }
+          - { label: "Text 1 (EN)",    name: text1_en, widget: string, default: "Free delivery on orders ₾200+" }
+          - { label: "ტექსტი 2 (KA)", name: text2_ka, widget: string, default: "ხელნაკეთი ხის & ლითონის ავეჯი" }
+          - { label: "Text 2 (EN)",    name: text2_en, widget: string, default: "Handcrafted Wood & Metal Furniture" }
+          - { label: "ხილული? / Visible", name: visible, widget: boolean, default: true }
+
+      - label: "Categories Section"
+        name: "categories"
+        file: "content/pages/homepage-categories.json"
+        fields:
+          - { label: "სექციის ტეგი (KA)",    name: tag_ka,   widget: string, default: "კატეგორიები" }
+          - { label: "Section Tag (EN)",       name: tag_en,   widget: string, default: "Categories" }
+          - { label: "სექციის სათაური (KA)",  name: title_ka, widget: string, default: "აირჩიეთ თქვენი სტილი" }
+          - { label: "Section Title (EN)",     name: title_en, widget: string, default: "Choose Your Style" }
+          - { label: "სექციის ქვეტექსტი (KA)", name: desc_ka, widget: string, default: "ხის სითბო და ლითონის სიმტკიცე — ყველა სივრცისთვის" }
+          - { label: "Section Subtitle (EN)",  name: desc_en,  widget: string, default: "Wood warmth and metal strength — for every space" }
+          - label: "კატეგორიის ბარათები / Category Cards"
+            name: cards
+            widget: list
+            fields:
+              - { label: "სახელი (KA)",  name: name_ka,    widget: string }
+              - { label: "Name (EN)",     name: name_en,    widget: string }
+              - { label: "ქვეტექსტი (KA)", name: sub_ka,   widget: string }
+              - { label: "Subtitle (EN)", name: sub_en,     widget: string }
+              - { label: "ბმული / Link", name: link,        widget: string }
+              - { label: "სურათი / Image", name: image,     widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads" }
+              - { label: "alt ტექსტი",  name: alt,          widget: string }
+              - { label: "დიდი ბარათი? / Large card", name: large, widget: boolean, default: false }
+
+      - label: "USP / Features Section"
+        name: "usp"
+        file: "content/pages/homepage-usp.json"
+        fields:
+          - label: "USP Cards"
+            name: cards
+            widget: list
+            fields:
+              - { label: "სათაური (KA)",  name: title_ka, widget: string }
+              - { label: "Title (EN)",     name: title_en, widget: string }
+              - { label: "ტექსტი (KA)",   name: text_ka,  widget: string }
+              - { label: "Text (EN)",      name: text_en,  widget: string }
+              - { label: "SVG Icon (paste raw SVG path)", name: icon, widget: text }
+
+      - label: "About Section"
+        name: "about"
+        file: "content/pages/homepage-about.json"
+        fields:
+          - { label: "ტეგი (KA)",    name: tag_ka,   widget: string, default: "ჩვენ შესახებ" }
+          - { label: "Tag (EN)",      name: tag_en,   widget: string, default: "About Us" }
+          - { label: "სათაური (KA)", name: title_ka, widget: string, default: "ხელოსნობა და ხარისხი" }
+          - { label: "Title (EN)",    name: title_en, widget: string, default: "Craft & Quality" }
+          - { label: "პარ. 1 (KA)",  name: para1_ka, widget: text }
+          - { label: "Paragraph 1 (EN)", name: para1_en, widget: text }
+          - { label: "პარ. 2 (KA)",  name: para2_ka, widget: text }
+          - { label: "Paragraph 2 (EN)", name: para2_en, widget: text }
+          - { label: "ღილაკი (KA)",  name: btn_ka,   widget: string, default: "დაგვიკავშირდით" }
+          - { label: "Button (EN)",   name: btn_en,   widget: string, default: "Contact Us" }
+          - { label: "სურათი / Image", name: image,  widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads" }
+
+      - label: "Newsletter Section"
+        name: "newsletter"
+        file: "content/pages/homepage-newsletter.json"
+        fields:
+          - { label: "სათაური (KA)",      name: title_ka,       widget: string, default: "გამოიწერეთ სიახლეები" }
+          - { label: "Title (EN)",          name: title_en,       widget: string, default: "Subscribe to News" }
+          - { label: "ტექსტი (KA)",        name: text_ka,        widget: string }
+          - { label: "Text (EN)",           name: text_en,        widget: string }
+          - { label: "Placeholder (KA)",   name: placeholder_ka, widget: string, default: "თქვენი ელ-ფოსტა" }
+          - { label: "Placeholder (EN)",   name: placeholder_en, widget: string, default: "Your email address" }
+          - { label: "ღილაკი (KA)",        name: btn_ka,         widget: string, default: "გამოწერა" }
+          - { label: "Button (EN)",         name: btn_en,         widget: string, default: "Subscribe" }
+
+  # ── 3. CATEGORY PAGES ────────────────────────────────────────
+  - name: "category_pages"
+    label: "📄  კატეგორიის გვერდები / Category Pages"
+    files:
+
+      - label: "მთავარი ავეჯი (main-furniture.html)"
+        name: "main_furniture"
+        file: "content/pages/main-furniture.json"
+        fields:
+          - { label: "Hero სათაური (KA)",  name: hero_title_ka,   widget: string }
+          - { label: "Hero Title (EN)",     name: hero_title_en,   widget: string }
+          - { label: "Hero ქვეტექსტი (KA)", name: hero_sub_ka,    widget: string }
+          - { label: "Hero Subtitle (EN)",  name: hero_sub_en,     widget: string }
+          - { label: "Hero სურათი / Image", name: hero_image,      widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - { label: "SEO Title",           name: seo_title,       widget: string }
+          - { label: "SEO Description",     name: seo_desc,        widget: text }
+
+      - label: "საოფისე ავეჯი (office-furniture.html)"
+        name: "office_furniture"
+        file: "content/pages/office-furniture.json"
+        fields:
+          - { label: "Hero სათაური (KA)",  name: hero_title_ka,  widget: string }
+          - { label: "Hero Title (EN)",     name: hero_title_en,  widget: string }
+          - { label: "Hero ქვეტექსტი (KA)", name: hero_sub_ka,   widget: string }
+          - { label: "Hero Subtitle (EN)",  name: hero_sub_en,    widget: string }
+          - { label: "Hero სურათი / Image", name: hero_image,     widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - { label: "SEO Title",           name: seo_title,      widget: string }
+          - { label: "SEO Description",     name: seo_desc,       widget: text }
+
+      - label: "ლოფტ კოლექცია (loft-collection.html)"
+        name: "loft_collection"
+        file: "content/pages/loft-collection.json"
+        fields:
+          - { label: "Hero სათაური (KA)",   name: hero_title_ka, widget: string }
+          - { label: "Hero Title (EN)",      name: hero_title_en, widget: string }
+          - { label: "Hero ქვეტექსტი (KA)", name: hero_sub_ka,   widget: string }
+          - { label: "Hero Subtitle (EN)",   name: hero_sub_en,   widget: string }
+          - { label: "Hero სურათი / Image",  name: hero_image,    widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - { label: "SEO Title",            name: seo_title,     widget: string }
+          - { label: "SEO Description",      name: seo_desc,      widget: text }
+
+      - label: "განათება (lighting.html)"
+        name: "lighting"
+        file: "content/pages/lighting.json"
+        fields:
+          - { label: "Hero სათაური (KA)",   name: hero_title_ka, widget: string }
+          - { label: "Hero Title (EN)",      name: hero_title_en, widget: string }
+          - { label: "Hero ქვეტექსტი (KA)", name: hero_sub_ka,   widget: string }
+          - { label: "Hero Subtitle (EN)",   name: hero_sub_en,   widget: string }
+          - { label: "Hero სურათი / Image",  name: hero_image,    widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - { label: "SEO Title",            name: seo_title,     widget: string }
+          - { label: "SEO Description",      name: seo_desc,      widget: text }
+
+      - label: "დეკორაცია (decoration.html)"
+        name: "decoration"
+        file: "content/pages/decoration.json"
+        fields:
+          - { label: "Hero სათაური (KA)",   name: hero_title_ka, widget: string }
+          - { label: "Hero Title (EN)",      name: hero_title_en, widget: string }
+          - { label: "Hero ქვეტექსტი (KA)", name: hero_sub_ka,   widget: string }
+          - { label: "Hero Subtitle (EN)",   name: hero_sub_en,   widget: string }
+          - { label: "Hero სურათი / Image",  name: hero_image,    widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - { label: "SEO Title",            name: seo_title,     widget: string }
+          - { label: "SEO Description",      name: seo_desc,      widget: text }
+
+  # ── 4. SITE SETTINGS ─────────────────────────────────────────
+  - name: "settings"
+    label: "⚙️  პარამეტრები / Settings"
+    files:
+
+      - label: "Global Settings"
+        name: "global"
+        file: "content/settings/global.json"
+        fields:
+          - { label: "Site Name",           name: site_name,    widget: string, default: "Loft Line" }
+          - { label: "Site URL",            name: site_url,     widget: string, default: "https://loftline.store" }
+          - { label: "Phone / WhatsApp",    name: phone,        widget: string, default: "+995599000000" }
+          - { label: "Email",               name: email,        widget: string, default: "info@loftline.store" }
+          - { label: "Facebook URL",        name: facebook,     widget: string, required: false }
+          - { label: "Instagram URL",       name: instagram,    widget: string, required: false }
+          - { label: "Free Delivery Threshold (₾)", name: free_delivery_threshold, widget: number, default: 200 }
+          - { label: "Default OG Image",    name: og_image,     widget: image, media_folder: "/images/uploads", public_folder: "/images/uploads", required: false }
+          - label: "Footer – ავეჯი links"
+            name: footer_furniture_links
+            widget: list
+            fields:
+              - { label: "ტექსტი (KA)", name: label_ka, widget: string }
+              - { label: "Label (EN)",   name: label_en, widget: string }
+              - { label: "URL / href",  name: href,      widget: string }
+          - label: "Footer – მაღაზია links"
+            name: footer_shop_links
+            widget: list
+            fields:
+              - { label: "ტექსტი (KA)", name: label_ka, widget: string }
+              - { label: "Label (EN)",   name: label_en, widget: string }
+              - { label: "URL / href",  name: href,      widget: string }
+
+      - label: "Navigation"
+        name: "navigation"
+        file: "content/settings/navigation.json"
+        fields:
+          - label: "Nav Links"
+            name: links
+            widget: list
+            fields:
+              - { label: "ტექსტი (KA)", name: label_ka, widget: string }
+              - { label: "Label (EN)",   name: label_en, widget: string }
+              - { label: "URL / href",  name: href,      widget: string }
+              - label: "Dropdown items"
+                name: children
+                widget: list
+                required: false
+                fields:
+                  - { label: "ტექსტი (KA)", name: label_ka, widget: string }
+                  - { label: "Label (EN)",   name: label_en, widget: string }
+                  - { label: "URL / href",  name: href,      widget: string }

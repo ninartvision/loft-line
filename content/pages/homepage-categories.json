@@ -1,0 +1,60 @@
+{
+  "tag_ka": "კატეგორიები",
+  "tag_en": "Categories",
+  "title_ka": "აირჩიეთ თქვენი სტილი",
+  "title_en": "Choose Your Style",
+  "desc_ka": "ხის სითბო და ლითონის სიმტკიცე — ყველა სივრცისთვის",
+  "desc_en": "Wood warmth and metal strength — for every space",
+  "cards": [
+    {
+      "name_ka": "გარე ავეჯი",
+      "name_en": "Outdoor Furniture",
+      "sub_ka": "ტერასა, ბაღი & აივანი",
+      "sub_en": "Terrace, Garden & Balcony",
+      "link": "main-furniture.html",
+      "image": "/images/chair/chair2.jpg",
+      "alt": "გარე ავეჯი — ტერასა და ბაღი",
+      "large": true
+    },
+    {
+      "name_ka": "საოფისე ავეჯი",
+      "name_en": "Office Furniture",
+      "sub_ka": "მაგიდები & სკამები",
+      "sub_en": "Desks & Chairs",
+      "link": "office-furniture.html",
+      "image": "/images/cover2.png",
+      "alt": "Loft Line საოფისე ავეჯის კოლექცია – ლოფტ სტილი",
+      "large": false
+    },
+    {
+      "name_ka": "განათება",
+      "name_en": "Lighting",
+      "sub_ka": "ინდუსტრიული ნათურები",
+      "sub_en": "Industrial Lights",
+      "link": "lighting.html",
+      "image": "/images/cover4.png",
+      "alt": "Loft Line ლოფტ სტილის განათება – Edison ფანარები",
+      "large": false
+    },
+    {
+      "name_ka": "დეკორაცია",
+      "name_en": "Decoration",
+      "sub_ka": "აქსესუარები & სეზონური",
+      "sub_en": "Accessories & Seasonal",
+      "link": "decoration.html",
+      "image": "/images/cover5.png",
+      "alt": "Loft Line ლოფტ სტილის დეკორაცია – ინდუსტრიული ხე & ლითონი",
+      "large": false
+    },
+    {
+      "name_ka": "ლოფტ სტილი",
+      "name_en": "Loft Style",
+      "sub_ka": "ინდუსტრიული ხასიათი",
+      "sub_en": "Industrial Character",
+      "link": "loft-collection.html",
+      "image": "/images/cover3.png",
+      "alt": "ლოფტ სტილის კოლექცია",
+      "large": false
+    }
+  ]
+}
