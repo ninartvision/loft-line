@@ -1,0 +1,53 @@
+/* ============================================================
+   Loft Line – Language Switcher Styles
+   Shared across all pages (index + ll-pages)
+   ============================================================ */
+
+/* ── KA | EN toggle – base shared rules ─────────────────────── */
+.lang-btn,
+.ll-lang-btn {
+  display:     inline-flex;
+  align-items: center;
+  gap:         1px;
+  cursor:      pointer;
+  font-family: inherit;
+  font-size:   12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background:  transparent;
+  border:      1px solid rgba(255, 255, 255, .28);
+  border-radius: 4px;
+  padding:     4px 9px;
+  color:       inherit;
+  transition:  border-color .2s, opacity .2s;
+  line-height: 1;
+}
+
+.lang-btn:hover,
+.ll-lang-btn:hover {
+  border-color: rgba(255, 255, 255, .7);
+}
+
+/* index.html lang-btn sits on a dark background – keep same rules */
+.lang-btn .lang-ka,
+.lang-btn .lang-sep,
+.lang-btn .lang-en,
+.ll-lang-btn .lang-ka,
+.ll-lang-btn .lang-sep,
+.ll-lang-btn .lang-en {
+  opacity: .38;
+  transition: opacity .2s;
+}
+
+.lang-btn .lang-sep,
+.ll-lang-btn .lang-sep {
+  margin:  0 2px;
+  font-weight: 300;
+}
+
+/* Active language is fully visible */
+.lang-btn .lang-active,
+.ll-lang-btn .lang-active {
+  opacity: 1;
+}
