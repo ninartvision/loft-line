@@ -1,0 +1,23 @@
+{
+  "site_name": "Loft Line",
+  "site_url": "https://loftline.store",
+  "phone": "+995599000000",
+  "email": "info@loftline.store",
+  "facebook": "",
+  "instagram": "",
+  "free_delivery_threshold": 200,
+  "og_image": "/images/cover.png",
+  "footer_furniture_links": [
+    { "label_ka": "გარე ავეჯი",       "label_en": "Outdoor Furniture",  "href": "main-furniture.html"   },
+    { "label_ka": "საოფისე ავეჯი",    "label_en": "Office Furniture",   "href": "office-furniture.html" },
+    { "label_ka": "ლოფტ კოლექცია",   "label_en": "Loft Collection",    "href": "loft-collection.html"  },
+    { "label_ka": "ხის ავეჯი",         "label_en": "Wood Furniture",     "href": "main-furniture.html"   },
+    { "label_ka": "ლითონის ავეჯი",    "label_en": "Metal Furniture",    "href": "main-furniture.html"   }
+  ],
+  "footer_shop_links": [
+    { "label_ka": "განათება",          "label_en": "Lighting",           "href": "lighting.html"         },
+    { "label_ka": "დეკორაცია",         "label_en": "Decoration",         "href": "decoration.html"       },
+    { "label_ka": "სეზონური",          "label_en": "Seasonal",           "href": "#"                     },
+    { "label_ka": "ფასდაკლება",        "label_en": "Sale",               "href": "#"                     }
+  ]
+}

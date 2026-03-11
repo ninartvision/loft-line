@@ -1,0 +1,19 @@
+{
+  "links": [
+    { "label_ka": "მთავარი",      "label_en": "Home",             "href": "index.html",            "children": [] },
+    { "label_ka": "ავეჯი",        "label_en": "Furniture",        "href": "main-furniture.html",
+      "children": [
+        { "label_ka": "გარე ავეჯი",     "label_en": "Outdoor Furniture",  "href": "main-furniture.html"   },
+        { "label_ka": "საოფისე ავეჯი",  "label_en": "Office Furniture",   "href": "office-furniture.html" },
+        { "label_ka": "ლოფტ კოლექცია", "label_en": "Loft Collection",    "href": "loft-collection.html"  },
+        { "label_ka": "ხის ავეჯი",       "label_en": "Wood Furniture",     "href": "main-furniture.html"   },
+        { "label_ka": "ლითონის ავეჯი",  "label_en": "Metal Furniture",    "href": "main-furniture.html"   }
+      ]
+    },
+    { "label_ka": "გარე ავეჯი",   "label_en": "Outdoor",          "href": "main-furniture.html",   "children": [] },
+    { "label_ka": "საოფისე",      "label_en": "Office",           "href": "office-furniture.html", "children": [] },
+    { "label_ka": "განათება",     "label_en": "Lighting",         "href": "lighting.html",          "children": [] },
+    { "label_ka": "დეკორაცია",    "label_en": "Decoration",       "href": "decoration.html",        "children": [] },
+    { "label_ka": "კონტაქტი",    "label_en": "Contact",          "href": "#contact",               "children": [] }
+  ]
+}

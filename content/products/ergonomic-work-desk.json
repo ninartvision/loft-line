@@ -1,0 +1,21 @@
+{
+  "name_ka": "ერგონომიული სამუშაო მაგიდა",
+  "name_en": "Ergonomic Work Desk",
+  "slug": "ergonomic-work-desk",
+  "category": "office",
+  "style": "modern",
+  "price": 550,
+  "old_price": 0,
+  "badge": "new",
+  "discount_pct": 0,
+  "description_ka": "ერგონომიული საოფისე მაგიდა ბამბუკისა და ბრინჯაოს ლითონისგან. ეკოლოგიური და სტილური სამუშაო სივრცე.",
+  "description_en": "Ergonomic office desk made from bamboo and brass metal. Eco-friendly and stylish workspace solution.",
+  "materials_ka": ["ბამბუკი", "ბრინჯაოს ლითონი"],
+  "materials_en": ["Bamboo", "Brass Metal"],
+  "image": "/images/table/table8.png",
+  "gallery": ["/images/table/table9.png"],
+  "available": true,
+  "featured": true,
+  "page": "office-furniture",
+  "date": "2026-02-01T00:00:00.000Z"
+}

@@ -1,0 +1,21 @@
+{
+  "name_ka": "ინდუსტრიული ხის მაგიდა",
+  "name_en": "Industrial Oak Table",
+  "slug": "industrial-oak-table",
+  "category": "indoor",
+  "style": "industrial",
+  "price": 160,
+  "old_price": 200,
+  "badge": "sale",
+  "discount_pct": 20,
+  "description_ka": "მუხის ხისგან დამზადებული ინდუსტრიული სტილის სასადილო მაგიდა. შავი ლითონის ფეხები, გამძლე და ხელმოსახელ ზედაპირი.",
+  "description_en": "Industrial-style dining table made from solid oak. Black metal legs, durable and easy-to-clean surface.",
+  "materials_ka": ["მუხის ხე", "შავი ლითონი"],
+  "materials_en": ["Oak Wood", "Black Metal"],
+  "image": "/images/table/table1.jpeg",
+  "gallery": ["/images/table/table2.jpeg", "/images/table/table3.jpeg"],
+  "available": true,
+  "featured": true,
+  "page": "index",
+  "date": "2026-01-15T00:00:00.000Z"
+}
