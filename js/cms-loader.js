@@ -1,14 +1,15 @@
 /**
- * cms-loader.js – Loft Line CMS Data Loader
+ * cms-loader.js – Loft Line CMS Data Loader (Sanity.io Edition)
  * ─────────────────────────────────────────────────────────────
- * Fetches JSON content files written by Decap CMS and renders
- * products + page sections dynamically, so editing content in
- * the admin panel immediately changes the website.
+ * Fetches content from Sanity.io CDN API using GROQ queries and
+ * renders products + page sections dynamically.
  *
- * Works alongside auto-translate.js (loaded after this script).
+ * Sanity project : 777f2m13
+ * Dataset        : production
+ * API version    : 2024-01-01
  * ─────────────────────────────────────────────────────────────
  *
- * Usage: include once per page:
+ * Usage: include once per page (unchanged from before):
  *   <script src="js/cms-loader.js" data-page="index" defer></script>
  *
  * data-page values:
@@ -19,7 +20,56 @@
 (function () {
   'use strict';
 
-  /* ── Helpers ─────────────────────────────────────────────── */
+  /* ── Sanity Configuration ────────────────────────────────── */
+
+  var SANITY_PROJECT_ID = '777f2m13';
+  var SANITY_DATASET    = 'production';
+  var SANITY_API_VER    = '2024-01-01';
+  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
+
+  /* ── Sanity Helpers ──────────────────────────────────────── */
+
+  /**
+   * Append Sanity image transformation parameters to a CDN URL.
+   * auto=format delivers WebP to supporting browsers automatically.
+   *
+   * @param {string} url    - Base URL from `image.asset->url` in GROQ
+   * @param {{width?: number, height?: number, quality?: number}} [opts]
+   * @returns {string}
+   */
+  function buildImageUrl(url, opts) {
+    if (!url) return '';
+    var q = [];
+    if (opts && opts.width)  q.push('w='  + opts.width);
+    if (opts && opts.height) q.push('h='  + opts.height);
+    q.push('auto=format');          // delivers WebP to supporting browsers
+    q.push('q=' + ((opts && opts.quality) || 85));
+    return url + '?' + q.join('&');
+  }
+
+  /**
+   * Execute a GROQ query against the Sanity CDN API.
+   * Public datasets require no authentication token.
+   *
+   * @param {string} query     - GROQ query string
+   * @param {Object} [params]  - Optional query parameters keyed without $
+   * @returns {Promise<any|null>}
+   */
+  function sanityQuery(query, params) {
+    var url = SANITY_HOST + '/v' + SANITY_API_VER + '/data/query/' + SANITY_DATASET;
+    url += '?query=' + encodeURIComponent(query);
+    if (params) {
+      Object.keys(params).forEach(function (key) {
+        url += '&$' + key + '=' + encodeURIComponent(JSON.stringify(params[key]));
+      });
+    }
+    return fetch(url)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { return d ? d.result : null; })
+      .catch(function () { return null; });
+  }
+
+  /* ── Language Helpers ────────────────────────────────────── */
 
   function getLang() {
     try { return localStorage.getItem('loftline_lang') || 'ka'; }
@@ -33,35 +83,47 @@
       : (obj[field + '_ka'] !== undefined ? obj[field + '_ka'] : obj[field] || '');
   }
 
-  /** Fetch a JSON file; returns a Promise resolving to parsed object or null. */
-  function fetchJSON(url) {
-    return fetch(url + '?_=' + Date.now())
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; });
-  }
+  /* ── Load products from Sanity ───────────────────────────── */
 
-  /** Load all product JSON files for a given page slug. */
+  /*
+   * Field names in the GROQ projection match the existing JSON schema
+   * exactly, so buildProductCard() and all rendering helpers are unchanged.
+   */
+  var PRODUCT_PROJECTION = [
+    '_id,',
+    '"slug": slug.current,',
+    'name_ka, name_en,',
+    'category, style,',
+    'price, old_price,',
+    'badge, discount_pct,',
+    'description_ka, description_en,',
+    'materials_ka, materials_en,',
+    '"image": image.asset->url,',
+    '"gallery": gallery[].asset->url,',
+    'available, featured, page',
+  ].join(' ');
+
   function loadProducts(pageSlug) {
-    var productFiles = [
-      'industrial-oak-table',
-      'park-wooden-chair',
-      'ergonomic-work-desk',
-      'table-chairs-set',
-      'industrial-pendant-light',
-      'outdoor-dining-table'
-    ];
+    var groq, params;
 
-    return Promise.all(
-      productFiles.map(function (slug) {
-        return fetchJSON('/content/products/' + slug + '.json');
-      })
-    ).then(function (products) {
-      // Filter out nulls and products not on this page
-      return products.filter(function (p) {
-        return p && p.available !== false &&
-          (pageSlug === 'index'
-            ? (p.featured || p.page === 'index' || !p.page)
-            : p.page === pageSlug);
+    if (pageSlug === 'index') {
+      groq   = '*[_type == "product" && available == true && featured == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      params = {};
+    } else {
+      groq   = '*[_type == "product" && available == true && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      params = {page: pageSlug};
+    }
+
+    return sanityQuery(groq, params).then(function (products) {
+      if (!Array.isArray(products) || !products.length) return [];
+      return products.map(function (p) {
+        // Optimise main image → WebP, max 600 px wide
+        if (p.image) p.image = buildImageUrl(p.image, {width: 600});
+        // Optimise gallery images → WebP, max 1200 px wide
+        if (Array.isArray(p.gallery)) {
+          p.gallery = p.gallery.map(function (u) { return buildImageUrl(u, {width: 1200}); });
+        }
+        return p;
       });
     });
   }
@@ -210,9 +272,34 @@
     if (btn1El)  btn1El.textContent   = lang === 'en' ? data.btn1_en  : data.btn1_ka;
     if (btn2El)  btn2El.textContent   = lang === 'en' ? data.btn2_en  : data.btn2_ka;
     if (heroBg && data.bg_image) {
-      heroBg.style.backgroundImage = "url('" + esc(data.bg_image) + "')";
+      // Apply WebP optimisation on hero background (full-width → 1600 px)
+      var heroUrl = buildImageUrl(data.bg_image, {width: 1600, quality: 90});
+      heroBg.style.backgroundImage = "url('" + esc(heroUrl) + "')";
     }
   }
+
+  /* ── Homepage GROQ query (hero + announcement in one request) ── */
+
+  var HOMEPAGE_GROQ = [
+    '*[_type == "homepage" && _id == "homepage-singleton"][0] {',
+    '  "tag_ka":   heroSection.tag_ka,',
+    '  "tag_en":   heroSection.tag_en,',
+    '  "title_ka": heroSection.title_ka,',
+    '  "title_en": heroSection.title_en,',
+    '  "desc_ka":  heroSection.desc_ka,',
+    '  "desc_en":  heroSection.desc_en,',
+    '  "btn1_ka":  heroSection.btn1_ka,',
+    '  "btn1_en":  heroSection.btn1_en,',
+    '  "btn2_ka":  heroSection.btn2_ka,',
+    '  "btn2_en":  heroSection.btn2_en,',
+    '  "bg_image": heroSection.bg_image.asset->url,',
+    '  "text1_ka": announcementSection.text1_ka,',
+    '  "text1_en": announcementSection.text1_en,',
+    '  "text2_ka": announcementSection.text2_ka,',
+    '  "text2_en": announcementSection.text2_en,',
+    '  "visible":  announcementSection.visible',
+    '}',
+  ].join('');
 
   /* ── Announcement Bar ───────────────────────────────────────── */
 
@@ -243,7 +330,7 @@
     init();
   });
 
-  /* ── Re-initialise Decap CMS quick-view after CMS render ───── */
+  /* ── Notify other scripts that CMS render is complete ─────── */
 
   function dispatchReady() {
     document.dispatchEvent(new Event('cms:ready'));
@@ -258,27 +345,33 @@
   function init() {
     var grid = document.getElementById('productGrid');
 
-    // Always load products for pages that have a grid
     if (grid) {
       loadProducts(_pageSlug).then(function (products) {
         renderProducts(products, grid);
         dispatchReady();
-        // Re-bind quick-view if the module exposes a rebind hook
         if (window.loftQuickView && typeof window.loftQuickView.init === 'function') {
           window.loftQuickView.init();
         }
       });
     }
 
-    // Homepage-only sections
+    // Homepage-only: fetch hero + announcement in a single Sanity request
     if (_pageSlug === 'index') {
-      fetchJSON('/content/pages/homepage-hero.json').then(applyHero);
-      fetchJSON('/content/pages/announcement.json').then(applyAnnouncement);
+      sanityQuery(HOMEPAGE_GROQ).then(function (data) {
+        applyHero(data);
+        applyAnnouncement(data);
+      });
     }
 
-    // Category pages
+    // Category pages: fetch hero title/subtitle from pageContent document
     if (_pageSlug !== 'index') {
-      fetchJSON('/content/pages/' + _pageSlug + '.json').then(applyCategoryPageHero);
+      var pageGroq = [
+        '*[_type == "pageContent" && pageKey == $page][0] {',
+        '  hero_title_ka, hero_title_en,',
+        '  hero_sub_ka,   hero_sub_en',
+        '}',
+      ].join('');
+      sanityQuery(pageGroq, {page: _pageSlug}).then(applyCategoryPageHero);
     }
   }
 
