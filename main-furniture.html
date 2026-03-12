@@ -355,7 +355,18 @@
   <script src="js/auto-translate.js"></script>
   <script src="js/loft-line.js"></script>
   <script src="js/quick-view.js"></script>
-  <!-- Netlify Identity Widget -->
+  <!-- Netlify Identity Widget (handles email-confirmation redirects) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function (user) {
+        if (!user) {
+          window.netlifyIdentity.on('login', function () {
+            document.location.href = '/admin/';
+          });
+        }
+      });
+    }
+  </script>
 </body>
 </html>

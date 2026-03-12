@@ -21,7 +21,7 @@
   to   = "/admin/"
   status = 301
 
-# ── Security headers ──────────────────────────────────────────
+# ── Security headers (all pages) ──────────────────────────────
 [[headers]]
   for = "/*"
   [headers.values]
@@ -29,6 +29,16 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy        = "strict-origin-when-cross-origin"
     Permissions-Policy     = "camera=(), microphone=(), geolocation=()"
+
+# ── Admin panel: hide from search engines + forbid caching ────
+# Prevents the login page from being indexed or cached by
+# browsers/proxies. Authentication is handled by Netlify Identity.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag   = "noindex, nofollow"
+    Cache-Control  = "no-store, no-cache, must-revalidate"
+    Pragma         = "no-cache"
 
 # ── Cache static assets ───────────────────────────────────────
 [[headers]]
