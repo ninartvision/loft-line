@@ -12,7 +12,7 @@
       "sub_ka": "ტერასა, ბაღი & აივანი",
       "sub_en": "Terrace, Garden & Balcony",
       "link": "main-furniture.html",
-      "image": "/images/chair/chair2.jpg",
+      "image": "/images/chair/chair2.webp",
       "alt": "გარე ავეჯი — ტერასა და ბაღი",
       "large": true
     },
@@ -22,7 +22,7 @@
       "sub_ka": "მაგიდები & სკამები",
       "sub_en": "Desks & Chairs",
       "link": "office-furniture.html",
-      "image": "/images/cover2.png",
+      "image": "/images/cover2.webp",
       "alt": "Loft Line საოფისე ავეჯის კოლექცია – ლოფტ სტილი",
       "large": false
     },
@@ -32,7 +32,7 @@
       "sub_ka": "ინდუსტრიული ნათურები",
       "sub_en": "Industrial Lights",
       "link": "lighting.html",
-      "image": "/images/cover4.png",
+      "image": "/images/cover4.webp",
       "alt": "Loft Line ლოფტ სტილის განათება – Edison ფანარები",
       "large": false
     },
@@ -42,7 +42,7 @@
       "sub_ka": "აქსესუარები & სეზონური",
       "sub_en": "Accessories & Seasonal",
       "link": "decoration.html",
-      "image": "/images/cover5.png",
+      "image": "/images/cover5.webp",
       "alt": "Loft Line ლოფტ სტილის დეკორაცია – ინდუსტრიული ხე & ლითონი",
       "large": false
     },
@@ -52,7 +52,7 @@
       "sub_ka": "ინდუსტრიული ხასიათი",
       "sub_en": "Industrial Character",
       "link": "loft-collection.html",
-      "image": "/images/cover3.png",
+      "image": "/images/cover3.webp",
       "alt": "ლოფტ სტილის კოლექცია",
       "large": false
     }

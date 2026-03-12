@@ -23,7 +23,7 @@ public_folder: "/images/uploads"         # URL path used in HTML
 # ── Site URL (used for preview links) ─────────────────────────
 site_url: https://loftline.store
 display_url: https://loftline.store
-logo_url: https://loftline.store/images/cover.png
+logo_url: https://loftline.store/images/cover.webp
 
 # ── Locale ────────────────────────────────────────────────────
 locale: "ka"

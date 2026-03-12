@@ -6,7 +6,7 @@
   "facebook": "",
   "instagram": "",
   "free_delivery_threshold": 200,
-  "og_image": "/images/cover.png",
+  "og_image": "/images/cover.webp",
   "footer_furniture_links": [
     { "label_ka": "გარე ავეჯი",       "label_en": "Outdoor Furniture",  "href": "main-furniture.html"   },
     { "label_ka": "საოფისე ავეჯი",    "label_en": "Office Furniture",   "href": "office-furniture.html" },
