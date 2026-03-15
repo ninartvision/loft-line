@@ -8,7 +8,7 @@ const translations = {
     /* Announcement bars */
     announce_free_delivery:  "უფასო მიტანა ₾200+ შეკვეთაზე",
     announce_craft:          "ხელნაკეთი ხის & ლითონის ავეჯი",
-    announce_loft_full:      "🚚 უფასო მიტანა ₾300+ შეკვეთაზე &nbsp;•&nbsp; ხელნაკეთი ლოფტ ავეჯი",
+    announce_loft_full:      "🚚 უფასო მიტანა ₾200+ შეკვეთაზე &nbsp;•&nbsp; ხელნაკეთი ლოფტ ავეჯი",
 
     /* Navigation */
     nav_home:            "მთავარი",
@@ -97,7 +97,7 @@ const translations = {
     about_tag:   "ჩვენ შესახებ",
     about_title: "ხელოსნობა და ხარისხი",
     about_p1:    "Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.",
-    about_p2:    "ჩვენი კოლექციები მოიცავს გარე ავეჯს, საოფისე ავეჯს და ლოფტ სტილის უნიკალურ ნამუშევრებს. მალე შეძლებთ ასევე განათების, დეკორაციისა და სეზონური პროდუქტების შეძენას.",
+    about_p2:    "ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლოფტ სტილის უნიკალურ ნამუშევრებს, ასევე განათებასა და დეკორაციას.",
     about_btn:   "დაგვიკავშირდით",
 
     /* Newsletter (index) */
@@ -151,13 +151,13 @@ const translations = {
     pqv_order_btn:     "შეკვეთა / კალათაში",
     pqv_secure:        "🔒 უსაფრთხო",
     pqv_delivery_200:  "უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე",
-    pqv_delivery_300:  "უფასო მიტანა ₾300-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე",
+    pqv_delivery_300:  "უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე",
     pqv_guarantee:     "5 წლის გარანტია",
     pqv_guarantee_2y:  "2 წლის გარანტია",
     pqv_handmade:      "ხელნაკეთი",
     pqv_georgian:      "ქართული წარმოება",
     pqv_ergonomic:     "ერგონომიკული",
-    pqv_led_support:   "LED მხარდაკი",
+    pqv_led_support:   "LED თავსებადი",
     pqv_for_decor:     "დეკორისთვის",
 
     /* Page heroes (ll-pages) */
@@ -187,7 +187,7 @@ const translations = {
     /* Announcement bars */
     announce_free_delivery:  "Free delivery on orders ₾200+",
     announce_craft:          "Handcrafted wood & metal furniture",
-    announce_loft_full:      "🚚 Free delivery on orders ₾300+ &nbsp;•&nbsp; Handcrafted loft furniture",
+    announce_loft_full:      "🚚 Free delivery on orders ₾200+ &nbsp;•&nbsp; Handcrafted loft furniture",
 
     /* Navigation */
     nav_home:            "Home",
@@ -330,7 +330,7 @@ const translations = {
     pqv_order_btn:     "Order / Add to Cart",
     pqv_secure:        "🔒 Secure",
     pqv_delivery_200:  "Free delivery on orders over ₾200 &nbsp;•&nbsp; 3–7 business days",
-    pqv_delivery_300:  "Free delivery on orders over ₾300 &nbsp;•&nbsp; 3–7 business days",
+    pqv_delivery_300:  "Free delivery on orders over ₾200 &nbsp;•&nbsp; 3–7 business days",
     pqv_guarantee:     "5-Year Warranty",
     pqv_guarantee_2y:  "2-Year Warranty",
     pqv_handmade:      "Handcrafted",
