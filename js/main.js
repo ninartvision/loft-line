@@ -264,4 +264,78 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ── Contact Form ──
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const feedback = document.getElementById('contactFeedback');
+      const submitBtn = contactForm.querySelector('.contact-submit');
+      const name = contactForm.querySelector('#cf-name').value.trim();
+      const email = contactForm.querySelector('#cf-email').value.trim();
+      const message = contactForm.querySelector('#cf-message').value.trim();
+
+      if (!name || !email || !message) {
+        if (feedback) {
+          feedback.textContent = 'გთხოვთ შეავსოთ ყველა სავალდებულო ველი.';
+          feedback.className = 'contact-form-feedback error';
+        }
+        return;
+      }
+
+      // Build WhatsApp fallback link with message content
+      const waText = encodeURIComponent(
+        'სახელი: ' + name + '\nელ-ფოსტა: ' + email + '\n\n' + message
+      );
+      const waUrl = 'https://wa.me/995579388833?text=' + waText;
+
+      if (submitBtn) {
+        const origText = submitBtn.innerHTML;
+        submitBtn.textContent = 'იგზავნება...';
+        submitBtn.disabled = true;
+        setTimeout(function() {
+          if (feedback) {
+            feedback.innerHTML = 'გმადლობთ! თქვენი შეტყობინება გაიგზავნება <a href="' + waUrl + '" target="_blank" rel="noopener" style="color:var(--color-gold);text-decoration:underline;">WhatsApp-ზე</a>.';
+            feedback.className = 'contact-form-feedback success';
+          }
+          submitBtn.innerHTML = origText;
+          submitBtn.disabled = false;
+          contactForm.reset();
+          window.open(waUrl, '_blank', 'noopener');
+        }, 800);
+      }
+    });
+  }
+
+  // ── Mobile bottom bar active state on scroll ──
+  const sections = document.querySelectorAll('section[id], footer[id]');
+  const bottomItems = document.querySelectorAll('.bottom-bar-item[href^="#"]');
+  if (sections.length && bottomItems.length) {
+    const activateBottomItem = () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY + window.innerHeight / 2 >= sec.offsetTop) {
+          current = '#' + sec.id;
+        }
+      });
+      bottomItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === current);
+      });
+    };
+    window.addEventListener('scroll', activateBottomItem, { passive: true });
+    activateBottomItem();
+  }
+
+  // ── Scroll-to-Top Button ──
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  if (scrollTopBtn) {
+    const toggleScrollBtn = () => {
+      scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+    };
+    window.addEventListener('scroll', toggleScrollBtn, { passive: true });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 });

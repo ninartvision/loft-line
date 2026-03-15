@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loft Line — Admin Panel</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold:    #c9a96e;
+      --gold2:   #b8943f;
+      --dark:    #0e0e0e;
+      --dark2:   #141414;
+      --dark3:   #1c1c1c;
+      --dark4:   #252525;
+      --border:  rgba(255,255,255,0.08);
+      --text:    #e8e8e8;
+      --muted:   #888;
+      --success: #2d8a56;
+      --danger:  #c0392b;
+      --sidebar-w: 240px;
+      --ease: cubic-bezier(0.22,1,0.36,1);
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; font-size: 14px; }
+    body { background: var(--dark2); color: var(--text); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; border: none; }
+    input, textarea, select { font-family: inherit; font-size: 14px; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Login Page ─────────────────────────────────────────── */
+    #loginPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dark);
+    }
+    .login-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .login-logo span { color: var(--gold); font-size: 10px; letter-spacing: 4px; display: block; margin-top: 2px; font-weight: 400; }
+    .login-title { font-size: 13px; color: var(--muted); margin-bottom: 36px; letter-spacing: 1px; text-transform: uppercase; }
+    .login-field { margin-bottom: 16px; text-align: left; }
+    .login-field label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .login-field input {
+      width: 100%; padding: 13px 16px;
+      background: var(--dark4); border: 1.5px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 14px; transition: border-color 0.3s;
+    }
+    .login-field input:focus { outline: none; border-color: var(--gold); }
+    .login-btn {
+      width: 100%; padding: 14px; margin-top: 8px;
+      background: var(--gold); color: var(--dark); font-size: 13px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; border-radius: 8px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .login-btn:hover { background: var(--gold2); transform: translateY(-1px); }
+    .login-error { color: #ff6b6b; font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+    /* ── App Shell ──────────────────────────────────────────── */
+    #appShell { display: none; height: 100vh; }
+    #appShell.active { display: flex; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--dark3);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo { font-size: 20px; font-weight: 700; letter-spacing: 4px; color: #fff; }
+    .sidebar-logo span { color: var(--gold); font-size: 8px; letter-spacing: 4px; display: block; font-weight: 400; }
+    .sidebar-badge { display: inline-block; background: var(--gold); color: var(--dark); font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; letter-spacing: 1px; margin-top: 6px; }
+
+    .sidebar-nav { padding: 16px 0; flex: 1; }
+    .sidebar-section-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 16px 20px 8px; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 11px 20px;
+      background: none; color: rgba(255,255,255,0.55);
+      font-size: 13px; font-weight: 500; letter-spacing: 0.3px;
+      border-left: 3px solid transparent;
+      transition: all 0.25s;
+      text-align: left;
+    }
+    .nav-btn svg { flex-shrink: 0; opacity: 0.7; }
+    .nav-btn:hover { background: rgba(255,255,255,0.04); color: #fff; }
+    .nav-btn.active { background: rgba(201,169,110,0.1); color: var(--gold); border-left-color: var(--gold); }
+    .nav-btn.active svg { opacity: 1; }
+
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+    .logout-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; background: rgba(192,57,43,0.12); color: #ff7b7b; border-radius: 8px; font-size: 13px; font-weight: 500; transition: background 0.2s; }
+    .logout-btn:hover { background: rgba(192,57,43,0.22); }
+
+    /* Main content */
+    .main-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+    /* Top bar */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; border-bottom: 1px solid var(--border);
+      background: var(--dark3); position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-title { font-size: 15px; font-weight: 600; color: #fff; }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .topbar-user { font-size: 12px; color: var(--muted); }
+
+    /* Content area */
+    .content-area { padding: 32px; flex: 1; }
+
+    /* ── Pages ──────────────────────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Dashboard */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: var(--dark3); border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px 24px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .stat-value { font-size: 28px; font-weight: 700; color: #fff; line-height: 1; }
+    .stat-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .dash-card { background: var(--dark3); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+    .dash-card-title { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .quick-links { display: flex; flex-direction: column; gap: 8px; }
+    .quick-link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: var(--dark4); border-radius: 8px;
+      font-size: 13px; color: var(--text); border: 1px solid var(--border);
+      transition: all 0.2s; cursor: pointer; width: 100%;
+    }
+    .quick-link:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Activity feed */
+    .activity-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .activity-item { display: flex; gap: 12px; align-items: flex-start; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 5px; flex-shrink: 0; }
+    .activity-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .activity-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Products Page ──────────────────────────────────────── */
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .page-ttl { font-size: 18px; font-weight: 700; color: #fff; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; background: var(--gold); color: var(--dark);
+      font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 8px; border: none; transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; background: var(--dark4); color: var(--text);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+      border-radius: 8px; border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-danger {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; background: rgba(192,57,43,0.12); color: #ff7b7b;
+      font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid rgba(192,57,43,0.2);
+      transition: background 0.2s;
+    }
+    .btn-danger:hover { background: rgba(192,57,43,0.25); }
+    .btn-edit {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; background: rgba(201,169,110,0.1); color: var(--gold);
+      font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid rgba(201,169,110,0.2);
+      transition: background 0.2s;
+    }
+    .btn-edit:hover { background: rgba(201,169,110,0.2); }
+
+    /* Search / filter bar */
+    .products-toolbar { display: flex; gap: 12px; margin-bottom: 20px; }
+    .search-input {
+      flex: 1; padding: 10px 16px; background: var(--dark3); border: 1.5px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 13px; transition: border-color 0.2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { outline: none; border-color: var(--gold); }
+    .filter-select {
+      padding: 10px 14px; background: var(--dark3); border: 1.5px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 13px; min-width: 140px;
+    }
+    .filter-select:focus { outline: none; border-color: var(--gold); }
+
+    /* Products table */
+    .products-table-wrap { overflow-x: auto; }
+    .products-table { width: 100%; border-collapse: collapse; }
+    .products-table thead th {
+      text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); padding: 10px 16px;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .products-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .products-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+    .products-table td { padding: 14px 16px; vertical-align: middle; }
+    .prod-thumb {
+      width: 48px; height: 48px; border-radius: 6px; object-fit: cover;
+      background: var(--dark4);
+    }
+    .prod-name { font-weight: 600; color: #fff; font-size: 13px; }
+    .prod-cat { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 3px 8px; border-radius: 20px;
+    }
+    .badge-active { background: rgba(45,138,86,0.15); color: #4cd485; }
+    .badge-draft  { background: rgba(255,255,255,0.06); color: var(--muted); }
+    .badge-sale   { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .prod-actions { display: flex; gap: 8px; }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state svg { opacity: 0.3; margin: 0 auto 16px; }
+
+    /* ── Modal ──────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal {
+      background: var(--dark3); border: 1px solid var(--border); border-radius: 12px;
+      width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto;
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--dark3); z-index: 1;
+    }
+    .modal-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .modal-close { font-size: 22px; color: var(--muted); background: none; border: none; line-height: 1; transition: color 0.2s; }
+    .modal-close:hover { color: #fff; }
+    .modal-body { padding: 24px; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* Form elements */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    .form-input, .form-select, .form-textarea {
+      padding: 11px 14px; background: var(--dark4); border: 1.5px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 13px; transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--gold); }
+    .form-textarea { resize: vertical; min-height: 90px; }
+    .form-hint { font-size: 11px; color: var(--muted); }
+    .img-preview { width: 100%; height: 160px; background: var(--dark4); border-radius: 8px; object-fit: cover; display: none; margin-top: 8px; border: 1px solid var(--border); }
+    .img-preview.visible { display: block; }
+
+    /* Settings page */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .settings-card { background: var(--dark3); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+    .settings-card-title { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: var(--dark4); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 20px; font-size: 13px; color: var(--text);
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(20px); opacity: 0; transition: all 0.35s;
+      pointer-events: none; max-width: 360px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: var(--success); }
+    .toast.error   { border-color: var(--danger); }
+
+    /* Confirm dialog */
+    .confirm-modal .modal { max-width: 360px; }
+    .confirm-msg { font-size: 14px; color: var(--text); line-height: 1.6; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .sidebar { display: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .dash-grid { grid-template-columns: 1fr; }
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .content-area { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     LOGIN PAGE
+════════════════════════════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">LOFT <span>LINE ADMIN</span></div>
+    <p class="login-title">Admin Panel Login</p>
+    <form id="loginForm" novalidate>
+      <div class="login-field">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" autocomplete="username" placeholder="admin" required>
+      </div>
+      <div class="login-field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="login-btn">Sign In</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════════════ -->
+<div id="appShell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">LOFT <span>LINE</span></div>
+      <span class="sidebar-badge">ADMIN</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Dashboard</div>
+      <button class="nav-btn active" data-page="dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <div class="sidebar-section-label">Content</div>
+      <button class="nav-btn" data-page="products">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.059 7H3.941A.94.94 0 003 7.94v2.12C3 10.58 3.42 11 3.941 11H20.06A.94.94 0 0021 10.059V7.94A.94.94 0 0020.059 7z"/><path d="M5 11v6m14-6v6M3 17h18"/></svg>
+        Products
+      </button>
+      <button class="nav-btn" data-page="settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 00-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </button>
+      <div class="sidebar-section-label">Links</div>
+      <a href="../index.html" target="_blank" class="nav-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Website
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <span class="topbar-title" id="topbarTitle">Dashboard</span>
+      <div class="topbar-actions">
+        <span class="topbar-user" id="topbarUser"></span>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- ── Dashboard ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-label">Total Products</div>
+            <div class="stat-value" id="statProducts">0</div>
+            <div class="stat-sub">in catalog</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Categories</div>
+            <div class="stat-value">5</div>
+            <div class="stat-sub">active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">WhatsApp</div>
+            <div class="stat-value" style="font-size:16px;">+995 579 388 833</div>
+            <div class="stat-sub">contact number</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Email</div>
+            <div class="stat-value" style="font-size:12px;line-height:1.4;">ninimzhavia9@gmail.com</div>
+            <div class="stat-sub">contact email</div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-card-title">Quick Actions</div>
+            <div class="quick-links">
+              <button class="quick-link" onclick="Admin.navigate('products'); Admin.openProductModal()">
+                <span>+ Add New Product</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </button>
+              <a href="../index.html" target="_blank" class="quick-link">
+                <span>View Homepage</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <button class="quick-link" onclick="Admin.navigate('settings')">
+                <span>Site Settings</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">Recent Activity</div>
+            <ul class="activity-list" id="activityList">
+              <li class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">Admin panel initialized</div>
+                  <div class="activity-time">Ready for use</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Products ── -->
+      <div class="page" id="page-products">
+        <div class="page-header">
+          <span class="page-ttl">Products</span>
+          <button class="btn-primary" id="addProductBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Product
+          </button>
+        </div>
+        <div class="products-toolbar">
+          <input type="search" class="search-input" id="productSearch" placeholder="Search products...">
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="outdoor">გარე ავეჯი</option>
+            <option value="office">საოფისე ავეჯი</option>
+            <option value="indoor">ლოფტ კოლექცია</option>
+            <option value="lighting">განათება</option>
+            <option value="decoration">დეკორაცია</option>
+          </select>
+        </div>
+        <div class="products-table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Sale Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <tr>
+                <td colspan="7">
+                  <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.059 7H3.941A.94.94 0 003 7.94v2.12C3 10.58 3.42 11 3.941 11H20.06A.94.94 0 0021 10.059V7.94A.94.94 0 0020.059 7z"/><path d="M5 11v6m14-6v6M3 17h18"/></svg>
+                    <p>No products yet. Add your first product.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Settings ── -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <span class="page-ttl">Site Settings</span>
+          <button class="btn-primary" onclick="Admin.saveSettings()">Save Changes</button>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="settings-card-title">Contact Info</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">WhatsApp Number</label>
+                <input type="tel" class="form-input" id="settingWA" value="+995579388833">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="settingEmail" value="ninimzhavia9@gmail.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" id="settingLocation" value="თბილისი, საქართველო">
+              </div>
+            </div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-card-title">Admin Credentials</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-input" id="newPassword" placeholder="Leave blank to keep current">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" id="confirmPassword" placeholder="Repeat new password">
+              </div>
+              <button class="btn-primary" onclick="Admin.changePassword()" style="align-self:flex-start;">Update Password</button>
+            </div>
+          </div>
+          <div class="settings-card" style="grid-column:1/-1;">
+            <div class="settings-card-title">Announcement Bar Text</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">Text (Georgian)</label>
+                <input type="text" class="form-input" id="settingAnnounceKa" value="უფასო მიტანა ₾200+ შეკვეთაზე">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Text (English)</label>
+                <input type="text" class="form-input" id="settingAnnounceEn" value="Free delivery on orders ₾200+">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-content -->
+</div><!-- /appShell -->
+
+<!-- ── Product Modal ────────────────────────────────────── -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Add Product</span>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Name (Georgian) *</label>
+          <input type="text" class="form-input" id="fName_ka" placeholder="ინდუსტრიული მაგიდა">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Name (English)</label>
+          <input type="text" class="form-input" id="fName_en" placeholder="Industrial Table">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description (Georgian)</label>
+          <textarea class="form-textarea" id="fDesc_ka" placeholder="მუხის ხე & შავი ლითონი..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select class="form-select" id="fCategory">
+            <option value="">— Select —</option>
+            <option value="outdoor">გარე ავეჯი / Outdoor</option>
+            <option value="office">საოფისე ავეჯი / Office</option>
+            <option value="indoor">ლოფტ კოლექცია / Indoor</option>
+            <option value="lighting">განათება / Lighting</option>
+            <option value="decoration">დეკორაცია / Decoration</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Style</label>
+          <select class="form-select" id="fStyle">
+            <option value="loft">ლოფტი</option>
+            <option value="industrial">ინდუსტრიული</option>
+            <option value="modern">თანამედროვე</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price (₾) *</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="1200" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sale Price (₾)</label>
+          <input type="number" class="form-input" id="fSalePrice" placeholder="Leave blank if no sale" min="0">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Main Image URL</label>
+          <input type="url" class="form-input" id="fImage" placeholder="https://... or /images/table.webp">
+          <img id="imgPreview" class="img-preview" alt="Preview">
+          <span class="form-hint">Paste an image URL — preview will appear above</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="fStatus">
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <select class="form-select" id="fBadge">
+            <option value="">None</option>
+            <option value="sale">Sale</option>
+            <option value="new">New</option>
+            <option value="popular">Popular</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge Text</label>
+          <input type="text" class="form-input" id="fBadgeText" placeholder="-20%">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="modalCancelBtn">Cancel</button>
+      <button class="btn-primary" id="modalSaveBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Product
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Confirm Delete Dialog ────────────────────────────── -->
+<div class="modal-overlay confirm-modal" id="confirmModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Confirm Delete</span>
+      <button class="modal-close" id="confirmClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-msg">Are you sure you want to delete "<strong id="confirmProductName"></strong>"?<br>This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="confirmCancelBtn">Cancel</button>
+      <button class="btn-danger" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   ADMIN PANEL — Loft Line
+   Data persisted in localStorage.
+   Credentials: admin / loftline2026  (changeable in Settings)
+════════════════════════════════════════════════════════ */
+const Admin = (() => {
+  'use strict';
+
+  // ── Storage keys ──────────────────────────────────────
+  const KEYS = {
+    auth:     'll_admin_auth',
+    creds:    'll_admin_creds',
+    products: 'll_products',
+    activity: 'll_activity',
+    settings: 'll_settings',
+  };
+
+  // ── Default credentials ───────────────────────────────
+  const DEFAULT_CREDS = { username: 'admin', password: 'loftline2026' };
+
+  // ── State ─────────────────────────────────────────────
+  let editingId = null;
+  let deleteId  = null;
+
+  // ── Helpers ───────────────────────────────────────────
+  function store(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+  function load(key, def)  { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; } }
+  function uid()           { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+  function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type + ' show';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.classList.remove('show'); }, 3000);
+  }
+
+  function logActivity(text) {
+    const acts = load(KEYS.activity, []);
+    acts.unshift({ text, time: new Date().toLocaleString() });
+    if (acts.length > 20) acts.pop();
+    store(KEYS.activity, acts);
+    renderActivity();
+  }
+
+  function renderActivity() {
+    const list = document.getElementById('activityList');
+    if (!list) return;
+    const acts = load(KEYS.activity, []);
+    if (!acts.length) return;
+    list.innerHTML = acts.slice(0, 6).map(a => `
+      <li class="activity-item">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text">${escHtml(a.text)}</div>
+          <div class="activity-time">${escHtml(a.time)}</div>
+        </div>
+      </li>`).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  }
+
+  // ── Auth ──────────────────────────────────────────────
+  function isLoggedIn() { return load(KEYS.auth, false); }
+
+  function login(username, password) {
+    const creds = load(KEYS.creds, DEFAULT_CREDS);
+    if (username === creds.username && password === creds.password) {
+      store(KEYS.auth, true);
+      return true;
+    }
+    return false;
+  }
+
+  function logout() {
+    store(KEYS.auth, false);
+    document.getElementById('appShell').classList.remove('active');
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('loginPassword').value = '';
+  }
+
+  function changePassword() {
+    const np = document.getElementById('newPassword').value.trim();
+    const cp = document.getElementById('confirmPassword').value.trim();
+    if (!np) { toast('Please enter a new password', 'error'); return; }
+    if (np !== cp) { toast('Passwords do not match', 'error'); return; }
+    if (np.length < 8) { toast('Password must be at least 8 characters', 'error'); return; }
+    const creds = load(KEYS.creds, DEFAULT_CREDS);
+    creds.password = np;
+    store(KEYS.creds, creds);
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    toast('Password updated successfully');
+    logActivity('Admin password changed');
+  }
+
+  // ── Navigation ────────────────────────────────────────
+  function navigate(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const target = document.getElementById('page-' + page);
+    if (target) target.classList.add('active');
+    const btn = document.querySelector('.nav-btn[data-page="' + page + '"]');
+    if (btn) btn.classList.add('active');
+    const titles = { dashboard: 'Dashboard', products: 'Products', settings: 'Settings' };
+    document.getElementById('topbarTitle').textContent = titles[page] || page;
+    if (page === 'products') renderProducts();
+    if (page === 'dashboard') {
+      document.getElementById('statProducts').textContent = load(KEYS.products, []).length;
+      renderActivity();
+    }
+  }
+
+  // ── Products CRUD ─────────────────────────────────────
+  function getProducts() { return load(KEYS.products, []); }
+  function saveProducts(prods) { store(KEYS.products, prods); }
+
+  function categoryLabel(v) {
+    return { outdoor: 'გარე ავეჯი', office: 'საოფისე ავეჯი', indoor: 'ლოფტ კოლექცია', lighting: 'განათება', decoration: 'დეკორაცია' }[v] || v;
+  }
+
+  function renderProducts(filter = {}) {
+    const tbody = document.getElementById('productsTableBody');
+    let prods = getProducts();
+    const q = (document.getElementById('productSearch')?.value || '').toLowerCase();
+    const cat = document.getElementById('categoryFilter')?.value || '';
+    if (q) prods = prods.filter(p => (p.name_ka + p.name_en + p.desc_ka).toLowerCase().includes(q));
+    if (cat) prods = prods.filter(p => p.category === cat);
+
+    if (!prods.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.059 7H3.941A.94.94 0 003 7.94v2.12C3 10.58 3.42 11 3.941 11H20.06A.94.94 0 0021 10.059V7.94A.94.94 0 0020.059 7z"/><path d="M5 11v6m14-6v6M3 17h18"/></svg><p>No products found.</p></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = prods.map(p => `
+      <tr data-id="${escHtml(p.id)}">
+        <td>${p.image ? `<img class="prod-thumb" src="${escHtml(p.image)}" alt="" onerror="this.style.display='none'">` : '<div class="prod-thumb" style="display:flex;align-items:center;justify-content:center;opacity:0.2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>'}</td>
+        <td><div class="prod-name">${escHtml(p.name_ka)}</div><div class="prod-cat">${p.name_en ? escHtml(p.name_en) : ''}</div></td>
+        <td>${escHtml(categoryLabel(p.category))}</td>
+        <td>₾${escHtml(String(p.price))}</td>
+        <td>${p.salePrice ? '₾' + escHtml(String(p.salePrice)) : '<span style="color:var(--muted)">—</span>'}</td>
+        <td><span class="badge ${p.status === 'active' ? 'badge-active' : 'badge-draft'}">${escHtml(p.status || 'draft')}</span></td>
+        <td><div class="prod-actions">
+          <button class="btn-edit" onclick="Admin.openProductModal('${escHtml(p.id)}')">Edit</button>
+          <button class="btn-danger" onclick="Admin.confirmDelete('${escHtml(p.id)}')">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  // ── Product Modal ─────────────────────────────────────
+  function openProductModal(id = null) {
+    editingId = id;
+    const modal = document.getElementById('productModal');
+    const title = document.getElementById('modalTitle');
+    const preview = document.getElementById('imgPreview');
+
+    if (id) {
+      const p = getProducts().find(x => x.id === id);
+      if (!p) return;
+      title.textContent = 'Edit Product';
+      document.getElementById('fName_ka').value   = p.name_ka || '';
+      document.getElementById('fName_en').value   = p.name_en || '';
+      document.getElementById('fDesc_ka').value   = p.desc_ka || '';
+      document.getElementById('fCategory').value  = p.category || '';
+      document.getElementById('fStyle').value     = p.style || 'loft';
+      document.getElementById('fPrice').value     = p.price || '';
+      document.getElementById('fSalePrice').value = p.salePrice || '';
+      document.getElementById('fImage').value     = p.image || '';
+      document.getElementById('fStatus').value    = p.status || 'active';
+      document.getElementById('fBadge').value     = p.badge || '';
+      document.getElementById('fBadgeText').value = p.badgeText || '';
+      if (p.image) { preview.src = p.image; preview.classList.add('visible'); }
+      else { preview.src = ''; preview.classList.remove('visible'); }
+    } else {
+      title.textContent = 'Add Product';
+      document.getElementById('fName_ka').value   = '';
+      document.getElementById('fName_en').value   = '';
+      document.getElementById('fDesc_ka').value   = '';
+      document.getElementById('fCategory').value  = '';
+      document.getElementById('fStyle').value     = 'loft';
+      document.getElementById('fPrice').value     = '';
+      document.getElementById('fSalePrice').value = '';
+      document.getElementById('fImage').value     = '';
+      document.getElementById('fStatus').value    = 'active';
+      document.getElementById('fBadge').value     = '';
+      document.getElementById('fBadgeText').value = '';
+      preview.src = ''; preview.classList.remove('visible');
+    }
+    modal.classList.add('open');
+    setTimeout(() => document.getElementById('fName_ka')?.focus(), 100);
+  }
+
+  function closeProductModal() {
+    document.getElementById('productModal').classList.remove('open');
+    editingId = null;
+  }
+
+  function saveProduct() {
+    const name_ka = document.getElementById('fName_ka').value.trim();
+    const category = document.getElementById('fCategory').value;
+    const price = parseFloat(document.getElementById('fPrice').value);
+
+    if (!name_ka) { toast('Product name (Georgian) is required', 'error'); document.getElementById('fName_ka').focus(); return; }
+    if (!category) { toast('Please select a category', 'error'); document.getElementById('fCategory').focus(); return; }
+    if (!price || isNaN(price)) { toast('Please enter a valid price', 'error'); document.getElementById('fPrice').focus(); return; }
+
+    const salePrice = parseFloat(document.getElementById('fSalePrice').value) || null;
+    const prod = {
+      id:        editingId || uid(),
+      name_ka,
+      name_en:   document.getElementById('fName_en').value.trim(),
+      desc_ka:   document.getElementById('fDesc_ka').value.trim(),
+      category,
+      style:     document.getElementById('fStyle').value,
+      price,
+      salePrice,
+      image:     document.getElementById('fImage').value.trim(),
+      status:    document.getElementById('fStatus').value,
+      badge:     document.getElementById('fBadge').value,
+      badgeText: document.getElementById('fBadgeText').value.trim(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const prods = getProducts();
+    if (editingId) {
+      const idx = prods.findIndex(p => p.id === editingId);
+      if (idx > -1) prods[idx] = prod;
+      logActivity('Updated product: ' + name_ka);
+      toast('Product updated');
+    } else {
+      prod.createdAt = prod.updatedAt;
+      prods.unshift(prod);
+      logActivity('Added product: ' + name_ka);
+      toast('Product added successfully');
+    }
+    saveProducts(prods);
+    closeProductModal();
+    renderProducts();
+    document.getElementById('statProducts').textContent = prods.length;
+  }
+
+  // ── Delete ────────────────────────────────────────────
+  function confirmDelete(id) {
+    deleteId = id;
+    const p = getProducts().find(x => x.id === id);
+    document.getElementById('confirmProductName').textContent = p ? p.name_ka : id;
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function executeDelete() {
+    if (!deleteId) return;
+    let prods = getProducts();
+    const p = prods.find(x => x.id === deleteId);
+    prods = prods.filter(x => x.id !== deleteId);
+    saveProducts(prods);
+    if (p) logActivity('Deleted product: ' + p.name_ka);
+    toast('Product deleted', 'error');
+    document.getElementById('confirmModal').classList.remove('open');
+    deleteId = null;
+    renderProducts();
+    document.getElementById('statProducts').textContent = prods.length;
+  }
+
+  // ── Settings ──────────────────────────────────────────
+  function saveSettings() {
+    const s = {
+      wa:           document.getElementById('settingWA').value.trim(),
+      email:        document.getElementById('settingEmail').value.trim(),
+      location:     document.getElementById('settingLocation').value.trim(),
+      announceKa:   document.getElementById('settingAnnounceKa').value.trim(),
+      announceEn:   document.getElementById('settingAnnounceEn').value.trim(),
+    };
+    store(KEYS.settings, s);
+    toast('Settings saved');
+    logActivity('Site settings updated');
+  }
+
+  // ── Init ──────────────────────────────────────────────
+  function init() {
+    // Load settings into fields
+    const s = load(KEYS.settings, {});
+    if (s.wa)          document.getElementById('settingWA').value = s.wa;
+    if (s.email)       document.getElementById('settingEmail').value = s.email;
+    if (s.location)    document.getElementById('settingLocation').value = s.location;
+    if (s.announceKa)  document.getElementById('settingAnnounceKa').value = s.announceKa;
+    if (s.announceEn)  document.getElementById('settingAnnounceEn').value = s.announceEn;
+
+    // Auth check
+    if (isLoggedIn()) {
+      showApp();
+    }
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value.trim();
+      const p = document.getElementById('loginPassword').value;
+      if (login(u, p)) {
+        showApp();
+      } else {
+        document.getElementById('loginError').textContent = 'Invalid username or password.';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+      }
+    });
+    // Clear error on input
+    ['loginUsername','loginPassword'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        document.getElementById('loginError').textContent = '';
+      });
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    // Sidebar nav
+    document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => navigate(btn.dataset.page));
+    });
+
+    // Product modal buttons
+    document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
+    document.getElementById('modalClose').addEventListener('click', closeProductModal);
+    document.getElementById('modalCancelBtn').addEventListener('click', closeProductModal);
+    document.getElementById('modalSaveBtn').addEventListener('click', saveProduct);
+
+    // Image URL preview
+    document.getElementById('fImage').addEventListener('input', function() {
+      const preview = document.getElementById('imgPreview');
+      if (this.value) {
+        preview.src = this.value;
+        preview.classList.add('visible');
+      } else {
+        preview.classList.remove('visible');
+      }
+    });
+
+    // Confirm delete buttons
+    document.getElementById('confirmClose').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+    document.getElementById('confirmCancelBtn').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+    document.getElementById('confirmDeleteBtn').addEventListener('click', executeDelete);
+
+    // Close modals on backdrop click
+    document.getElementById('productModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProductModal(); });
+    document.getElementById('confirmModal').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('confirmModal').classList.remove('open'); });
+
+    // Search / filter
+    document.getElementById('productSearch').addEventListener('input', () => renderProducts());
+    document.getElementById('categoryFilter').addEventListener('change', () => renderProducts());
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeProductModal();
+        document.getElementById('confirmModal').classList.remove('open');
+      }
+    });
+  }
+
+  function showApp() {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('appShell').classList.add('active');
+    document.getElementById('topbarUser').textContent = 'Logged in as admin';
+    renderActivity();
+    document.getElementById('statProducts').textContent = getProducts().length;
+  }
+
+  // Public API
+  return { init, navigate, openProductModal, confirmDelete, saveSettings, changePassword };
+})();
+
+document.addEventListener('DOMContentLoaded', Admin.init);
+</script>
+</body>
+</html>
