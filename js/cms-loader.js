@@ -241,22 +241,94 @@
       .replace(/'/g, '&#39;');
   }
 
-  /* ── Render products into #productGrid ─────────────────────── */
+  /* ── Loft-line product card builder (System A pages) ───────── */
 
-  function renderProducts(products, grid) {
-    if (!grid || !products.length) return;
-    // Clear only CMS-generated cards (keep any static ones if present)
-    grid.querySelectorAll('[data-cms-card]').forEach(function (el) { el.remove(); });
-    // If grid has no static cards, replace all content
-    var staticCards = grid.querySelectorAll('.product-card:not([data-cms-card])');
-    if (!staticCards.length) {
-      grid.innerHTML = '';
+  function buildLoftCard(product) {
+    var name    = t(product, 'name');
+    var matArr  = getLang() === 'en' ? (product.materials_en || product.materials_ka || []) : (product.materials_ka || []);
+    var matStr  = Array.isArray(matArr) ? matArr.join(' & ') : String(matArr || '');
+
+    var badgeHtml = '';
+    if (product.badge === 'new') {
+      badgeHtml = '<span class="ll-badge ll-badge-new">ახალი</span>';
+    } else if (product.badge === 'sale') {
+      var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : 'Sale';
+      badgeHtml = '<span class="ll-badge ll-badge-sale">' + pct + '</span>';
     }
+
+    var oldPriceHtml = (product.old_price && product.old_price > 0)
+      ? '<span class="ll-prod-old-price">₾' + product.old_price.toLocaleString() + '</span>'
+      : '';
+
+    var waSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">'
+      + '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>'
+      + '<path d="M11.975 0C5.361 0 0 5.359 0 11.975c0 2.094.549 4.062 1.508 5.773L.055 23.455a.477.477 0 0 0 .574.603l5.898-1.543C8.163 23.43 10.047 24 11.975 24 18.589 24 24 18.641 24 12.025 24 5.41 18.589 0 11.975 0zm0 21.897c-1.84 0-3.596-.502-5.109-1.451l-.365-.217-3.783.99 1.008-3.666-.239-.378A9.916 9.916 0 0 1 2.079 12.025c0-5.463 4.44-9.901 9.896-9.901 5.456 0 9.896 4.438 9.896 9.901 0 5.462-4.44 9.872-9.896 9.872z"/>'
+      + '</svg>';
+
+    var article = document.createElement('article');
+    article.className = 'll-product-card';
+    article.setAttribute('data-category', product.category || 'loft');
+    article.setAttribute('data-price',    String(product.price || 0));
+    article.setAttribute('data-style',    product.style || 'loft');
+    article.setAttribute('data-slug',     product.slug || '');
+
+    var _imgs = [product.image]
+      .concat(Array.isArray(product.gallery) ? product.gallery : [])
+      .filter(Boolean);
+    if (_imgs.length) article.setAttribute('data-gallery', JSON.stringify(_imgs));
+
+    article.innerHTML = [
+      '<div class="ll-prod-img-wrap">',
+        badgeHtml,
+        '<img src="' + esc(product.image || '') + '" alt="' + esc(name) + '" loading="lazy">',
+        '<button class="ll-quick-view" aria-label="სწრაფი ნახვა">',
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
+            '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
+            '<circle cx="12" cy="12" r="3"/>',
+          '</svg>',
+        '</button>',
+      '</div>',
+      '<div class="ll-prod-body">',
+        '<span class="ll-prod-cat">' + esc(categoryLabel(product.category)) + '</span>',
+        '<h3 class="ll-prod-name">' + esc(name) + '</h3>',
+        '<p class="ll-prod-material">' + esc(matStr) + '</p>',
+        '<div class="ll-prod-footer"><div>',
+          '<span class="ll-prod-price">₾' + (product.price || 0).toLocaleString() + '</span>',
+          oldPriceHtml,
+        '</div></div>',
+        '<div class="ll-prod-actions">',
+          '<button class="btn-order">შეკვეთა</button>',
+          '<button class="btn-wa" aria-label="WhatsApp">' + waSvg + '</button>',
+        '</div>',
+      '</div>'
+    ].join('');
+
+    return article;
+  }
+
+  /* ── Render products into the product grid ──────────────────── */
+
+  /**
+   * @param {Array}    products    - Product objects from Sanity
+   * @param {Element}  grid        - The grid container element
+   * @param {Function} cardBuilder - buildProductCard | buildLoftCard
+   */
+  function renderProducts(products, grid, cardBuilder) {
+    if (!grid) return;
+    // Always clear the template card — even when Sanity returns nothing
+    grid.innerHTML = '';
+    // Always update the count badge, including the 0-products case
+    var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
+    if (countEl) countEl.textContent = products.length + ' პროდუქტი';
+    if (!products.length) return;
+    /* Batch all card insertions in one DOM operation to avoid layout thrash */
+    var frag = document.createDocumentFragment();
     products.forEach(function (product) {
-      var card = buildProductCard(product);
+      var card = cardBuilder(product);
       card.setAttribute('data-cms-card', '1');
-      grid.appendChild(card);
+      frag.appendChild(card);
     });
+    grid.appendChild(frag); // single reflow for the entire product list
   }
 
   /* ── Homepage Hero ──────────────────────────────────────────── */
@@ -344,20 +416,24 @@
 
   /* ── Bootstrap ─────────────────────────────────────────────── */
 
-  var _pageSlug = document.currentScript
-    ? (document.currentScript.getAttribute('data-page') || 'index')
-    : 'index';
+  // Capture the script element now (currentScript is null after defer in some browsers)
+  var _thisScript = document.currentScript || document.querySelector('script[src*="cms-loader"]');
+  var _pageSlug   = _thisScript ? (_thisScript.getAttribute('data-page') || 'index') : 'index';
+  // Incremented on every init() call; lets async callbacks detect stale responses
+  var _renderGen  = 0;
 
   function init() {
-    var grid = document.getElementById('productGrid');
+    var gen = ++_renderGen; // capture this render's generation token
+
+    // System B (index.html) uses id="productGrid"; System A pages use id="sanity-product-grid"
+    var grid        = document.getElementById('productGrid') || document.getElementById('sanity-product-grid');
+    var cardBuilder = document.getElementById('sanity-product-grid') ? buildLoftCard : buildProductCard;
 
     if (grid) {
       loadProducts(_pageSlug).then(function (products) {
-        renderProducts(products, grid);
-        dispatchReady();
-        if (window.loftQuickView && typeof window.loftQuickView.init === 'function') {
-          window.loftQuickView.init();
-        }
+        if (gen !== _renderGen) return; // stale — a newer render is already in flight
+        renderProducts(products, grid, cardBuilder);
+        dispatchReady(); // fires cms:ready → quick-view.js re-wires click triggers once
       });
     }
 

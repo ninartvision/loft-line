@@ -24,22 +24,56 @@
     return src;
   }
 
-  /* â”€â”€ Wire Up Click Triggers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  function setupTriggers() {
-    qsa('.product-card, .ll-product-card').forEach(function (card) {
-      var qvBtn   = qs('.product-quick-view, .ll-quick-view', card);
-      var imgWrap = qs('.product-image-wrap, .ll-prod-img-wrap', card);
+  /* ── Wire Up Click Triggers (Event Delegation) ─────────────────────────
+   *
+   * A single delegated listener on document.body handles clicks from every
+   * product card — static HTML or CMS-injected — past, present, and future.
+   * Because we never attach listeners to individual cards:
+   *
+   *   • No duplicate handlers regardless of how many times CMS re-renders.
+   *   • No listeners are orphaned on discarded DOM nodes (zero memory leaks).
+   *   • Re-renders, language switches, and filter changes need no re-wiring.
+   *
+   * setupTriggers() is kept as a no-op so that window.loftQuickView.init()
+   * and the cms:ready listener remain backwards-compatible without causing
+   * duplicate handlers.
+   * ── */
+  var _delegatedSetup = false;
 
+  function setupTriggers() {
+    // No-op: real click wiring is performed once by setupDelegatedTriggers().
+    // Preserved for backwards-compatibility with window.loftQuickView.init
+    // and any external code that calls it — calling it is now always safe.
+  }
+
+  function setupDelegatedTriggers() {
+    if (_delegatedSetup) return;   // guard: wire the listener exactly once
+    _delegatedSetup = true;
+
+    document.body.addEventListener('click', function (e) {
+      var target = e.target;
+
+      // ── Quick-view button (or any child element, e.g. the SVG icon) ─────
+      var qvBtn = target.closest
+        ? target.closest('.product-quick-view, .ll-quick-view')
+        : null;
       if (qvBtn) {
-        qvBtn.addEventListener('click', function (e) {
+        var card = qvBtn.closest('.product-card, .ll-product-card');
+        if (card) {
           e.preventDefault();
           e.stopPropagation();
           openModal(card);
-        });
+          return; // handled — skip image-wrap branch
+        }
       }
+
+      // ── Image-wrap click ─────────────────────────────────────────────────
+      var imgWrap = target.closest
+        ? target.closest('.product-image-wrap, .ll-prod-img-wrap')
+        : null;
       if (imgWrap) {
-        imgWrap.style.cursor = 'pointer';
-        imgWrap.addEventListener('click', function () { openModal(card); });
+        var card2 = imgWrap.closest('.product-card, .ll-product-card');
+        if (card2) openModal(card2);
       }
     });
   }
@@ -79,8 +113,8 @@
     /* Build slide track â€” first image loads eagerly, rest lazy */
     domGalleryTrack.innerHTML    = '';
     domGalleryTrack.style.cssText = 'transition:none;transform:translateX(0)';
-
-    images.forEach(function (src, i) {
+    /* Batch all slide insertions in one DOM operation to avoid layout thrash */
+    var trackFrag = document.createDocumentFragment();    images.forEach(function (src, i) {
       var slide = document.createElement('div');
       slide.className = 'pqv-slide';
 
@@ -101,8 +135,9 @@
       }
 
       slide.appendChild(img);
-      domGalleryTrack.appendChild(slide);
+      trackFrag.appendChild(slide);
     });
+    domGalleryTrack.appendChild(trackFrag); // single reflow for all slides
 
     /* Show/hide controls based on whether there are multiple images */
     var multi = images.length > 1;
@@ -149,6 +184,8 @@
     if (!domThumbs) return;
     domThumbs.innerHTML = '';
 
+    /* Batch all thumbnail buttons in one DOM operation to avoid layout thrash */
+    var thumbFrag = document.createDocumentFragment();
     images.forEach(function (src, i) {
       var btn = document.createElement('button');
       btn.type      = 'button';
@@ -164,8 +201,9 @@
 
       btn.appendChild(img);
       btn.addEventListener('click', function () { goToSlide(i); });
-      domThumbs.appendChild(btn);
+      thumbFrag.appendChild(btn);
     });
+    domThumbs.appendChild(thumbFrag); // single reflow for all thumbnails
   }
 
   function updateThumbActive() {
@@ -327,13 +365,15 @@
   /* â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   document.addEventListener('DOMContentLoaded', function () {
     cacheModalElements();
-    setupTriggers();
+    setupDelegatedTriggers(); // one delegated listener — covers static + CMS cards
     wireModalControls();
   });
 
-  /* Re-wire triggers after CMS cards are injected into the DOM */
+  // Backwards-compat: external callers (e.g. window.loftQuickView.init()) remain
+  // safe to invoke — setupTriggers() is a no-op; delegation covers all cards.
+  // cms:ready is still dispatched by cms-loader.js after each render, but
+  // quick-view no longer needs to listen for it: delegation requires no re-wiring.
   window.loftQuickView = { init: setupTriggers };
-  document.addEventListener('cms:ready', setupTriggers);
 
 })();
 

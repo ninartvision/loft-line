@@ -429,6 +429,13 @@
   line-height: 1.4;
 }
 
+/* ── Card image-wrap: pointer cursor ── */
+/* Previously set per-card via JS; moved to CSS to support event delegation. */
+.product-image-wrap,
+.ll-prod-img-wrap {
+  cursor: pointer;
+}
+
 /* ── Prevent body scroll when modal open ── */
 body.pqv-open {
   overflow: hidden;

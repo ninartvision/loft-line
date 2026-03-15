@@ -16,8 +16,8 @@
   --color-gold-hover: #b8943f;
   --color-sale: #b33a2e;
   --color-new: #2d8a56;
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Playfair Display', 'Noto Sans Georgian', Georgia, serif;
+  --font-body: 'Inter', 'Noto Sans Georgian', -apple-system, BlinkMacSystemFont, sans-serif;
   --container-max: 1400px;
   --section-pad: 100px;
   --gap: 28px;

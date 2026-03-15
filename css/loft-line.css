@@ -25,8 +25,8 @@
   --whatsapp:    #25D366;
   --sale:        #bb3c30;
 
-  --f-h: 'Playfair Display', Georgia, serif;
-  --f-b: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-h: 'Playfair Display', 'Noto Sans Georgian', Georgia, serif;
+  --f-b: 'Inter', 'Noto Sans Georgian', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --cw:    1380px;
   --px:    clamp(16px, 4.5vw, 56px);
@@ -243,6 +243,48 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .ll-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .ll-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .ll-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Language toggle */
+.ll-lang-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-sub);
+  border: 1px solid var(--bdr);
+  border-radius: 50%;
+  transition: all var(--dur) var(--ease);
+}
+.ll-lang-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold-bdr);
+  background: var(--gold-dim);
+}
+
+/* Cart button */
+.ll-cart-btn { position: relative; }
+.ll-cart-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  background: var(--gold);
+  color: #0c0c0c;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.ll-cart-badge:empty { display: none; }
 
 /* ── SIDE DRAWER ── */
 .ll-overlay {
