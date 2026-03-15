@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const WA_NUMBER = '995599000000'; // Replace with real number
+  const WA_NUMBER = '995579388833';
 
   // ── Header scroll elevation ──
   const header = document.querySelector('.ll-header');

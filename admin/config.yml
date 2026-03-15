@@ -306,7 +306,7 @@ collections:
         fields:
           - { label: "Site Name",           name: site_name,    widget: string, default: "Loft Line" }
           - { label: "Site URL",            name: site_url,     widget: string, default: "https://loftline.store" }
-          - { label: "Phone / WhatsApp",    name: phone,        widget: string, default: "+995599000000" }
+          - { label: "Phone / WhatsApp",    name: phone,        widget: string, default: "+995579388833" }
           - { label: "Email",               name: email,        widget: string, default: "info@loftline.store" }
           - { label: "Facebook URL",        name: facebook,     widget: string, required: false }
           - { label: "Instagram URL",       name: instagram,    widget: string, required: false }
