@@ -172,6 +172,12 @@
     article.setAttribute('data-style',    product.style || 'loft');
     article.setAttribute('data-slug',     product.slug || '');
 
+    /* Store all product images so the quick-view gallery can display them */
+    var _imgs = [product.image]
+      .concat(Array.isArray(product.gallery) ? product.gallery : [])
+      .filter(Boolean);
+    if (_imgs.length) article.setAttribute('data-gallery', JSON.stringify(_imgs));
+
     article.innerHTML = [
       '<div class="product-image-wrap">',
         buildBadgeHTML(product),
