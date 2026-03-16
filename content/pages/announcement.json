@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "text1_ka": "უფასო მიტანა ₾200+ შეკვეთაზე",
   "text1_en": "Free delivery on orders ₾200+",
@@ -5,3 +6,12 @@
   "text2_en": "Handcrafted Wood & Metal Furniture",
   "visible": true
 }
+=======
+{
+  "text1_ka": "უფასო მიტანა ₾200+ შეკვეთაზე",
+  "text1_en": "Free delivery on orders ₾200+",
+  "text2_ka": "ხელნაკეთი ხის & ლითონის ავეჯი",
+  "text2_en": "Handcrafted Wood & Metal Furniture",
+  "visible": true
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

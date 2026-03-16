@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /admin.html
 
 Sitemap: https://loftline.store/sitemap.xml
+=======
+User-agent: *
+Allow: /
+
+Sitemap: https://loftline.store/sitemap.xml
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

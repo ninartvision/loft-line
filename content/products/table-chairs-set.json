@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name_ka": "მაგიდა & სკამები კომპლექტი",
   "name_en": "Table & Chairs Set",
@@ -19,3 +20,26 @@
   "page": "loft-collection",
   "date": "2026-02-10T00:00:00.000Z"
 }
+=======
+{
+  "name_ka": "მაგიდა & სკამები კომპლექტი",
+  "name_en": "Table & Chairs Set",
+  "slug": "table-chairs-set",
+  "category": "loft",
+  "style": "loft",
+  "price": 340,
+  "old_price": 400,
+  "badge": "sale",
+  "discount_pct": 15,
+  "description_ka": "ლოფტ სტილის სასადილო მაგიდა 4 სკამით. რეციკლირებული ხე და ლითონის კარკასი. ეკო-მეგობრული.",
+  "description_en": "Loft-style dining table with 4 chairs. Recycled wood and metal frame. Eco-friendly.",
+  "materials_ka": ["რეციკლირებული ხე", "ლითონი"],
+  "materials_en": ["Recycled Wood", "Metal"],
+  "image": "/images/table/table4.jpeg",
+  "gallery": ["/images/table/table5.jpeg", "/images/table/table6.jpeg"],
+  "available": true,
+  "featured": false,
+  "page": "loft-collection",
+  "date": "2026-02-10T00:00:00.000Z"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

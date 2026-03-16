@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "tag_ka": "ხის & ლითონის ხელობა",
   "tag_en": "Wood & Metal Craft",
@@ -11,3 +12,18 @@
   "btn2_en": "Browse Products",
   "bg_image": "/images/cover.webp"
 }
+=======
+{
+  "tag_ka": "ხის & ლითონის ხელობა",
+  "tag_en": "Wood & Metal Craft",
+  "title_ka": "შექმენით თქვენი იდეალური სივრცე",
+  "title_en": "Create Your Ideal Space",
+  "desc_ka": "ინდუსტრიული დიზაინი • ხელნაკეთი ავეჯი • ბუნებრივი მასალები",
+  "desc_en": "Industrial Design • Handcrafted Furniture • Natural Materials",
+  "btn1_ka": "კოლექციის ნახვა",
+  "btn1_en": "View Collection",
+  "btn2_ka": "პროდუქციის ნახვა",
+  "btn2_en": "Browse Products",
+  "bg_image": "/images/cover.png"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

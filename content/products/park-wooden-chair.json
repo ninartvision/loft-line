@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name_ka": "პარკის ხის სკამი",
   "name_en": "Park Wooden Chair",
@@ -19,3 +20,26 @@
   "page": "index",
   "date": "2026-01-20T00:00:00.000Z"
 }
+=======
+{
+  "name_ka": "პარკის ხის სკამი",
+  "name_en": "Park Wooden Chair",
+  "slug": "park-wooden-chair",
+  "category": "outdoor",
+  "style": "loft",
+  "price": 250,
+  "old_price": 0,
+  "badge": "",
+  "discount_pct": 0,
+  "description_ka": "გარე გამოყენებისთვის განკუთვნილი ხის სკამი. თუჯის მდგრადი ჩარჩო, ამინდგამძლე ნაძვის ხე.",
+  "description_en": "Outdoor wooden chair with a cast iron frame. Weather-resistant spruce wood construction.",
+  "materials_ka": ["ნაძვის ხე", "თუჯი"],
+  "materials_en": ["Spruce Wood", "Cast Iron"],
+  "image": "/images/chair/chair4.jpg",
+  "gallery": ["/images/chair/chair1.jpg", "/images/chair/chair2.jpg"],
+  "available": true,
+  "featured": false,
+  "page": "index",
+  "date": "2026-01-20T00:00:00.000Z"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

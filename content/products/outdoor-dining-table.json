@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name_ka": "გარე სადილის მაგიდა",
   "name_en": "Outdoor Dining Table",
@@ -19,3 +20,26 @@
   "page": "index",
   "date": "2026-02-20T00:00:00.000Z"
 }
+=======
+{
+  "name_ka": "გარე სადილის მაგიდა",
+  "name_en": "Outdoor Dining Table",
+  "slug": "outdoor-dining-table",
+  "category": "outdoor",
+  "style": "modern",
+  "price": 1450,
+  "old_price": 0,
+  "badge": "",
+  "discount_pct": 0,
+  "description_ka": "პრემიუმ გარე სადილის მაგიდა ტიკის ხისა და ალუმინის ფეხებით. ამინდგამძლე, სეზონური",
+  "description_en": "Premium outdoor dining table made from teak wood with aluminium legs. Weather-resistant, seasonal use.",
+  "materials_ka": ["ტიკის ხე", "ალუმინი"],
+  "materials_en": ["Teak Wood", "Aluminium"],
+  "image": "/images/table/table3.jpeg",
+  "gallery": ["/images/table/table2.jpeg"],
+  "available": true,
+  "featured": false,
+  "page": "index",
+  "date": "2026-02-20T00:00:00.000Z"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

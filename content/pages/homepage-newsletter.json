@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "title_ka": "გამოიწერეთ სიახლეები",
   "title_en": "Subscribe to News",
@@ -8,3 +9,15 @@
   "btn_ka": "გამოწერა",
   "btn_en": "Subscribe"
 }
+=======
+{
+  "title_ka": "გამოიწერეთ სიახლეები",
+  "title_en": "Subscribe to News",
+  "text_ka": "მიიღეთ ინფორმაცია ახალი კოლექციების, ფასდაკლებებისა და სეზონური შეთავაზებების შესახებ.",
+  "text_en": "Get information about new collections, discounts and seasonal offers.",
+  "placeholder_ka": "თქვენი ელ-ფოსტა",
+  "placeholder_en": "Your email address",
+  "btn_ka": "გამოწერა",
+  "btn_en": "Subscribe"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36

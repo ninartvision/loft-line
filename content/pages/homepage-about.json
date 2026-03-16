@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "tag_ka": "ჩვენ შესახებ",
   "tag_en": "About Us",
@@ -11,3 +12,18 @@
   "btn_en": "Contact Us",
   "image": "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=800&q=80"
 }
+=======
+{
+  "tag_ka": "ჩვენ შესახებ",
+  "tag_en": "About Us",
+  "title_ka": "ხელოსნობა და ხარისხი",
+  "title_en": "Craft & Quality",
+  "para1_ka": "Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.",
+  "para1_en": "At Loft Line, we create furniture that combines the natural warmth of wood with the industrial character of metal. Every piece is crafted by hand by Georgian artisans.",
+  "para2_ka": "ჩვენი კოლექციები მოიცავს გარე ავეჯს, საოფისე ავეჯს და ლოფტ სტილის უნიკალურ ნამუშევრებს. მალე შეძლებთ ასევე განათების, დეკორაციისა და სეზონური პროდუქტების შეძენას.",
+  "para2_en": "Our collections include outdoor furniture, office furniture and unique loft-style pieces. Lighting, decoration and seasonal products are also coming soon.",
+  "btn_ka": "დაგვიკავშირდით",
+  "btn_en": "Contact Us",
+  "image": "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=800&q=80"
+}
+>>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36
