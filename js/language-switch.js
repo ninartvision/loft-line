@@ -54,6 +54,7 @@
       '.btn-order':               'btn_order',
       '.product-badge.badge-new': 'badge_new',
       '.ll-badge.ll-badge-new':   'badge_new',
+      '.ll-drawer-section-label': 'drawer_categories',
     };
     Object.keys(selectorMap).forEach(function (selector) {
       var key = selectorMap[selector];
@@ -74,6 +75,7 @@
       var ka = btn.querySelector('.lang-ka');
       var en = btn.querySelector('.lang-en');
       if (ka && en) {
+        /* KA | EN dual-label structure */
         if (lang === 'ka') {
           ka.classList.add('lang-active');
           en.classList.remove('lang-active');
@@ -81,6 +83,9 @@
           en.classList.add('lang-active');
           ka.classList.remove('lang-active');
         }
+      } else {
+        /* Simple single-label button: show current language */
+        btn.textContent = lang.toUpperCase();
       }
     });
   }
