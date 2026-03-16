@@ -220,9 +220,9 @@
     var lang = getLang();
     var labels = {
       indoor:     { ka: 'შიდა ავეჯი',        en: 'Indoor Furniture' },
-      outdoor:    { ka: 'გარე ავეჯი',         en: 'Outdoor Furniture' },
+      outdoor:    { ka: 'მთავარი ავეჯი',     en: 'Main Furniture' },
       office:     { ka: 'საოფისე ავეჯი',      en: 'Office Furniture' },
-      loft:       { ka: 'ლოფტ კოლექცია',     en: 'Loft Collection' },
+      loft:       { ka: 'ლითონის ნაკეთობა',     en: 'Metal Works' },
       lighting:   { ka: 'განათება',           en: 'Lighting' },
       decoration: { ka: 'დეკორაცია',          en: 'Decoration' }
     };

@@ -460,9 +460,9 @@
           <input type="search" class="search-input" id="productSearch" placeholder="Search products...">
           <select class="filter-select" id="categoryFilter">
             <option value="">All Categories</option>
-            <option value="outdoor">გარე ავეჯი</option>
+            <option value="outdoor">მთავარი ავეჯი</option>
             <option value="office">საოფისე ავეჯი</option>
-            <option value="indoor">ლოფტ კოლექცია</option>
+            <option value="indoor">ლითონის ნაკეთობა</option>
             <option value="lighting">განათება</option>
             <option value="decoration">დეკორაცია</option>
           </select>
@@ -577,9 +577,9 @@
           <label class="form-label">Category *</label>
           <select class="form-select" id="fCategory">
             <option value="">— Select —</option>
-            <option value="outdoor">გარე ავეჯი / Outdoor</option>
+            <option value="outdoor">მთავარი ავეჯი / Outdoor</option>
             <option value="office">საოფისე ავეჯი / Office</option>
-            <option value="indoor">ლოფტ კოლექცია / Indoor</option>
+            <option value="indoor">ლითონის ნაკეთობა / Indoor</option>
             <option value="lighting">განათება / Lighting</option>
             <option value="decoration">დეკორაცია / Decoration</option>
           </select>
@@ -779,7 +779,7 @@ const Admin = (() => {
   function saveProducts(prods) { store(KEYS.products, prods); }
 
   function categoryLabel(v) {
-    return { outdoor: 'გარე ავეჯი', office: 'საოფისე ავეჯი', indoor: 'ლოფტ კოლექცია', lighting: 'განათება', decoration: 'დეკორაცია' }[v] || v;
+    return { outdoor: 'მთავარი ავეჯი', office: 'საოფისე ავეჯი', indoor: 'ლითონის ნაკეთობა', lighting: 'განათება', decoration: 'დეკორაცია' }[v] || v;
   }
 
   function renderProducts(filter = {}) {

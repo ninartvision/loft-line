@@ -13,7 +13,7 @@ const translations = {
     /* Navigation */
     nav_home:            "მთავარი",
     nav_furniture:       "ავეჯი",
-    nav_outdoor:         "გარე ავეჯი",
+    nav_outdoor:         "მთავარი ავეჯი",
     nav_office:          "საოფისე",
     nav_office_full:     "საოფისე ავეჯი",
     nav_loft_collection: "ლითონის ნაკეთობა",
@@ -40,12 +40,12 @@ const translations = {
     cat_section_tag:    "კატეგორიები",
     cat_section_title:  "აირჩიეთ თქვენი სტილი",
     cat_section_desc:   "ხის სითბო და ლითონის სიმტკიცე — ყველა სივრცისთვის",
-    cat_outdoor_title:  "გარე ავეჯი",
-    cat_outdoor_sub:    "ტერასა, ბაღი & აივანი",
+    cat_outdoor_title:  "მთავარი ავეჯი",
+    cat_outdoor_sub:    "მაგიდები, სკამები & კომოდები",
     cat_office_title:   "საოფისე ავეჯი",
     cat_office_sub:     "მაგიდები & სკამები",
     cat_lighting_title: "განათება",
-    cat_lighting_sub:   "ინდუსტრიული ნათურები",
+    cat_lighting_sub: "ინდუსტრიული სანათები",
     cat_decor_title:    "დეკორაცია",
     cat_decor_sub:      "აქსესუარები & სეზონური",
     cat_loft_title:     "ლოფტ სტილი",
@@ -53,15 +53,15 @@ const translations = {
 
     /* Products / collections section (index) */
     prod_section_tag:   "პოპულარული",
-    prod_section_title: "ლითონის ნაკეთობა",
-    prod_section_desc:  "ჩვენი საუკეთესო ხის და ლითონის ნამუშევრები",
+    prod_section_title: "რჩეული პროდუქცია",
+    prod_section_desc:  "ჩვენი საუკეთესო ნამუშევრები",
 
     /* Filter */
     filter_btn:         "ფილტრი",
     filter_title:       "ფილტრები",
     filter_cat_label:   "კატეგორია",
     filter_indoor:      "შიდა ავეჯი",
-    filter_outdoor:     "გარე ავეჯი",
+    filter_outdoor:     "მთავარი ავეჯი",
     filter_office:      "საოფისე",
     filter_style_label: "სტილი",
     filter_loft:        "ლოფტ",
@@ -97,7 +97,7 @@ const translations = {
     about_tag:   "ჩვენ შესახებ",
     about_title: "ხელოსნობა და ხარისხი",
     about_p1:    "Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.",
-    about_p2:    "ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლოფტ სტილის უნიკალურ ნამუშევრებს, ასევე განათებასა და დეკორაციას.",
+    about_p2:    "ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლითონის უნიკალურ ნაკეთობებს, ასევე განათებასა და დეკორაციას.",
     about_btn:   "დაგვიკავშირდით",
 
     /* Newsletter (index) */
@@ -111,7 +111,7 @@ const translations = {
     footer_furniture_h:  "ავეჯი",
     footer_store_h:      "მაღაზია",
     footer_company_h:    "კომპანია",
-    footer_outdoor:      "გარე ავეჯი",
+    footer_outdoor:      "მთავარი ავეჯი",
     footer_office:       "საოფისე ავეჯი",
     footer_loft:         "ლითონის ნაკეთობა",
     footer_wood:         "ხის ავეჯი",
@@ -161,23 +161,23 @@ const translations = {
     pqv_for_decor:     "დეკორისთვის",
 
     /* Page heroes (ll-pages) */
-    lc_hero_label:  "პრემიუმ სერია",
-    lc_hero_title:  "ლოფტ კოლექცია",
+    lc_hero_label:  "ხელნაკეთი ლითონი",
+    lc_hero_title:  "ლითონის ნაკეთობა",
     lc_count:       "6 პროდუქტი",
 
-    mf_hero_label:  "ლოფტ სტილი",
+    mf_hero_label:  "ხელნაკეთი ლოფტ ავეჯი",
     mf_hero_title:  "მთავარი ავეჯი",
     mf_count:       "8 პროდუქტი",
 
-    of_hero_label:  "ლოფტ სტილი",
+    of_hero_label:  "ერგონომიკული დიზაინი",
     of_hero_title:  "საოფისე ავეჯი",
     of_count:       "6 პროდუქტი",
 
-    lt_hero_label:  "ინდუსტრიული სტილი",
+    lt_hero_label:  "ხელნაკეთი სანათები",
     lt_hero_title:  "განათება",
     lt_count:       "6 პროდუქტი",
 
-    dc_hero_label:  "ინდუსტრიული სტილი",
+    dc_hero_label:  "ხელნაკეთი დეკორი",
     dc_hero_title:  "დეკორაცია",
     dc_count:       "6 პროდუქტი",
   },
@@ -192,7 +192,7 @@ const translations = {
     /* Navigation */
     nav_home:            "Home",
     nav_furniture:       "Furniture",
-    nav_outdoor:         "Outdoor Furniture",
+    nav_outdoor:         "Main Furniture",
     nav_office:          "Office",
     nav_office_full:     "Office Furniture",
     nav_loft_collection: "Metal Works",
@@ -219,8 +219,8 @@ const translations = {
     cat_section_tag:    "Categories",
     cat_section_title:  "Choose Your Style",
     cat_section_desc:   "Wood warmth and metal strength — for every space",
-    cat_outdoor_title:  "Outdoor Furniture",
-    cat_outdoor_sub:    "Terrace, Garden & Balcony",
+    cat_outdoor_title:  "Main Furniture",
+    cat_outdoor_sub:    "Tables, Chairs & Dressers",
     cat_office_title:   "Office Furniture",
     cat_office_sub:     "Desks & Chairs",
     cat_lighting_title: "Lighting",
@@ -232,15 +232,15 @@ const translations = {
 
     /* Products / collections section (index) */
     prod_section_tag:   "Popular",
-    prod_section_title: "Metal Works",
-    prod_section_desc:  "Our finest wood and metal creations",
+    prod_section_title: "Featured Products",
+    prod_section_desc:  "Our finest creations",
 
     /* Filter */
     filter_btn:         "Filter",
     filter_title:       "Filters",
     filter_cat_label:   "Category",
     filter_indoor:      "Indoor Furniture",
-    filter_outdoor:     "Outdoor Furniture",
+    filter_outdoor:     "Main Furniture",
     filter_office:      "Office",
     filter_style_label: "Style",
     filter_loft:        "Loft",
@@ -276,7 +276,7 @@ const translations = {
     about_tag:   "About Us",
     about_title: "Craftsmanship & Quality",
     about_p1:    "At Loft Line, we create furniture that combines the natural warmth of wood with the industrial character of metal. Every piece is crafted by hand by Georgian artisans.",
-    about_p2:    "Our collections include outdoor furniture, office furniture and unique loft-style pieces. Soon you'll also be able to purchase lighting, decoration and seasonal products.",
+    about_p2:    "Our collections include main furniture, office furniture, unique metalwork, as well as lighting and decoration.",
     about_btn:   "Contact Us",
 
     /* Newsletter (index) */
@@ -290,7 +290,7 @@ const translations = {
     footer_furniture_h:  "Furniture",
     footer_store_h:      "Store",
     footer_company_h:    "Company",
-    footer_outdoor:      "Outdoor Furniture",
+    footer_outdoor:      "Main Furniture",
     footer_office:       "Office Furniture",
     footer_loft:         "Metal Works",
     footer_wood:         "Wood Furniture",
@@ -340,23 +340,23 @@ const translations = {
     pqv_for_decor:     "For Decoration",
 
     /* Page heroes (ll-pages) */
-    lc_hero_label:  "Premium Series",
-    lc_hero_title:  "Loft Collection",
+    lc_hero_label:  "Handcrafted Metalwork",
+    lc_hero_title:  "Metal Works",
     lc_count:       "6 Products",
 
-    mf_hero_label:  "Loft Style",
+    mf_hero_label:  "Handcrafted Loft Furniture",
     mf_hero_title:  "Main Furniture",
     mf_count:       "8 Products",
 
-    of_hero_label:  "Loft Style",
+    of_hero_label:  "Ergonomic Design",
     of_hero_title:  "Office Furniture",
     of_count:       "6 Products",
 
-    lt_hero_label:  "Industrial Style",
+    lt_hero_label:  "Handcrafted Lighting",
     lt_hero_title:  "Lighting",
     lt_count:       "6 Products",
 
-    dc_hero_label:  "Industrial Style",
+    dc_hero_label:  "Handcrafted Decor",
     dc_hero_title:  "Decoration",
     dc_count:       "6 Products",
   }

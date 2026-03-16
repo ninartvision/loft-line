@@ -67,6 +67,107 @@
   <main>
     <section class="ll-catalog">
       <div class="container">
+        <!-- ── Category icon filter ── -->
+        <div class="ll-iconcat" role="group" aria-label="კატეგორიის ფილტრი">
+
+          <button class="ll-iconcat-btn active" data-filter="all" aria-pressed="true">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">ყველა</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-magida" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="10" width="20" height="2.5" rx="1"/>
+                <line x1="5" y1="12.5" x2="5" y2="20"/>
+                <line x1="19" y1="12.5" x2="19" y2="20"/>
+                <rect x="13" y="4" width="7" height="6" rx="1"/>
+                <line x1="16.5" y1="10" x2="16.5" y2="12.5"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">ოფისის მაგიდები</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-skami" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 3 C9 3 8 7 8 10"/>
+                <path d="M8 10 Q4 10 4 13"/>
+                <line x1="4" y1="13" x2="20" y2="13"/>
+                <line x1="16" y1="13" x2="16" y2="10"/>
+                <path d="M16 10 Q15 6 15 3"/>
+                <line x1="7" y1="13" x2="5" y2="20"/>
+                <line x1="17" y1="13" x2="19" y2="20"/>
+                <line x1="5" y1="20" x2="19" y2="20"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">საოფისე სკამები</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-shexvedra" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <ellipse cx="12" cy="12" rx="9" ry="5"/>
+                <line x1="3" y1="12" x2="3" y2="17"/>
+                <line x1="21" y1="12" x2="21" y2="17"/>
+                <path d="M3 17 Q3 20 12 20 Q21 20 21 17"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">შეხვედრების მაგიდები</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-karada" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="1.5"/>
+                <line x1="5" y1="9" x2="19" y2="9"/>
+                <line x1="5" y1="16" x2="19" y2="16"/>
+                <circle cx="12" cy="5.5" r="0.8" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="12.5" r="0.8" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="19" r="0.8" fill="currentColor" stroke="none"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">საოფისე კარადები</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-taro" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="4" x2="3" y2="22"/>
+                <line x1="21" y1="4" x2="21" y2="22"/>
+                <line x1="3" y1="4" x2="21" y2="4"/>
+                <line x1="3" y1="11" x2="21" y2="11"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="22" x2="21" y2="22"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">თაროები</span>
+          </button>
+
+          <button class="ll-iconcat-btn" data-filter="of-failkab" aria-pressed="false">
+            <span class="ll-iconcat-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="4" y="2" width="16" height="20" rx="1.5"/>
+                <line x1="4" y1="7.5" x2="20" y2="7.5"/>
+                <line x1="4" y1="13" x2="20" y2="13"/>
+                <line x1="4" y1="18.5" x2="20" y2="18.5"/>
+                <line x1="10" y1="5" x2="14" y2="5"/>
+                <line x1="10" y1="10.3" x2="14" y2="10.3"/>
+                <line x1="10" y1="15.8" x2="14" y2="15.8"/>
+              </svg>
+            </span>
+            <span class="ll-iconcat-label">დოკუმენტების კარადა</span>
+          </button>
+
+        </div>
+
         <div class="ll-catalog-bar">
           <span class="ll-catalog-count" id="ll-catalog-count" data-i18n="of_count">0 პროდუქტი</span>
           <select class="ll-sort-select" aria-label="დალაგება">
@@ -79,7 +180,7 @@
 
         <div class="ll-product-grid ll-product-grid-3" id="sanity-product-grid" data-animate-stagger>
 
-          <article class="ll-product-card">
+          <article class="ll-product-card" data-category="of-magida">
             <div class="ll-prod-img-wrap">
               <span class="ll-badge ll-badge-new">ახალი</span>
               <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80" alt="L-ფორმის სამუშაო მაგიდა" loading="lazy">
@@ -101,11 +202,6 @@
   </main>
 
   <div id="site-footer"></div>
-
-  <a href="https://wa.me/995579388833?text=გამარჯობა! მინდა საოფისე ავეჯის შეკვეთა." target="_blank" rel="noopener" class="ll-float-wa" aria-label="WhatsApp">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.975 0C5.361 0 0 5.359 0 11.975c0 2.094.549 4.062 1.508 5.773L.055 23.455a.477.477 0 0 0 .574.603l5.898-1.543C8.163 23.43 10.047 24 11.975 24 18.589 24 24 18.641 24 12.025 24 5.41 18.589 0 11.975 0zm0 21.897c-1.84 0-3.596-.502-5.109-1.451l-.365-.217-3.783.99 1.008-3.666-.239-.378A9.916 9.916 0 0 1 2.079 12.025c0-5.463 4.44-9.901 9.896-9.901 5.456 0 9.896 4.438 9.896 9.901 0 5.462-4.44 9.872-9.896 9.872z"/></svg>
-    <span>WhatsApp</span>
-  </a>
 
   <!-- ═══ Product Quick View Modal ═══ -->
   <div class="pqv-overlay" id="pqvOverlay" aria-hidden="true" role="presentation"></div>
@@ -178,5 +274,6 @@
   <script src="js/quick-view.js"></script>
   <script src="js/cms-loader.js" data-page="office-furniture"></script>
   <script src="js/admin-access.js" defer></script>
+  <script src="js/subcat-filter.js"></script>
 </body>
 </html>

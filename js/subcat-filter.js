@@ -11,8 +11,8 @@
   'use strict';
 
   var GRID_ID   = 'sanity-product-grid';
-  var BAR_CLASS = 'll-subcat-bar';
-  var BTN_CLASS = 'll-subcat-btn';
+  var BAR_CLASS = 'll-iconcat';
+  var BTN_CLASS = 'll-iconcat-btn';
   var EMPTY_ID  = 'll-filter-empty';
 
   var currentFilter = 'all';
@@ -57,11 +57,13 @@
       var btn = e.target.closest('.' + BTN_CLASS);
       if (!btn) return;
 
-      /* Update active state */
+      /* Update active state + ARIA */
       bar.querySelectorAll('.' + BTN_CLASS).forEach(function (b) {
         b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
       });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
 
       currentFilter = btn.dataset.filter || 'all';
       applyFilter(grid, currentFilter);
