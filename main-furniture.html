@@ -66,6 +66,17 @@
   <main>
     <section class="ll-catalog">
       <div class="container">
+        <!-- ── Subcategory filter ── -->
+        <div class="ll-subcat-bar" role="group" aria-label="კატეგორიის ფილტრი">
+          <button class="ll-subcat-btn active" data-filter="all">ყველა</button>
+          <button class="ll-subcat-btn" data-filter="magida">მაგიდა</button>
+          <button class="ll-subcat-btn" data-filter="skami">სკამი</button>
+          <button class="ll-subcat-btn" data-filter="karada">კარადა</button>
+          <button class="ll-subcat-btn" data-filter="taro">თარო</button>
+          <button class="ll-subcat-btn" data-filter="fexsacmlis-karada">ფეხსაცმლის კარადა</button>
+          <button class="ll-subcat-btn" data-filter="komodi">კომოდი</button>
+        </div>
+
         <div class="ll-catalog-bar">
           <span class="ll-catalog-count" id="ll-catalog-count" data-i18n="mf_count">0 პროდუქტი</span>
           <select class="ll-sort-select" aria-label="დალაგება">
@@ -78,7 +89,7 @@
 
         <div class="ll-product-grid ll-product-grid-3" id="sanity-product-grid" data-animate-stagger>
 
-          <article class="ll-product-card">
+          <article class="ll-product-card" data-category="magida">
             <div class="ll-prod-img-wrap">
               <span class="ll-badge ll-badge-new">ახალი</span>
               <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80" alt="ინდუსტრიული სასადილო მაგიდა" loading="lazy">
@@ -177,5 +188,6 @@
   <script src="js/quick-view.js"></script>
   <script src="js/cms-loader.js" data-page="main-furniture"></script>
   <script src="js/admin-access.js" defer></script>
+  <script src="js/subcat-filter.js"></script>
 </body>
 </html>

@@ -35,7 +35,7 @@
         <a href="index.html" data-i18n="nav_home">მთავარი</a>
         <a href="main-furniture.html" data-i18n="nav_main_furniture">მთავარი ავეჯი</a>
         <a href="office-furniture.html" data-i18n="nav_office_full">საოფისე ავეჯი</a>
-        <a href="loft-collection.html" data-i18n="nav_loft_collection">ლოფტ კოლექცია</a>
+        <a href="loft-collection.html" data-i18n="nav_loft_collection">ლითონის ნაკეთობა</a>
         <a href="lighting.html" data-i18n="nav_lighting">განათება</a>
         <a href="decoration.html" data-i18n="nav_decoration">დეკორაცია</a>
         <a href="index.html#contact-form" data-i18n="nav_contact">კონტაქტი</a>
@@ -72,7 +72,7 @@
     <a href="index.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span data-i18n="nav_home">მთავარი</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
     <a href="main-furniture.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.059 7H3.941A.94.94 0 003 7.94v2.12C3 10.58 3.42 11 3.941 11H20.06A.94.94 0 0021 10.059V7.94A.94.94 0 0020.059 7z"/><path d="M5 11v6m14-6v6M3 17h18"/></svg><span data-i18n="nav_main_furniture">მთავარი ავეჯი</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
     <a href="office-furniture.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span data-i18n="nav_office_full">საოფისე ავეჯი</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
-    <a href="loft-collection.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span data-i18n="nav_loft_collection">ლოფტ კოლექცია</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a href="loft-collection.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span data-i18n="nav_loft_collection">ლითონის ნაკეთობა</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
     <a href="lighting.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/></svg><span data-i18n="nav_lighting">განათება</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
     <a href="decoration.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22c4.97 0 9-3.134 9-7s-4.03-7-9-7-9 3.134-9 7 4.03 7 9 7z"/><path d="M12 8V2m0 0L9 5m3-3 3 3"/></svg><span data-i18n="nav_decoration">დეკორაცია</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
   </div>
@@ -105,7 +105,7 @@
         <ul>
           <li><a href="main-furniture.html" data-i18n="nav_main_furniture">მთავარი ავეჯი</a></li>
           <li><a href="office-furniture.html" data-i18n="nav_office_full">საოფისე ავეჯი</a></li>
-          <li><a href="loft-collection.html" data-i18n="nav_loft_collection">ლოფტ კოლექცია</a></li>
+          <li><a href="loft-collection.html" data-i18n="nav_loft_collection">ლითონის ნაკეთობა</a></li>
           <li><a href="lighting.html" data-i18n="nav_lighting">განათება</a></li>
           <li><a href="decoration.html" data-i18n="nav_decoration">დეკორაცია</a></li>
         </ul>

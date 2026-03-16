@@ -1179,6 +1179,63 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   gap: 20px;
 }
 
+/* ── SUBCATEGORY FILTER BAR ── */
+.ll-subcat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.ll-subcat-btn {
+  appearance: none;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  color: var(--text-sub);
+  font-family: var(--f-b);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 7px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+  white-space: nowrap;
+}
+.ll-subcat-btn:hover {
+  background: var(--bg-card-h);
+  border-color: var(--bdr-em);
+  color: var(--text);
+}
+.ll-subcat-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold-bdr);
+  color: var(--gold);
+}
+
+/* hidden product cards during filter */
+.ll-product-card[hidden] { display: none !important; }
+
+/* empty-state message */
+.ll-filter-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 0;
+  color: var(--text-ghost);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .ll-subcat-bar {
+    gap: 6px;
+  }
+  .ll-subcat-btn {
+    font-size: 12px;
+    padding: 6px 13px;
+  }
+}
+
 /* ── FLOATING WHATSAPP ── */
 .ll-float-wa {
   position: fixed;

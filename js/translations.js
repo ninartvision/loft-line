@@ -16,7 +16,7 @@ const translations = {
     nav_outdoor:         "გარე ავეჯი",
     nav_office:          "საოფისე",
     nav_office_full:     "საოფისე ავეჯი",
-    nav_loft_collection: "ლოფტ კოლექცია",
+    nav_loft_collection: "ლითონის ნაკეთობა",
     nav_main_furniture:  "მთავარი ავეჯი",
     nav_lighting:        "განათება",
     nav_decoration:      "დეკორაცია",
@@ -53,7 +53,7 @@ const translations = {
 
     /* Products / collections section (index) */
     prod_section_tag:   "პოპულარული",
-    prod_section_title: "ლოფტ კოლექცია",
+    prod_section_title: "ლითონის ნაკეთობა",
     prod_section_desc:  "ჩვენი საუკეთესო ხის და ლითონის ნამუშევრები",
 
     /* Filter */
@@ -113,7 +113,7 @@ const translations = {
     footer_company_h:    "კომპანია",
     footer_outdoor:      "გარე ავეჯი",
     footer_office:       "საოფისე ავეჯი",
-    footer_loft:         "ლოფტ კოლექცია",
+    footer_loft:         "ლითონის ნაკეთობა",
     footer_wood:         "ხის ავეჯი",
     footer_metal:        "ლითონის ავეჯი",
     footer_lighting:     "განათება",
@@ -195,7 +195,7 @@ const translations = {
     nav_outdoor:         "Outdoor Furniture",
     nav_office:          "Office",
     nav_office_full:     "Office Furniture",
-    nav_loft_collection: "Loft Collection",
+    nav_loft_collection: "Metal Works",
     nav_main_furniture:  "Main Furniture",
     nav_lighting:        "Lighting",
     nav_decoration:      "Decoration",
@@ -232,7 +232,7 @@ const translations = {
 
     /* Products / collections section (index) */
     prod_section_tag:   "Popular",
-    prod_section_title: "Loft Collection",
+    prod_section_title: "Metal Works",
     prod_section_desc:  "Our finest wood and metal creations",
 
     /* Filter */
@@ -292,7 +292,7 @@ const translations = {
     footer_company_h:    "Company",
     footer_outdoor:      "Outdoor Furniture",
     footer_office:       "Office Furniture",
-    footer_loft:         "Loft Collection",
+    footer_loft:         "Metal Works",
     footer_wood:         "Wood Furniture",
     footer_metal:        "Metal Furniture",
     footer_lighting:     "Lighting",
