@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;600&family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="popular-products.css">
+  <link rel="stylesheet" href="css/loft-line.css">
 </head>
 <body style="background: #f5f5f5; margin:0; font-family: 'Inter', sans-serif;">
   <section class="popular-products-section">
@@ -15,11 +15,54 @@
     <div class="slider-container">
       <button class="slider-arrow left" aria-label="Previous">&#8592;</button>
       <div class="slider-track">
-        <!-- Product cards will be injected here by JS -->
+        <article class="ll-card">
+          <div class="ll-card-img-wrap">
+            <img src="images/out.png" alt="ინდუსტრიული ხის მაგიდა" loading="lazy" width="400" height="400">
+          </div>
+          <div class="ll-card-body">
+            <p class="ll-card-cat">ავეჯი</p>
+            <h3 class="ll-card-name">ინდუსტრიული ხის მაგიდა</h3>
+            <p class="ll-card-price">₾160</p>
+            <a href="main-furniture.html" class="ll-btn-sm">ნახვა</a>
+          </div>
+        </article>
+        <article class="ll-card">
+          <div class="ll-card-img-wrap">
+            <img src="images/cover2.webp" alt="საოფისე სკამი" loading="lazy" width="400" height="400">
+          </div>
+          <div class="ll-card-body">
+            <p class="ll-card-cat">საოფისე ავეჯი</p>
+            <h3 class="ll-card-name">ერგონომიული სამუშაო მაგიდა</h3>
+            <p class="ll-card-price">₾340</p>
+            <a href="office-furniture.html" class="ll-btn-sm">ნახვა</a>
+          </div>
+        </article>
+        <article class="ll-card">
+          <div class="ll-card-img-wrap">
+            <img src="images/cover4.webp" alt="ინდუსტრიული ფანარი" loading="lazy" width="400" height="400">
+          </div>
+          <div class="ll-card-body">
+            <p class="ll-card-cat">განათება</p>
+            <h3 class="ll-card-name">ინდუსტრიული ედისონის ფანარი</h3>
+            <p class="ll-card-price">₾85</p>
+            <a href="lighting.html" class="ll-btn-sm">ნახვა</a>
+          </div>
+        </article>
+        <article class="ll-card">
+          <div class="ll-card-img-wrap">
+            <img src="images/cover5.webp" alt="დეკორაციის ელემენტი" loading="lazy" width="400" height="400">
+          </div>
+          <div class="ll-card-body">
+            <p class="ll-card-cat">დეკორი</p>
+            <h3 class="ll-card-name">ლოფტ სტილის კამინი</h3>
+            <p class="ll-card-price">₾220</p>
+            <a href="decoration.html" class="ll-btn-sm">ნახვა</a>
+          </div>
+        </article>
       </div>
       <button class="slider-arrow right" aria-label="Next">&#8594;</button>
     </div>
   </section>
-  <script src="popular-products.js"></script>
+  <script src="js/slider.js"></script>
 </body>
 </html>
