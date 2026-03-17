@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
@@ -32,39 +31,4 @@
 <priority>0.70</priority>
 </url>
 
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-<url>
-<loc>https://loftline.store/</loc>
-<priority>1.00</priority>
-</url>
-
-<url>
-<loc>https://loftline.store/main-furniture.html</loc>
-<priority>0.80</priority>
-</url>
-
-<url>
-<loc>https://loftline.store/office-furniture.html</loc>
-<priority>0.80</priority>
-</url>
-
-<url>
-<loc>https://loftline.store/loft-collection.html</loc>
-<priority>0.80</priority>
-</url>
-
-<url>
-<loc>https://loftline.store/lighting.html</loc>
-<priority>0.70</priority>
-</url>
-
-<url>
-<loc>https://loftline.store/decoration.html</loc>
-<priority>0.70</priority>
-</url>
-
->>>>>>> 3ed041ba99caf768bf631741d2f0268115154b36
 </urlset>
