@@ -6,4 +6,4 @@ export default defineCliConfig({
     dataset: 'production'
   },
   studioHost: 'loftline'
-})s
+})
