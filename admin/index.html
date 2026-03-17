@@ -1,153 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loft Line – Admin Panel</title>
-  <!-- Prevent search engine indexing of the admin panel -->
+  <title>Loft Line – Admin</title>
   <meta name="robots" content="noindex, nofollow">
-  <!-- Netlify Identity Widget — MUST load before Decap CMS -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- Instant redirect to Sanity Studio (hosted, no server required) -->
+  <meta http-equiv="refresh" content="0; url=https://777f2m13.sanity.studio/">
   <style>
-    /* ── Brand tokens ─────────────────────────────────────── */
-    :root {
-      --gold:   #c8a879;
-      --dark:   #0e0e0e;
-      --dark2:  #161616;
-      --dark3:  #1e1e1e;
-      --border: #2a2a2a;
-      --text:   #e0e0e0;
-      --muted:  #888888;
-    }
-
-    /* ── Loading splash ───────────────────────────────────── */
-    #ll-splash {
-      position: fixed;
-      inset: 0;
-      background: var(--dark);
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0e0e0e;
+      color: #e0e0e0;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 100000;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      transition: opacity 0.5s ease;
-    }
-    #ll-splash.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .ll-splash-inner {
+      min-height: 100vh;
       text-align: center;
     }
-    .ll-mark {
-      width: 64px;
-      height: 64px;
-      background: var(--gold);
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--dark);
-      letter-spacing: -1px;
-      margin-bottom: 16px;
-    }
-    .ll-brand-name {
-      color: #fff;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .ll-brand-name em {
-      color: var(--gold);
-      font-style: normal;
-    }
-    .ll-brand-sub {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 48px;
-    }
-    .ll-spinner {
-      width: 36px;
-      height: 36px;
-      border: 2px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: ll-spin 0.75s linear infinite;
-      margin: 0 auto 24px;
-    }
-    @keyframes ll-spin { to { transform: rotate(360deg); } }
-    .ll-hint {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
-
-    /* ── Decap CMS accent colour overrides ───────────────── */
-    /* Applied globally so the CMS UI matches the brand.    */
-    :root {
-      --color: var(--gold) !important;
-    }
+    .mark { color: #c8a879; font-size: 14px; letter-spacing: 2px; margin-bottom: 8px; }
+    .sub  { color: #666; font-size: 12px; }
+    a     { color: #c8a879; }
   </style>
 </head>
 <body>
-
-  <!-- Branded loading splash — auto-dismissed when CMS mounts -->
-  <div id="ll-splash">
-    <div class="ll-splash-inner">
-      <div class="ll-mark">LL</div>
-      <div class="ll-brand-name">Loft <em>Line</em></div>
-      <div class="ll-brand-sub">Admin Panel</div>
-      <div class="ll-spinner"></div>
-      <div class="ll-hint">Loading secure dashboard…</div>
+  <div>
+    <div class="mark">LOFT LINE</div>
+    <div class="sub">Redirecting to Sanity Studio&hellip;<br>
+      <a href="https://777f2m13.sanity.studio/">Click here if not redirected</a>
     </div>
   </div>
-
-  <!-- Decap CMS — renders the full admin UI + handles auth -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-  <script>
-    (function () {
-      'use strict';
-
-      var splash = document.getElementById('ll-splash');
-
-      /* ── Dismiss splash once CMS finishes mounting ───── */
-      function hideSplash() {
-        if (!splash) return;
-        splash.classList.add('fade-out');
-        setTimeout(function () { splash && splash.remove(); }, 600);
-        splash = null;
-      }
-
-      // Decap CMS fires a custom event when its root is rendered
-      document.addEventListener('decap-cms:rendered', hideSplash);
-
-      // Fallback: hide after 5 s regardless (handles slow connections)
-      setTimeout(hideSplash, 5000);
-
-      /* ── Netlify Identity: redirect to /admin/ after login ─ */
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', function (user) {
-          if (!user) {
-            window.netlifyIdentity.on('login', function () {
-              document.location.href = '/admin/';
-            });
-          }
-        });
-      }
-
-      /* ── Session-expired guard ───────────────────────── */
-      // If the page is loaded with a stale token, Decap CMS
-      // will handle the logout itself — no extra action needed.
-    }());
-  </script>
-
+  <script>window.location.replace('https://777f2m13.sanity.studio/');</script>
 </body>
 </html>
