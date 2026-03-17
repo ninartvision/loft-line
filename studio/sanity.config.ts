@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'Loft Line Studio',
 
-  projectId: '777f2m13',
+  projectId: '4n3g4zv5',
   dataset: 'production',
 
   plugins: [

@@ -1,0 +1,780 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name_ka",
+        "type": "string",
+        "title": "პროდუქტის სახელი (KA)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name_en",
+        "type": "string",
+        "title": "Product Name (EN)"
+      },
+      {
+        "options": {
+          "source": "name_en",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL ID)"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Indoor Furniture / შიდა ავეჯი",
+              "value": "indoor"
+            },
+            {
+              "title": "Outdoor Furniture / გარე ავეჯი",
+              "value": "outdoor"
+            },
+            {
+              "title": "Office Furniture / საოფისე",
+              "value": "office"
+            },
+            {
+              "title": "Loft Collection / ლოფტ კოლექცია",
+              "value": "loft"
+            },
+            {
+              "title": "Lighting / განათება",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration / დეკორაცია",
+              "value": "decoration"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "indoor",
+                  "outdoor",
+                  "office",
+                  "loft",
+                  "lighting",
+                  "decoration"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "category",
+        "type": "string",
+        "title": "Category / კატეგორია"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "ლოფტი",
+              "value": "loft"
+            },
+            {
+              "title": "ინდუსტრიული",
+              "value": "industrial"
+            },
+            {
+              "title": "თანამედროვე",
+              "value": "modern"
+            }
+          ]
+        },
+        "name": "style",
+        "type": "string",
+        "title": "Style / სტილი"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "price",
+        "type": "number",
+        "title": "Price ₾ / ფასი"
+      },
+      {
+        "initialValue": 0,
+        "name": "old_price",
+        "type": "number",
+        "title": "Old Price ₾ (0 = none) / ძველი ფასი"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "None"
+            },
+            {
+              "title": "ახალი / New",
+              "value": "new"
+            },
+            {
+              "title": "ფასდაკლება / Sale",
+              "value": "sale"
+            },
+            {
+              "title": "Best Seller",
+              "value": "best"
+            }
+          ]
+        },
+        "name": "badge",
+        "type": "string",
+        "title": "Badge / ბეჯი"
+      },
+      {
+        "hidden": "conditional",
+        "name": "discount_pct",
+        "type": "number",
+        "title": "Discount % / ფასდაკლება %"
+      },
+      {
+        "rows": 3,
+        "name": "description_ka",
+        "type": "text",
+        "title": "Description (KA) / აღწერა"
+      },
+      {
+        "rows": 3,
+        "name": "description_en",
+        "type": "text",
+        "title": "Description (EN)"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "materials_ka",
+        "type": "array",
+        "title": "Materials (KA) / მასალები"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "materials_en",
+        "type": "array",
+        "title": "Materials (EN)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Main Image / მთავარი სურათი"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array",
+        "title": "Gallery Images / გალერეა"
+      },
+      {
+        "initialValue": true,
+        "name": "available",
+        "type": "boolean",
+        "title": "Available / ხელმისაწვდომია"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean",
+        "title": "Featured on Homepage / მთავარ გვერდზე"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Homepage / მთავარი",
+              "value": "index"
+            },
+            {
+              "title": "Main Furniture / მთავარი ავეჯი",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture / საოფისე ავეჯი",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection / ლოფტ კოლექცია",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting / განათება",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration / დეკორაცია",
+              "value": "decoration"
+            }
+          ]
+        },
+        "name": "page",
+        "type": "string",
+        "title": "Page / გვერდი"
+      }
+    ],
+    "name": "product",
+    "type": "document",
+    "title": "Product / პროდუქტი"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "title_ka",
+        "type": "string",
+        "title": "სათაური (KA)"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 80
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 2,
+        "name": "description",
+        "type": "text"
+      }
+    ],
+    "name": "category",
+    "type": "document",
+    "title": "Category / კატეგორია"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": false
+        },
+        "fields": [
+          {
+            "name": "tag_ka",
+            "type": "string",
+            "title": "Tag (KA)"
+          },
+          {
+            "name": "tag_en",
+            "type": "string",
+            "title": "Tag (EN)"
+          },
+          {
+            "name": "title_ka",
+            "type": "string",
+            "title": "Hero Title (KA)"
+          },
+          {
+            "name": "title_en",
+            "type": "string",
+            "title": "Hero Title (EN)"
+          },
+          {
+            "name": "desc_ka",
+            "type": "string",
+            "title": "Description (KA)"
+          },
+          {
+            "name": "desc_en",
+            "type": "string",
+            "title": "Description (EN)"
+          },
+          {
+            "name": "btn1_ka",
+            "type": "string",
+            "title": "Button 1 (KA)"
+          },
+          {
+            "name": "btn1_en",
+            "type": "string",
+            "title": "Button 1 (EN)"
+          },
+          {
+            "name": "btn2_ka",
+            "type": "string",
+            "title": "Button 2 (KA)"
+          },
+          {
+            "name": "btn2_en",
+            "type": "string",
+            "title": "Button 2 (EN)"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "name": "bg_image",
+            "type": "image",
+            "title": "Background Image"
+          }
+        ],
+        "name": "heroSection",
+        "type": "object",
+        "title": "① Hero Section"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": false
+        },
+        "fields": [
+          {
+            "initialValue": true,
+            "name": "visible",
+            "type": "boolean",
+            "title": "Show bar"
+          },
+          {
+            "name": "text1_ka",
+            "type": "string",
+            "title": "Text 1 (KA)"
+          },
+          {
+            "name": "text1_en",
+            "type": "string",
+            "title": "Text 1 (EN)"
+          },
+          {
+            "name": "text2_ka",
+            "type": "string",
+            "title": "Text 2 (KA)"
+          },
+          {
+            "name": "text2_en",
+            "type": "string",
+            "title": "Text 2 (EN)"
+          }
+        ],
+        "name": "announcementSection",
+        "type": "object",
+        "title": "② Announcement Bar"
+      }
+    ],
+    "name": "homepage",
+    "type": "document",
+    "title": "Homepage / მთავარი გვერდი"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Main Furniture / მთავარი ავეჯი",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture / საოფისე ავეჯი",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection / ლოფტ კოლექცია",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting / განათება",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration / დეკორაცია",
+              "value": "decoration"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "main-furniture",
+                  "office-furniture",
+                  "loft-collection",
+                  "lighting",
+                  "decoration"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "pageKey",
+        "type": "string",
+        "title": "Page"
+      },
+      {
+        "name": "hero_title_ka",
+        "type": "string",
+        "title": "Hero Title (KA)"
+      },
+      {
+        "name": "hero_title_en",
+        "type": "string",
+        "title": "Hero Title (EN)"
+      },
+      {
+        "rows": 2,
+        "name": "hero_sub_ka",
+        "type": "text",
+        "title": "Hero Subtitle (KA)"
+      },
+      {
+        "rows": 2,
+        "name": "hero_sub_en",
+        "type": "text",
+        "title": "Hero Subtitle (EN)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "hero_image",
+        "type": "image",
+        "title": "Hero Background Image"
+      },
+      {
+        "name": "seo_title",
+        "type": "string",
+        "title": "SEO Meta Title"
+      },
+      {
+        "rows": 2,
+        "name": "seo_desc",
+        "type": "text",
+        "title": "SEO Meta Description"
+      }
+    ],
+    "name": "pageContent",
+    "type": "document",
+    "title": "Category Page Content / კატეგორიის გვერდი"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Gallery Title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 80
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "layout": "grid"
+        },
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              },
+              {
+                "name": "caption",
+                "type": "string"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array",
+        "title": "Images / სურათები"
+      }
+    ],
+    "name": "gallery",
+    "type": "document",
+    "title": "Gallery / გალერეა"
+  },
+  {
+    "fields": [
+      {
+        "description": "Fallback title used when a page has no specific title",
+        "name": "defaultMetaTitle",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "defaultMetaDescription",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Image used when sharing the site on social media (1200×630 px recommended)",
+        "name": "ogImage",
+        "type": "image",
+        "title": "Default OG Image"
+      },
+      {
+        "description": "e.g. @loftlinestore",
+        "name": "twitterHandle",
+        "type": "string",
+        "title": "Twitter / X Handle"
+      },
+      {
+        "name": "googleVerification",
+        "type": "string",
+        "title": "Google Search Console Verification"
+      }
+    ],
+    "name": "seoSettings",
+    "type": "document",
+    "title": "SEO Settings"
+  },
+  {
+    "fields": [
+      {
+        "name": "site_name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "site_url",
+        "type": "url",
+        "title": "Site URL"
+      },
+      {
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "facebook",
+        "type": "url",
+        "title": "Facebook URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "instagram",
+        "type": "url",
+        "title": "Instagram URL"
+      },
+      {
+        "initialValue": 200,
+        "name": "free_delivery_threshold",
+        "type": "number",
+        "title": "Free Delivery Threshold ₾"
+      }
+    ],
+    "name": "globalSettings",
+    "type": "document",
+    "title": "Global Settings / გლობალური პარამეტრები"
+  }
+]
