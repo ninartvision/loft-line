@@ -1414,3 +1414,38 @@ body.menu-open { overflow: hidden; }
 .text-gold  { color: var(--gold); }
 .text-muted { color: var(--text-sub); }
 .mt-a       { margin-top: auto; }
+
+/* ============================================================
+   Skeleton loading cards (System A — dark theme)
+   Displayed immediately while Sanity data is in flight.
+   ============================================================ */
+@keyframes ll-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.ll-skel {
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-raised) 25%,
+    var(--bg-card-h) 50%,
+    var(--bg-raised) 75%
+  );
+  background-size: 600px 100%;
+  animation: ll-shimmer 1.4s infinite linear;
+}
+
+.ll-product-card--skeleton {
+  pointer-events: none;
+  cursor: default;
+}
+.ll-product-card--skeleton .ll-prod-img-wrap {
+  background: transparent;
+  padding: 0;
+}
+.ll-skel-img   { width: 100%; aspect-ratio: 1 / 1; border-radius: 0; }
+.ll-skel-cat   { height: 10px; width: 38%; }
+.ll-skel-name  { height: 18px; width: 78%; margin-top: 4px; }
+.ll-skel-mat   { height: 12px; width: 58%; }
+.ll-skel-price { height: 22px; width: 32%; margin-top: 8px; }

@@ -418,3 +418,95 @@
   .newsletter-section { padding: 48px 0; }
   .about-grid { gap: 32px; }
   .about-content p { font-size: 14px; line-height: 1.7; }
+
+
+/* ============================================================
+   Skeleton loading cards (System B  light theme / index.html)
+   Displayed immediately while Sanity data is in flight.
+   ============================================================ */
+@keyframes skel-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skel-block {
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-cream) 25%,
+    var(--color-gray-lighter) 50%,
+    var(--color-cream) 75%
+  );
+  background-size: 600px 100%;
+  animation: skel-shimmer 1.4s infinite linear;
+}
+
+.product-card--skeleton {
+  pointer-events: none;
+  cursor: default;
+  box-shadow: none;
+}
+.product-card--skeleton:hover {
+  transform: none;
+  box-shadow: none;
+}
+.product-card--skeleton .product-image-wrap {
+  background: var(--color-cream);
+  padding: 0;
+}
+.skel-img   { width: 100%; aspect-ratio: 4 / 3; border-radius: 0; }
+.skel-cat   { height: 10px; width: 36%; margin-bottom: 6px; }
+.skel-name  { height: 18px; width: 76%; margin-bottom: 8px; }
+.skel-desc  { height: 12px; width: 90%; margin-bottom: 4px; }
+.skel-price { height: 22px; width: 30%; margin-top: 10px; }
+.product-card--skeleton .product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ============================================================
+   Skeleton loading cards (System B  light theme / index.html)
+   Displayed immediately while Sanity data is in flight.
+   ============================================================ */
+@keyframes skel-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skel-block {
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-cream) 25%,
+    var(--color-gray-lighter) 50%,
+    var(--color-cream) 75%
+  );
+  background-size: 600px 100%;
+  animation: skel-shimmer 1.4s infinite linear;
+}
+
+.product-card--skeleton {
+  pointer-events: none;
+  cursor: default;
+  box-shadow: none;
+}
+.product-card--skeleton:hover {
+  transform: none;
+  box-shadow: none;
+}
+.product-card--skeleton .product-image-wrap {
+  background: var(--color-cream);
+  padding: 0;
+}
+.skel-img   { width: 100%; aspect-ratio: 4 / 3; border-radius: 0; }
+.skel-cat   { height: 10px; width: 36%; margin-bottom: 6px; }
+.skel-name  { height: 18px; width: 76%; margin-bottom: 8px; }
+.skel-desc  { height: 12px; width: 90%; margin-bottom: 4px; }
+.skel-price { height: 22px; width: 30%; margin-top: 10px; }
+.product-card--skeleton .product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}

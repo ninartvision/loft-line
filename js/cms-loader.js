@@ -306,6 +306,53 @@
     return article;
   }
 
+  /* ── Skeleton loaders ───────────────────────────────────────── */
+
+  /**
+   * Immediately fill the grid with inert skeleton cards so that static
+   * placeholder content (baked into the HTML) is never visible.
+   * Skeletons are replaced in-place when renderProducts() runs.
+   */
+  function showSkeletons(grid, isLoftSystem) {
+    grid.innerHTML = '';
+    var frag = document.createDocumentFragment();
+    var count = 6;
+    for (var i = 0; i < count; i++) {
+      var article = document.createElement('article');
+      if (isLoftSystem) {
+        article.className = 'll-product-card ll-product-card--skeleton';
+        article.setAttribute('aria-hidden', 'true');
+        article.innerHTML = [
+          '<div class="ll-prod-img-wrap">',
+            '<div class="ll-skel ll-skel-img"></div>',
+          '</div>',
+          '<div class="ll-prod-body">',
+            '<div class="ll-skel ll-skel-cat"></div>',
+            '<div class="ll-skel ll-skel-name"></div>',
+            '<div class="ll-skel ll-skel-mat"></div>',
+            '<div class="ll-skel ll-skel-price"></div>',
+          '</div>',
+        ].join('');
+      } else {
+        article.className = 'product-card product-card--skeleton';
+        article.setAttribute('aria-hidden', 'true');
+        article.innerHTML = [
+          '<div class="product-image-wrap">',
+            '<div class="skel-block skel-img"></div>',
+          '</div>',
+          '<div class="product-info">',
+            '<div class="skel-block skel-cat"></div>',
+            '<div class="skel-block skel-name"></div>',
+            '<div class="skel-block skel-desc"></div>',
+            '<div class="skel-block skel-price"></div>',
+          '</div>',
+        ].join('');
+      }
+      frag.appendChild(article);
+    }
+    grid.appendChild(frag);
+  }
+
   /* ── Render products into the product grid ──────────────────── */
 
   /**
@@ -315,7 +362,7 @@
    */
   function renderProducts(products, grid, cardBuilder) {
     if (!grid) return;
-    // Always clear the template card — even when Sanity returns nothing
+    // Always clear skeletons/placeholder cards — even when Sanity returns nothing
     grid.innerHTML = '';
     // Always update the count badge, including the 0-products case
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
@@ -426,10 +473,17 @@
     var gen = ++_renderGen; // capture this render's generation token
 
     // System B (index.html) uses id="productGrid"; System A pages use id="sanity-product-grid"
-    var grid        = document.getElementById('productGrid') || document.getElementById('sanity-product-grid');
-    var cardBuilder = document.getElementById('sanity-product-grid') ? buildLoftCard : buildProductCard;
+    var isLoftSystem = !!document.getElementById('sanity-product-grid');
+    var grid         = isLoftSystem
+      ? document.getElementById('sanity-product-grid')
+      : document.getElementById('productGrid');
+    var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
 
     if (grid) {
+      // Immediately replace any static HTML placeholder cards with skeletons.
+      // This prevents stale images from the baked-in HTML from ever being visible.
+      showSkeletons(grid, isLoftSystem);
+
       loadProducts(_pageSlug).then(function (products) {
         if (gen !== _renderGen) return; // stale — a newer render is already in flight
         renderProducts(products, grid, cardBuilder);
