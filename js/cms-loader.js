@@ -4,7 +4,7 @@
  * Fetches content from Sanity.io CDN API using GROQ queries and
  * renders products + page sections dynamically.
  *
- * Sanity project : 777f2m13
+ * Sanity project : 4n3g4zv5
  * Dataset        : production
  * API version    : 2024-01-01
  * ─────────────────────────────────────────────────────────────
@@ -22,10 +22,12 @@
 
   /* ── Sanity Configuration ────────────────────────────────── */
 
-  var SANITY_PROJECT_ID = '777f2m13';
+  var SANITY_PROJECT_ID = '4n3g4zv5';
   var SANITY_DATASET    = 'production';
   var SANITY_API_VER    = '2024-01-01';
-  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
+  // Use the direct API host (not apicdn) so newly published content
+  // is always returned without CDN edge-cache delay.
+  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.api.sanity.io';
 
   /* ── Sanity Helpers ──────────────────────────────────────── */
 
@@ -63,10 +65,21 @@
         url += '&$' + key + '=' + encodeURIComponent(JSON.stringify(params[key]));
       });
     }
-    return fetch(url)
+    console.log('[CMS] query URL:', url);
+    return fetch(url, {cache: 'no-store'})
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { return d ? d.result : null; })
-      .catch(function () { return null; });
+      .then(function (d) {
+        var result = d ? d.result : null;
+        console.log('[CMS] result count:', Array.isArray(result) ? result.length : result);
+        if (Array.isArray(result) && result.length) {
+          console.log('[CMS] first document fields:', Object.keys(result[0]));
+        }
+        return result;
+      })
+      .catch(function (err) {
+        console.error('[CMS] fetch error:', err);
+        return null;
+      });
   }
 
   /* ── Language Helpers ────────────────────────────────────── */
@@ -103,28 +116,74 @@
     'available, featured, page',
   ].join(' ');
 
+  /* ── Page slug → category value map (for fallback query) ─────── */
+  // These match the schema's category list values exactly.
+  var PAGE_TO_CATEGORY = {
+    'main-furniture':   ['indoor', 'outdoor'],
+    'office-furniture': ['office'],
+    'loft-collection':  ['loft'],
+    'lighting':         ['lighting'],
+    'decoration':       ['decoration'],
+  };
+
   function loadProducts(pageSlug) {
     var groq, params;
 
     if (pageSlug === 'index') {
-      groq   = '*[_type == "product" && available == true && featured == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      // available != false also catches products where the field was never set
+      groq   = '*[_type == "product" && available != false && featured == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
       params = {};
-    } else {
-      groq   = '*[_type == "product" && available == true && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-      params = {page: pageSlug};
+      return sanityQuery(groq, params).then(processProducts);
     }
 
+    // Primary query: match by `page` field (exact schema value)
+    groq   = '*[_type == "product" && available != false && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+    params = {page: pageSlug};
+
     return sanityQuery(groq, params).then(function (products) {
-      if (!Array.isArray(products) || !products.length) return [];
-      return products.map(function (p) {
-        // Optimise main image → WebP, max 600 px wide
-        if (p.image) p.image = buildImageUrl(p.image, {width: 600});
-        // Optimise gallery images → WebP, max 1200 px wide
-        if (Array.isArray(p.gallery)) {
-          p.gallery = p.gallery.map(function (u) { return buildImageUrl(u, {width: 1200}); });
-        }
-        return p;
-      });
+      if (Array.isArray(products) && products.length) {
+        return processProducts(products);
+      }
+
+      // Fallback: page field may not be set — try matching by category instead
+      var cats = PAGE_TO_CATEGORY[pageSlug];
+      if (cats) {
+        console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category fallback:', cats);
+        var fallbackGroq = '*[_type == "product" && available != false && category in $cats] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+        return sanityQuery(fallbackGroq, {cats: cats}).then(function (fallback) {
+          if (!Array.isArray(fallback) || !fallback.length) {
+            // Last resort: log ALL products to help diagnose field values
+            console.warn('[CMS] Category fallback also empty. Loading all products to inspect field values...');
+            return sanityQuery('*[_type == "product"][0...10] { _id, page, category, available, name_ka }', {})
+              .then(function (all) {
+                console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
+                return [];
+              });
+          }
+          return processProducts(fallback);
+        });
+      }
+
+      // No category map for this slug — run the diagnostic query
+      console.warn('[CMS] No products for page="' + pageSlug + '". Loading sample docs...');
+      return sanityQuery('*[_type == "product"][0...10] { _id, page, category, available, name_ka }', {})
+        .then(function (all) {
+          console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
+          return [];
+        });
+    });
+  }
+
+  function processProducts(products) {
+    if (!Array.isArray(products) || !products.length) return [];
+    return products.map(function (p) {
+      // Optimise main image → WebP, max 600 px wide
+      if (p.image) p.image = buildImageUrl(p.image, {width: 600});
+      // Optimise gallery images → WebP, max 1200 px wide
+      if (Array.isArray(p.gallery)) {
+        p.gallery = p.gallery.map(function (u) { return buildImageUrl(u, {width: 1200}); });
+      }
+      return p;
     });
   }
 
