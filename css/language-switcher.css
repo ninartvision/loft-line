@@ -51,3 +51,12 @@
 .ll-lang-btn .lang-active {
   opacity: 1;
 }
+
+/* ll-header dark theme: restore circular button style *
+   (language-switcher shared rules above override header.css,
+    so we restore the correct appearance here) */
+.ll-lang-btn {
+  color: var(--text-sub);
+  border-radius: 50%;
+  border: 1px solid var(--bdr);
+}

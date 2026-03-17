@@ -531,7 +531,7 @@ body.menu-open { overflow: hidden; }
   justify-content: center;
   width: 40px;
   height: 40px;
-  color: var(--text-sub);
+  color: rgba(240,237,232,0.8);
   border-radius: 50%;
   transition: all var(--dur) var(--ease);
 }
@@ -765,3 +765,4 @@ body.menu-open { overflow: hidden; }
 }
 @media (max-width: 560px) {
   .ll-header-inner { gap: 8px; }
+}
