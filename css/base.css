@@ -25,9 +25,12 @@
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --duration: 0.4s;
   --duration-slow: 0.7s;
-  --radius-sm: 2px;
-  --radius: 6px;
-  --radius-lg: 10px;
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
 }
 
 *, *::before, *::after {
@@ -73,7 +76,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 /* Section shared */
 .section-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: clamp(40px, 5vw, 64px);
 }
 
 .section-tag {
@@ -83,7 +86,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--color-gold);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  position: relative;
 }
 
 .section-title {
@@ -111,12 +115,12 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 16px 40px;
-  font-size: 13px;
+  padding: 15px 38px;
+  font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   transition: all var(--duration) var(--ease);
   cursor: pointer;
   position: relative;
@@ -133,8 +137,13 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .btn-primary:hover {
   background: var(--color-gold-hover);
   border-color: var(--color-gold-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(201,169,110,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(201,169,110,0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(201,169,110,0.2);
 }
 
 .btn-outline {
@@ -146,7 +155,13 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   background: var(--color-white);
   color: var(--color-dark);
   border-color: var(--color-white);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,255,255,0.15);
+}
+
+.btn-outline:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .btn-dark {

@@ -32,8 +32,8 @@
   --px:    clamp(16px, 4.5vw, 56px);
   --spy:   clamp(60px, 9vw, 112px);
 
-  --r:     4px;
-  --r-lg:  10px;
+  --r:     6px;
+  --r-lg:  12px;
 
   --ease:  cubic-bezier(0.22, 1, 0.36, 1);
   --dur:   0.36s;
@@ -513,8 +513,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .btn-order:hover {
   background: var(--gold-h);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(201,169,110,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(201,169,110,0.3);
 }
 .btn-wa {
   display: flex;
@@ -723,10 +723,10 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   height: 100%;
   object-fit: cover;
   filter: brightness(0.6) saturate(0.65);
-  transition: transform 0.75s var(--ease), filter 0.5s;
+  transition: transform 0.7s var(--ease), filter 0.5s;
 }
 .ll-cat-card:hover img {
-  transform: scale(1.07);
+  transform: scale(1.05);
   filter: brightness(0.5) saturate(0.55);
 }
 .ll-cat-body {
@@ -798,8 +798,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .ll-product-card:hover {
   border-color: var(--bdr-em);
-  transform: translateY(-5px);
-  box-shadow: 0 20px 52px rgba(0,0,0,0.44);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.44);
 }
 
 /* Product image */
@@ -817,7 +817,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   transition: transform 0.7s var(--ease), filter 0.5s;
 }
 .ll-product-card:hover .ll-prod-img-wrap img {
-  transform: scale(1.07);
+  transform: scale(1.05);
   filter: brightness(1) saturate(1);
 }
 
@@ -941,7 +941,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .ll-usp-card:hover .ll-usp-icon {
   background: var(--gold-dim);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 .ll-usp-card h3 {
   font-size: 15px;

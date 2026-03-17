@@ -16,12 +16,13 @@
   background: var(--color-white);
   border-radius: var(--radius);
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
   transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), opacity 0.35s var(--ease);
 }
 
 .product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
 }
 
 .product-image-wrap {
@@ -39,7 +40,7 @@
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 /* Badge */
@@ -178,14 +179,15 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   cursor: pointer;
   transition: all var(--duration) var(--ease);
 }
 
 .add-to-cart-btn:hover {
   background: var(--color-charcoal);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 /* USP Section */
@@ -221,6 +223,7 @@
 
 .usp-card:hover .usp-icon {
   border-color: var(--color-gold);
+  background: rgba(201,169,110,0.06);
   transform: translateY(-2px);
 }
 
@@ -318,7 +321,7 @@
   padding: 16px 24px;
   font-size: 14px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: rgba(255,255,255,0.08);
   color: var(--color-white);
   border: 1px solid rgba(255,255,255,0.1);
@@ -342,7 +345,7 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   cursor: pointer;
   transition: all var(--duration) var(--ease);
   white-space: nowrap;
@@ -350,7 +353,8 @@
 
 .newsletter-form button:hover {
   background: var(--color-gold-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(201,169,110,0.3);
 }
 
 /* Responsive */
