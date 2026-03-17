@@ -46,12 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Intersection Observer scroll animations ──
+  // Adds both 'in' (loft-line.css) and 'is-visible' (base.css) so this
+  // script works correctly on both the homepage and category pages.
   const toAnimate = document.querySelectorAll('[data-animate], [data-animate-stagger]');
   if (toAnimate.length) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('in');
+          entry.target.classList.add('in', 'is-visible');
           observer.unobserve(entry.target);
         }
       });

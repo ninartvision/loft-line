@@ -1323,33 +1323,33 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .ll-float-wa svg { flex-shrink: 0; }
 
-/* ── ANIMATIONS ── */
-[data-animate] {
+/* ── ANIMATIONS — guarded by html.js so content is visible without JS ── */
+html.js [data-animate] {
   opacity: 0;
   transform: translateY(26px);
   transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
-[data-animate].in {
+html.js [data-animate].in {
   opacity: 1;
   transform: translateY(0);
 }
-[data-animate-stagger] > * {
+html.js [data-animate-stagger] > * {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
 }
-[data-animate-stagger].in > * {
+html.js [data-animate-stagger].in > * {
   opacity: 1;
   transform: translateY(0);
 }
-[data-animate-stagger].in > *:nth-child(1){transition-delay:0ms}
-[data-animate-stagger].in > *:nth-child(2){transition-delay:80ms}
-[data-animate-stagger].in > *:nth-child(3){transition-delay:160ms}
-[data-animate-stagger].in > *:nth-child(4){transition-delay:240ms}
-[data-animate-stagger].in > *:nth-child(5){transition-delay:320ms}
-[data-animate-stagger].in > *:nth-child(6){transition-delay:400ms}
-[data-animate-stagger].in > *:nth-child(7){transition-delay:480ms}
-[data-animate-stagger].in > *:nth-child(8){transition-delay:560ms}
+html.js [data-animate-stagger].in > *:nth-child(1){transition-delay:0ms}
+html.js [data-animate-stagger].in > *:nth-child(2){transition-delay:80ms}
+html.js [data-animate-stagger].in > *:nth-child(3){transition-delay:160ms}
+html.js [data-animate-stagger].in > *:nth-child(4){transition-delay:240ms}
+html.js [data-animate-stagger].in > *:nth-child(5){transition-delay:320ms}
+html.js [data-animate-stagger].in > *:nth-child(6){transition-delay:400ms}
+html.js [data-animate-stagger].in > *:nth-child(7){transition-delay:480ms}
+html.js [data-animate-stagger].in > *:nth-child(8){transition-delay:560ms}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1200px) {
