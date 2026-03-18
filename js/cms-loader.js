@@ -129,9 +129,8 @@
   function loadProducts(pageSlug) {
     var groq, params;
 
-    if (pageSlug === 'index') {
-      // available != false also catches products where the field was never set
-      groq   = '*[_type == "product" && available != false && featured == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+   if (pageSlug === 'index') {
+  groq = '*[_type == "product" && available != false] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
       params = {};
       return sanityQuery(groq, params).then(processProducts);
     }
