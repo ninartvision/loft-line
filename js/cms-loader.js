@@ -129,11 +129,11 @@
   function loadProducts(pageSlug) {
     var groq, params;
 
-   if (pageSlug === 'index') {
-  groq = '*[_type == "product" && available != false] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-      params = {};
-      return sanityQuery(groq, params).then(processProducts);
-    }
+  if (pageSlug === 'index') {
+  groq = '*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+  params = {};
+  return sanityQuery(groq, params).then(processProducts);
+}
 
     // Primary query: match by `page` field (exact schema value)
     groq   = '*[_type == "product" && available != false && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
