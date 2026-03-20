@@ -182,22 +182,53 @@
 
   var PLACEHOLDER_IMG = 'images/placeholder.svg';
 
+  /**
+   * Normalise every product document into a guaranteed-safe shape.
+   * Card builders MUST receive products through this function.
+   * All defaults live here — no need for || fallbacks in UI code.
+   */
   function processProducts(products) {
     if (!Array.isArray(products) || !products.length) return [];
     return products.map(function (p) {
-      // Optimise main image → WebP, max 600 px wide; fall back to placeholder
-      if (p.image) {
-        p.image = buildImageUrl(p.image, {width: 600});
-      } else {
-        p.image = PLACEHOLDER_IMG;
+
+      // ── Debug: flag documents that are missing critical fields ──
+      if (!p.title_ka && !p.title_en) {
+        console.warn('[CMS] product missing title — check name_ka/name_en in Sanity. _id:', p._id);
       }
-      // Optimise gallery images → WebP, max 1200 px wide
-      if (Array.isArray(p.gallery)) {
-        p.gallery = p.gallery.map(function (u) { return u ? buildImageUrl(u, {width: 1200}) : PLACEHOLDER_IMG; });
+      if (!p.image) {
+        console.warn('[CMS] product missing image, using placeholder. _id:', p._id);
       }
-      // Safety: ensure numeric fields are numbers, not null/undefined
-      p.price    = p.price    || 0;
-      p.oldPrice = p.oldPrice || 0;
+
+      // ── Image ────────────────────────────────────────────────────
+      // Always resolves to a non-empty string; <img src> will never be blank.
+      p.image = p.image
+        ? buildImageUrl(p.image, {width: 600})
+        : PLACEHOLDER_IMG;
+
+      // ── Gallery ──────────────────────────────────────────────────
+      p.gallery = Array.isArray(p.gallery)
+        ? p.gallery.map(function (u) { return u ? buildImageUrl(u, {width: 1200}) : PLACEHOLDER_IMG; })
+        : [];
+
+      // ── Numeric fields ───────────────────────────────────────────
+      // parseFloat handles strings like "890"; || 0 catches NaN/null/undefined.
+      p.price    = (typeof p.price    === 'number' ? p.price    : parseFloat(p.price))    || 0;
+      p.oldPrice = (typeof p.oldPrice === 'number' ? p.oldPrice : parseFloat(p.oldPrice)) || 0;
+
+      // ── String fields ─────────────────────────────────────────────
+      // Cross-fill so t(product,'title') always finds at least one language.
+      p.title_ka = p.title_ka || p.title_en || '';
+      p.title_en = p.title_en || p.title_ka || '';
+      // slug may arrive as object {_type:'slug',current:'...'} on some paths.
+      p.slug     = (typeof p.slug === 'string' ? p.slug : (p.slug && p.slug.current)) || '';
+      p.style    = p.style || 'loft';
+      p.badge    = p.badge || '';
+
+      // ── Array fields ──────────────────────────────────────────────
+      p.filterTags   = Array.isArray(p.filterTags)   ? p.filterTags   : [];
+      p.materials_ka = Array.isArray(p.materials_ka) ? p.materials_ka : [];
+      p.materials_en = Array.isArray(p.materials_en) ? p.materials_en : [];
+
       return p;
     });
   }
@@ -255,7 +286,7 @@
     article.innerHTML = [
       '<div class="product-image-wrap">',
         buildBadgeHTML(product),
-        '<img src="' + esc(product.image || '') + '" alt="' + esc(name) + '" loading="lazy" width="500" height="500">',
+        '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy" width="500" height="500">',
         '<button class="product-quick-view" aria-label="სწრაფი ნახვა">',
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
@@ -356,7 +387,7 @@
     article.innerHTML = [
       '<div class="ll-prod-img-wrap">',
         badgeHtml,
-        '<img src="' + esc(product.image || '') + '" alt="' + esc(name) + '" loading="lazy">',
+        '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy">',
         '<button class="ll-quick-view" aria-label="სწრაფი ნახვა">',
           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
