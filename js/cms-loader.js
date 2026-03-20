@@ -25,9 +25,8 @@
   var SANITY_PROJECT_ID = '4n3g4zv5';
   var SANITY_DATASET    = 'production';
   var SANITY_API_VER    = '2024-01-01';
-  // Use the direct API host (not apicdn) so newly published content
-  // is always returned without CDN edge-cache delay.
-  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.api.sanity.io';
+  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
+  var QUERY_CACHE       = Object.create(null);
 
   /* ── Sanity Helpers ──────────────────────────────────────── */
 
@@ -58,6 +57,11 @@
    * @returns {Promise<any|null>}
    */
   function sanityQuery(query, params) {
+    var cacheKey = JSON.stringify([query, params || {}]);
+    if (QUERY_CACHE[cacheKey]) {
+      return Promise.resolve(QUERY_CACHE[cacheKey]);
+    }
+
     var url = SANITY_HOST + '/v' + SANITY_API_VER + '/data/query/' + SANITY_DATASET;
     url += '?query=' + encodeURIComponent(query);
     if (params) {
@@ -66,19 +70,24 @@
       });
     }
     console.log('[CMS] query URL:', url);
-    return fetch(url, {cache: 'no-store'})
-      .then(function (r) { return r.ok ? r.json() : null; })
+    return fetch(url, {cache: 'force-cache'})
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' for Sanity request');
+        return r.json();
+      })
       .then(function (d) {
         var result = d ? d.result : null;
         console.log('[CMS] result count:', Array.isArray(result) ? result.length : result);
         if (Array.isArray(result) && result.length) {
           console.log('[CMS] first document fields:', Object.keys(result[0]));
         }
-        return result;
+        var payload = {ok: true, result: result, error: null};
+        QUERY_CACHE[cacheKey] = payload;
+        return payload;
       })
       .catch(function (err) {
         console.error('[CMS] fetch error:', err);
-        return null;
+        return {ok: false, result: null, error: err};
       });
   }
 
@@ -94,6 +103,10 @@
     return (lang === 'en' && obj[field + '_en'] !== undefined)
       ? obj[field + '_en']
       : (obj[field + '_ka'] !== undefined ? obj[field + '_ka'] : obj[field] || '');
+  }
+
+  function text(ka, en) {
+    return getLang() === 'en' ? en : ka;
   }
 
   /* ── Load products from Sanity ───────────────────────────── */
@@ -126,35 +139,52 @@
   function loadProducts(pageSlug) {
     var groq, params;
 
-  if (pageSlug === 'index') {
-  groq = '*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-  params = {};
-  return sanityQuery(groq, params).then(processProducts);
-}
+    if (pageSlug === 'index') {
+      groq = '*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      params = {};
+      return sanityQuery(groq, params).then(function (response) {
+        return {
+          items: response.ok ? processProducts(response.result) : [],
+          error: response.ok ? null : response.error
+        };
+      });
+    }
 
     // Primary query: match by `page` field (exact schema value)
     groq   = '*[_type == "product" && available != false && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
     params = {page: pageSlug};
 
-    return sanityQuery(groq, params).then(function (products) {
+    return sanityQuery(groq, params).then(function (response) {
+      var products = response.ok ? response.result : null;
       if (Array.isArray(products) && products.length) {
-        return processProducts(products);
+        return {items: processProducts(products), error: null};
+      }
+
+      if (!response.ok) {
+        return {items: [], error: response.error};
       }
 
       // Fallback: if product.page is missing, derive membership from the referenced category.
       console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category->pageKey fallback.');
       var fallbackGroq = '*[_type == "product" && available != false && category->pageKey == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-      return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallback) {
+      return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallbackResponse) {
+        var fallback = fallbackResponse.ok ? fallbackResponse.result : null;
         if (Array.isArray(fallback) && fallback.length) {
-          return processProducts(fallback);
+          return {items: processProducts(fallback), error: null};
+        }
+
+        if (!fallbackResponse.ok) {
+          return {items: [], error: fallbackResponse.error};
         }
 
         // Last resort: log ALL products to help diagnose field values
         console.warn('[CMS] category->pageKey fallback also empty. Loading all products to inspect field values...');
         return sanityQuery('*[_type == "product"][0...10] { _id, page, "categoryPage": category->pageKey, "categoryFilter": category->filterKey, available, name_ka, filterTags }', {})
           .then(function (all) {
-            console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
-            return [];
+            if (all.ok) {
+              console.log('[CMS] Sample documents in dataset:', JSON.stringify(all.result, null, 2));
+            }
+            return {items: [], error: null};
           });
       });
     });
@@ -169,7 +199,8 @@
    */
   function processProducts(products) {
     if (!Array.isArray(products) || !products.length) return [];
-    return products.map(function (p) {
+    return products.map(function (item) {
+      var p = Object.assign({}, item);
 
       // ── Debug: flag documents that are missing critical fields ──
       if (!p.title_ka && !p.title_en) {
@@ -326,10 +357,24 @@
   ].join(' ');
 
   function loadCategories(pageSlug) {
-    if (!pageSlug || pageSlug === 'index') return Promise.resolve([]);
+    var groq;
+    var params = {};
 
-    var groq = '*[_type == "category" && pageKey == $page] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
-    return sanityQuery(groq, {page: pageSlug}).then(processCategories);
+    if (!pageSlug) return Promise.resolve({items: [], error: null});
+
+    if (pageSlug === 'index') {
+      groq = '*[_type == "category" && count(*[_type == "product" && coalesce(available, true) == true && references(^._id)]) > 0] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
+    } else {
+      groq = '*[_type == "category" && pageKey == $page] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
+      params.page = pageSlug;
+    }
+
+    return sanityQuery(groq, params).then(function (response) {
+      return {
+        items: response.ok ? processCategories(response.result) : [],
+        error: response.ok ? null : response.error
+      };
+    });
   }
 
   function processCategories(categories) {
@@ -384,6 +429,29 @@
     return button;
   }
 
+  function renderInlineState(container, className, message) {
+    if (!container) return;
+    container.innerHTML = '';
+    var state = document.createElement('p');
+    state.className = className;
+    state.textContent = message;
+    container.appendChild(state);
+  }
+
+  function showCategoryFilterLoading(bar) {
+    if (!bar) return;
+    bar.hidden = false;
+    bar.removeAttribute('aria-hidden');
+    renderInlineState(bar, 'll-filter-empty', text('კატეგორიები იტვირთება...', 'Loading categories...'));
+  }
+
+  function showCategoryFilterError(bar) {
+    if (!bar) return;
+    bar.hidden = false;
+    bar.removeAttribute('aria-hidden');
+    renderInlineState(bar, 'll-filter-empty', text('კატეგორიები დროებით მიუწვდომელია.', 'Categories are temporarily unavailable.'));
+  }
+
   function renderCategoryFilters(categories, bar) {
     if (!bar) return;
 
@@ -416,6 +484,68 @@
     bar.removeAttribute('aria-hidden');
     bar.setAttribute('data-current-filter', activeFilter);
     bar.appendChild(fragment);
+  }
+
+  function showHomepageCategoryLoading(container) {
+    if (!container) return;
+    renderInlineState(container, 'filter-loading', text('კატეგორიები იტვირთება...', 'Loading categories...'));
+  }
+
+  function showHomepageCategoryError(container) {
+    if (!container) return;
+    renderInlineState(container, 'filter-loading', text('კატეგორიები დროებით მიუწვდომელია.', 'Categories are temporarily unavailable.'));
+  }
+
+  function renderHomepageCategoryFilters(categories, container) {
+    if (!container) return;
+
+    var filterGroup = container.closest('.filter-group');
+    var selected = [];
+
+    container.querySelectorAll('input[name="category"]:checked').forEach(function (input) {
+      selected.push(input.value);
+    });
+
+    if (!selected.length) {
+      try {
+        selected = JSON.parse(container.getAttribute('data-selected-values') || '[]');
+      } catch (e) {
+        selected = [];
+      }
+    }
+
+    selected = selected.filter(function (value) {
+      return categories.some(function (category) { return category.filterKey === value; });
+    });
+
+    if (!selected.length) {
+      selected = categories.map(function (category) { return category.filterKey; });
+    }
+
+    container.innerHTML = '';
+
+    if (!categories.length) {
+      if (filterGroup) filterGroup.hidden = true;
+      container.setAttribute('data-selected-values', '[]');
+      return;
+    }
+
+    if (filterGroup) filterGroup.hidden = false;
+
+    var fragment = document.createDocumentFragment();
+    categories.forEach(function (category) {
+      var label = document.createElement('label');
+      label.className = 'filter-checkbox';
+      label.innerHTML = [
+        '<input type="checkbox" name="category" value="' + esc(category.filterKey) + '"' + (selected.indexOf(category.filterKey) !== -1 ? ' checked' : '') + '>',
+        '<span class="checkbox-mark"></span>',
+        '<span class="checkbox-label">' + esc(getLang() === 'en' ? category.title_en : category.title_ka) + '</span>'
+      ].join('');
+      fragment.appendChild(label);
+    });
+
+    container.setAttribute('data-selected-values', JSON.stringify(selected));
+    container.appendChild(fragment);
   }
 
   /** Escape HTML entities to prevent XSS */
@@ -540,6 +670,15 @@
     grid.appendChild(frag);
   }
 
+  function renderGridError(grid, isLoftSystem) {
+    if (!grid) return;
+    grid.innerHTML = '';
+    var error = document.createElement('p');
+    error.className = isLoftSystem ? 'll-filter-empty' : 'filter-no-results is-visible';
+    error.textContent = text('პროდუქტების ჩატვირთვა ვერ მოხერხდა. სცადეთ მოგვიანებით.', 'We could not load products right now. Please try again later.');
+    grid.appendChild(error);
+  }
+
   /* ── Render products into the product grid ──────────────────── */
 
   /**
@@ -557,7 +696,7 @@
     if (!products.length) {
       var empty = document.createElement('p');
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
-      empty.textContent = getLang() === 'en' ? 'No products found.' : 'პროდუქტი ვერ მოიძებნა.';
+      empty.textContent = text('პროდუქტი ვერ მოიძებნა.', 'No products found.');
       grid.appendChild(empty);
       return;
     }
@@ -600,11 +739,14 @@
 
   function setMeta(name, value, attr) {
     if (!value) return;
-    var selector = attr === 'property'
-      ? 'meta[property="' + name + '"]'
-      : 'meta[name="' + name + '"]';
+    var key = attr === 'property' ? 'property' : 'name';
+    var selector = 'meta[' + key + '="' + name + '"]';
     var el = document.querySelector(selector);
-    if (!el) return;
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(key, name);
+      document.head.appendChild(el);
+    }
     el.setAttribute('content', value);
   }
 
@@ -617,9 +759,11 @@
     setMeta('og:title', seo.ogTitle || seo.metaTitle, 'property');
     setMeta('og:description', seo.ogDescription || seo.metaDescription, 'property');
     setMeta('og:image', seo.ogImage, 'property');
+    setMeta('og:image:alt', seo.ogTitle || seo.metaTitle, 'property');
     setMeta('twitter:title', seo.twitterTitle || seo.ogTitle || seo.metaTitle);
     setMeta('twitter:description', seo.twitterDescription || seo.ogDescription || seo.metaDescription);
     setMeta('twitter:image', seo.ogImage);
+    setMeta('twitter:image:alt', seo.twitterTitle || seo.ogTitle || seo.metaTitle);
   }
 
   /* ── Homepage GROQ query (hero + announcement in one request) ── */
@@ -700,7 +844,7 @@
   /* ── Notify other scripts that CMS render is complete ─────── */
 
   function dispatchReady() {
-    document.dispatchEvent(new Event('cms:ready'));
+    document.dispatchEvent(new CustomEvent('cms:ready', {detail: {page: _pageSlug}}));
   }
 
   /* ── Bootstrap ─────────────────────────────────────────────── */
@@ -720,6 +864,7 @@
       ? document.getElementById('sanity-product-grid')
       : document.getElementById('productGrid');
     var filterBar    = isLoftSystem ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
+    var homeCategoryContainer = !isLoftSystem ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
     var tasks        = [];
 
@@ -728,16 +873,37 @@
       // This prevents stale images from the baked-in HTML from ever being visible.
       showSkeletons(grid, isLoftSystem);
 
-      tasks.push(loadProducts(_pageSlug).then(function (products) {
+      tasks.push(loadProducts(_pageSlug).then(function (payload) {
         if (gen !== _renderGen) return; // stale — a newer render is already in flight
-        renderProducts(products, grid, cardBuilder);
+        if (payload.error) {
+          renderGridError(grid, isLoftSystem);
+          return;
+        }
+        renderProducts(payload.items, grid, cardBuilder);
       }));
     }
 
     if (filterBar && _pageSlug !== 'index') {
-      tasks.push(loadCategories(_pageSlug).then(function (categories) {
+      showCategoryFilterLoading(filterBar);
+      tasks.push(loadCategories(_pageSlug).then(function (payload) {
         if (gen !== _renderGen) return;
-        renderCategoryFilters(categories, filterBar);
+        if (payload.error) {
+          showCategoryFilterError(filterBar);
+          return;
+        }
+        renderCategoryFilters(payload.items, filterBar);
+      }));
+    }
+
+    if (homeCategoryContainer && _pageSlug === 'index') {
+      showHomepageCategoryLoading(homeCategoryContainer);
+      tasks.push(loadCategories('index').then(function (payload) {
+        if (gen !== _renderGen) return;
+        if (payload.error) {
+          showHomepageCategoryError(homeCategoryContainer);
+          return;
+        }
+        renderHomepageCategoryFilters(payload.items, homeCategoryContainer);
       }));
     }
 
@@ -750,7 +916,8 @@
 
     // Homepage-only: fetch hero + announcement in a single Sanity request
     if (_pageSlug === 'index') {
-      sanityQuery(HOMEPAGE_GROQ).then(function (data) {
+      sanityQuery(HOMEPAGE_GROQ).then(function (response) {
+        var data = response.ok ? response.result : null;
         applySeo(data && data.seo);
         applyHero(data);
         applyAnnouncement(data);
@@ -778,7 +945,8 @@
         '  }',
         '}',
       ].join('');
-      sanityQuery(pageGroq, {page: _pageSlug}).then(function (data) {
+      sanityQuery(pageGroq, {page: _pageSlug}).then(function (response) {
+        var data = response.ok ? response.result : null;
         applySeo(data && data.seo);
         applyCategoryPageHero(data);
       });

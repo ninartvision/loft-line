@@ -57,12 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const priceMaxDisplay = document.getElementById('priceMaxDisplay');
 
   if (filterDrawer && productGrid) {
-    const categoryCheckboxes = filterDrawer.querySelectorAll('input[name="category"]');
-    const styleCheckboxes = filterDrawer.querySelectorAll('input[name="style"]');
+    const categoryContainer = filterDrawer.querySelector('[data-cms-home-categories]');
     const SLIDER_MAX = 2000;
 
     function getCards() {
       return productGrid.querySelectorAll('.product-card:not(.product-card--skeleton)');
+    }
+
+    function getCategoryCheckboxes() {
+      return filterDrawer.querySelectorAll('input[name="category"]');
+    }
+
+    function getStyleCheckboxes() {
+      return filterDrawer.querySelectorAll('input[name="style"]');
     }
 
     // Open / Close drawer helpers
@@ -138,11 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Apply all active filters
     function applyFilters() {
-      const activeCategories = getCheckedValues(categoryCheckboxes);
-      const activeStyles = getCheckedValues(styleCheckboxes);
+      const activeCategories = getCheckedValues(getCategoryCheckboxes());
+      const activeStyles = getCheckedValues(getStyleCheckboxes());
       const minPrice = rangeMin ? parseInt(rangeMin.value, 10) : 0;
       const maxPrice = rangeMax ? parseInt(rangeMax.value, 10) : SLIDER_MAX;
       const allCards = getCards();
+
+      if (categoryContainer) {
+        categoryContainer.setAttribute('data-selected-values', JSON.stringify(activeCategories));
+      }
 
       let visibleCount = 0;
 
@@ -192,8 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Checkbox change handlers
-    categoryCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
-    styleCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+    filterDrawer.addEventListener('change', (e) => {
+      if (!e.target.matches('input[name="category"], input[name="style"]')) return;
+      applyFilters();
+    });
 
     // Range slider handlers
     if (rangeMin && rangeMax) {
@@ -220,8 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear all filters
     if (filterClear) {
       filterClear.addEventListener('click', () => {
-        categoryCheckboxes.forEach(cb => { cb.checked = true; });
-        styleCheckboxes.forEach(cb => { cb.checked = true; });
+        getCategoryCheckboxes().forEach(cb => { cb.checked = true; });
+        getStyleCheckboxes().forEach(cb => { cb.checked = true; });
         if (rangeMin) { rangeMin.value = 0; }
         if (rangeMax) { rangeMax.value = SLIDER_MAX; }
         updateSliderRange();
