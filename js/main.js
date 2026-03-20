@@ -57,10 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const priceMaxDisplay = document.getElementById('priceMaxDisplay');
 
   if (filterDrawer && productGrid) {
-    const allCards = productGrid.querySelectorAll('.product-card');
     const categoryCheckboxes = filterDrawer.querySelectorAll('input[name="category"]');
     const styleCheckboxes = filterDrawer.querySelectorAll('input[name="style"]');
     const SLIDER_MAX = 2000;
+
+    function getCards() {
+      return productGrid.querySelectorAll('.product-card:not(.product-card--skeleton)');
+    }
 
     // Open / Close drawer helpers
     function openDrawer() {
@@ -139,11 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const activeStyles = getCheckedValues(styleCheckboxes);
       const minPrice = rangeMin ? parseInt(rangeMin.value, 10) : 0;
       const maxPrice = rangeMax ? parseInt(rangeMax.value, 10) : SLIDER_MAX;
+      const allCards = getCards();
 
       let visibleCount = 0;
 
       allCards.forEach(card => {
-        const catMatch = activeCategories.length === 0 || activeCategories.includes(card.dataset.category);
+        const cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
+        const catMatch = activeCategories.length === 0 || activeCategories.some(value => cardFilters.includes(value));
         const styleMatch = activeStyles.length === 0 || activeStyles.includes(card.dataset.style);
         const price = parseInt(card.dataset.price, 10);
         const priceMatch = price >= minPrice && price <= maxPrice;
@@ -223,6 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters();
       });
     }
+
+    document.addEventListener('cms:ready', applyFilters);
   }
 
   // ── Cart Badge ──
@@ -230,22 +237,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartBadgeEl   = document.getElementById('cartBadge');
   const bottomBadgeEl = document.querySelector('.bottom-bar-badge');
 
-  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      cartCount++;
-      if (cartBadgeEl)   cartBadgeEl.textContent   = cartCount;
-      if (bottomBadgeEl) bottomBadgeEl.textContent = cartCount;
-      const labelEl = btn.querySelector('span');
-      if (labelEl) {
-        const orig = labelEl.textContent;
-        labelEl.textContent = 'დამატებულია ✓';
-        btn.disabled = true;
-        setTimeout(() => {
-          labelEl.textContent = orig;
-          btn.disabled = false;
-        }, 1400);
-      }
-    });
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.add-to-cart-btn');
+    if (!btn) return;
+
+    cartCount++;
+    if (cartBadgeEl)   cartBadgeEl.textContent   = cartCount;
+    if (bottomBadgeEl) bottomBadgeEl.textContent = cartCount;
+
+    const labelEl = btn.querySelector('span');
+    if (labelEl) {
+      const orig = labelEl.textContent;
+      labelEl.textContent = 'დამატებულია ✓';
+      btn.disabled = true;
+      setTimeout(() => {
+        labelEl.textContent = orig;
+        btn.disabled = false;
+      }, 1400);
+    }
   });
 
   // ── Newsletter Form ──

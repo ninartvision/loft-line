@@ -38,7 +38,8 @@
   function applyFilter(grid, filter) {
     var cards = grid.querySelectorAll('.ll-product-card');
     cards.forEach(function (card) {
-      if (filter === 'all' || card.dataset.category === filter) {
+      var cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
+      if (filter === 'all' || cardFilters.indexOf(filter) !== -1) {
         card.removeAttribute('hidden');
       } else {
         card.setAttribute('hidden', '');
@@ -73,11 +74,15 @@
        Uses MutationObserver to watch for added nodes in the grid. */
     var observer = new MutationObserver(function (mutations) {
       var hasNew = mutations.some(function (m) { return m.addedNodes.length > 0; });
-      if (hasNew && currentFilter !== 'all') {
+      if (hasNew) {
         applyFilter(grid, currentFilter);
       }
     });
     observer.observe(grid, { childList: true });
+
+    document.addEventListener('cms:ready', function () {
+      applyFilter(grid, currentFilter);
+    });
   }
 
   /* Run after DOM is ready */

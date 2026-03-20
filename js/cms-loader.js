@@ -109,7 +109,7 @@
     '"title_ka": name_ka,',
     '"title_en": name_en,',
     // Resolve category reference to its display names
-    '"category_ka": category->title_ka, "category_en": category->title,',
+    '"category_ka": category->title_ka, "category_en": category->title, "category_filter": category->filterKey,',
     'filterTags, style,',
     'price,',
     // Alias old_price → oldPrice
@@ -117,21 +117,11 @@
     'badge, discount_pct,',
     'description_ka, description_en,',
     'materials_ka, materials_en,',
-    // Primary image: first gallery item; full gallery kept for quick-view
-    '"image": gallery[0].asset->url,',
+    // Support both the current gallery-based data and the schema main image field.
+    '"image": coalesce(gallery[0].asset->url, image.asset->url),',
     '"gallery": gallery[].asset->url,',
     'available, featured, page',
   ].join(' ');
-
-  /* ── Page slug → category value map (for fallback query) ─────── */
-  // These match the schema's category list values exactly.
-  var PAGE_TO_CATEGORY = {
-    'main-furniture':   ['indoor', 'outdoor'],
-    'office-furniture': ['office'],
-    'loft-collection':  ['loft'],
-    'lighting':         ['lighting'],
-    'decoration':       ['decoration'],
-  };
 
   function loadProducts(pageSlug) {
     var groq, params;
@@ -151,32 +141,22 @@
         return processProducts(products);
       }
 
-      // Fallback: page field may not be set — try matching by category instead
-      var cats = PAGE_TO_CATEGORY[pageSlug];
-      if (cats) {
-        console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category fallback:', cats);
-        var fallbackGroq = '*[_type == "product" && available != false && category in $cats] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-        return sanityQuery(fallbackGroq, {cats: cats}).then(function (fallback) {
-          if (!Array.isArray(fallback) || !fallback.length) {
-            // Last resort: log ALL products to help diagnose field values
-            console.warn('[CMS] Category fallback also empty. Loading all products to inspect field values...');
-            return sanityQuery('*[_type == "product"][0...10] { _id, page, category, available, name_ka }', {})
-              .then(function (all) {
-                console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
-                return [];
-              });
-          }
+      // Fallback: if product.page is missing, derive membership from the referenced category.
+      console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category->pageKey fallback.');
+      var fallbackGroq = '*[_type == "product" && available != false && category->pageKey == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallback) {
+        if (Array.isArray(fallback) && fallback.length) {
           return processProducts(fallback);
-        });
-      }
+        }
 
-      // No category map for this slug — run the diagnostic query
-      console.warn('[CMS] No products for page="' + pageSlug + '". Loading sample docs...');
-      return sanityQuery('*[_type == "product"][0...10] { _id, page, category, available, name_ka }', {})
-        .then(function (all) {
-          console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
-          return [];
-        });
+        // Last resort: log ALL products to help diagnose field values
+        console.warn('[CMS] category->pageKey fallback also empty. Loading all products to inspect field values...');
+        return sanityQuery('*[_type == "product"][0...10] { _id, page, "categoryPage": category->pageKey, "categoryFilter": category->filterKey, available, name_ka, filterTags }', {})
+          .then(function (all) {
+            console.log('[CMS] Sample documents in dataset:', JSON.stringify(all, null, 2));
+            return [];
+          });
+      });
     });
   }
 
@@ -223,9 +203,13 @@
       p.slug     = (typeof p.slug === 'string' ? p.slug : (p.slug && p.slug.current)) || '';
       p.style    = p.style || 'loft';
       p.badge    = p.badge || '';
+      p.category_ka = p.category_ka || p.category_en || '';
+      p.category_en = p.category_en || p.category_ka || '';
 
       // ── Array fields ──────────────────────────────────────────────
-      p.filterTags   = Array.isArray(p.filterTags)   ? p.filterTags   : [];
+      p.filterTags   = Array.isArray(p.filterTags) && p.filterTags.length
+        ? p.filterTags.filter(Boolean)
+        : (p.category_filter ? [p.category_filter] : []);
       p.materials_ka = Array.isArray(p.materials_ka) ? p.materials_ka : [];
       p.materials_en = Array.isArray(p.materials_en) ? p.materials_en : [];
 
@@ -272,10 +256,10 @@
     var desc    = t(product, 'description');
     var article = document.createElement('article');
     article.className  = 'product-card';
-    article.setAttribute('data-category', filterKey(product));
-    article.setAttribute('data-price',    String(product.price || 0));
-    article.setAttribute('data-style',    product.style || 'loft');
-    article.setAttribute('data-slug',     product.slug || '');
+    article.setAttribute('data-category', filterValues(product).join(' '));
+    article.setAttribute('data-price',    String(product.price));
+    article.setAttribute('data-style',    product.style);
+    article.setAttribute('data-slug',     product.slug);
 
     /* Store all product images so the quick-view gallery can display them */
     var _imgs = [product.image]
@@ -328,14 +312,9 @@
     return (lang === 'en' ? product.category_en : product.category_ka) || '';
   }
 
-  // Returns the subcategory filter key from the first filterTag.
-  // "mf-magida"         → "magida"
-  // "of-sakabi"         → "sakabi"
-  // "mf-some-long-key"  → "some-long-key"  (slice(1) keeps all segments after prefix)
-  function filterKey(product) {
-    var tags = product.filterTags;
-    if (!Array.isArray(tags) || !tags.length) return '';
-    return tags[0].split('-').slice(1).join('-');
+  // Keep exact Sanity filter keys end-to-end.
+  function filterValues(product) {
+    return Array.isArray(product.filterTags) ? product.filterTags.filter(Boolean) : [];
   }
 
   /** Escape HTML entities to prevent XSS */
@@ -374,10 +353,10 @@
 
     var article = document.createElement('article');
     article.className = 'll-product-card';
-    article.setAttribute('data-category', filterKey(product));
-    article.setAttribute('data-price',    String(product.price || 0));
-    article.setAttribute('data-style',    product.style || 'loft');
-    article.setAttribute('data-slug',     product.slug || '');
+    article.setAttribute('data-category', filterValues(product).join(' '));
+    article.setAttribute('data-price',    String(product.price));
+    article.setAttribute('data-style',    product.style);
+    article.setAttribute('data-slug',     product.slug);
 
     var _imgs = [product.image]
       .concat(Array.isArray(product.gallery) ? product.gallery : [])
@@ -474,7 +453,13 @@
     // Always update the count badge, including the 0-products case
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
     if (countEl) countEl.textContent = products.length + ' პროდუქტი';
-    if (!products.length) return;
+    if (!products.length) {
+      var empty = document.createElement('p');
+      empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
+      empty.textContent = getLang() === 'en' ? 'No products found.' : 'პროდუქტი ვერ მოიძებნა.';
+      grid.appendChild(empty);
+      return;
+    }
     /* Batch all card insertions in one DOM operation to avoid layout thrash */
     var frag = document.createDocumentFragment();
     products.forEach(function (product) {
@@ -503,11 +488,37 @@
     if (descEl)  descEl.textContent   = lang === 'en' ? data.desc_en  : data.desc_ka;
     if (btn1El)  btn1El.textContent   = lang === 'en' ? data.btn1_en  : data.btn1_ka;
     if (btn2El)  btn2El.textContent   = lang === 'en' ? data.btn2_en  : data.btn2_ka;
+    if (btn1El && data.btn1_url) btn1El.setAttribute('href', data.btn1_url);
+    if (btn2El && data.btn2_url) btn2El.setAttribute('href', data.btn2_url);
     if (heroBg && data.bg_image) {
       // Apply WebP optimisation on hero background (full-width → 1600 px)
       var heroUrl = buildImageUrl(data.bg_image, {width: 1600, quality: 90});
       heroBg.style.backgroundImage = "url('" + esc(heroUrl) + "')";
     }
+  }
+
+  function setMeta(name, value, attr) {
+    if (!value) return;
+    var selector = attr === 'property'
+      ? 'meta[property="' + name + '"]'
+      : 'meta[name="' + name + '"]';
+    var el = document.querySelector(selector);
+    if (!el) return;
+    el.setAttribute('content', value);
+  }
+
+  function applySeo(seo) {
+    if (!seo) return;
+    if (seo.metaTitle) document.title = seo.metaTitle;
+    setMeta('description', seo.metaDescription);
+    setMeta('keywords', seo.keywords);
+    setMeta('robots', seo.noIndex ? 'noindex, nofollow' : 'index, follow');
+    setMeta('og:title', seo.ogTitle || seo.metaTitle, 'property');
+    setMeta('og:description', seo.ogDescription || seo.metaDescription, 'property');
+    setMeta('og:image', seo.ogImage, 'property');
+    setMeta('twitter:title', seo.twitterTitle || seo.ogTitle || seo.metaTitle);
+    setMeta('twitter:description', seo.twitterDescription || seo.ogDescription || seo.metaDescription);
+    setMeta('twitter:image', seo.ogImage);
   }
 
   /* ── Homepage GROQ query (hero + announcement in one request) ── */
@@ -522,16 +533,31 @@
     '  "title_en": heroSection.heading_en,',
     '  "desc_ka":  heroSection.sub_ka,',
     '  "desc_en":  heroSection.sub_en,',
-    '  "btn1_ka":  heroSection.btnPrimary_ka,',
-    '  "btn1_en":  heroSection.btnPrimary_en,',
-    '  "btn2_ka":  heroSection.btnSecondary_ka,',
-    '  "btn2_en":  heroSection.btnSecondary_en,',
+    '  "btn1_ka":  coalesce(heroSection.btnPrimary_ka, heroSection.btnPrimaryLabel_ka),',
+    '  "btn1_en":  coalesce(heroSection.btnPrimary_en, heroSection.btnPrimaryLabel_en),',
+    '  "btn2_ka":  coalesce(heroSection.btnSecondary_ka, heroSection.btnSecondaryLabel_ka),',
+    '  "btn2_en":  coalesce(heroSection.btnSecondary_en, heroSection.btnSecondaryLabel_en),',
+    '  "btn1_url": coalesce(heroSection.btnPrimary_url, heroSection.btnPrimaryUrl),',
+    '  "btn2_url": coalesce(heroSection.btnSecondary_url, heroSection.btnSecondaryUrl),',
     '  "bg_image": heroSection.bgImage.asset->url,',
     '  "text1_ka": announcementSection.text1_ka,',
     '  "text1_en": announcementSection.text1_en,',
     '  "text2_ka": announcementSection.text2_ka,',
     '  "text2_en": announcementSection.text2_en,',
-    '  "visible":  announcementSection.visible',
+    '  "text3_ka": announcementSection.text3_ka,',
+    '  "text3_en": announcementSection.text3_en,',
+    '  "visible":  announcementSection.visible,',
+    '  "seo": seo {',
+    '    metaTitle,',
+    '    metaDescription,',
+    '    keywords,',
+    '    "ogTitle": coalesce(ogTitle, metaTitle),',
+    '    "ogDescription": coalesce(ogDescription, metaDescription),',
+    '    "ogImage": ogImage.asset->url,',
+    '    "twitterTitle": coalesce(twitterTitle, ogTitle, metaTitle),',
+    '    "twitterDescription": coalesce(twitterDescription, ogDescription, metaDescription),',
+    '    noIndex',
+    '  }',
     '}',
   ].join('');
 
@@ -540,11 +566,17 @@
   function applyAnnouncement(data) {
     if (!data) return;
     var lang    = getLang();
-    var bar     = document.querySelector('.announcement-bar');
-    var spans   = bar ? bar.querySelectorAll('span[data-translate]') : [];
+    var bar     = document.querySelector('.ll-announce, .announcement-bar');
+    var parts   = [
+      lang === 'en' ? data.text1_en : data.text1_ka,
+      lang === 'en' ? data.text2_en : data.text2_ka,
+      lang === 'en' ? data.text3_en : data.text3_ka,
+    ].filter(Boolean);
     if (data.visible === false && bar) { bar.style.display = 'none'; return; }
-    if (spans[0]) spans[0].textContent = lang === 'en' ? data.text1_en : data.text1_ka;
-    if (spans[1]) spans[1].textContent = lang === 'en' ? data.text2_en : data.text2_ka;
+    if (bar && parts.length) {
+      bar.style.display = '';
+      bar.innerHTML = parts.map(esc).join(' &nbsp;•&nbsp; ');
+    }
   }
 
   /* ── Category page hero ─────────────────────────────────────── */
@@ -552,8 +584,8 @@
   function applyCategoryPageHero(data) {
     if (!data) return;
     var lang    = getLang();
-    var heroH   = document.querySelector('.ll-hero-title, .hero-title');
-    var heroSub = document.querySelector('.ll-hero-sub, .hero-desc');
+    var heroH   = document.querySelector('.ll-hero-title, .ll-page-hero-content h1, .hero-title');
+    var heroSub = document.querySelector('.ll-hero-sub, .ll-page-hero-content p, .hero-desc');
     if (heroH)   heroH.textContent   = lang === 'en' ? data.hero_title_en : data.hero_title_ka;
     if (heroSub) heroSub.textContent = lang === 'en' ? data.hero_sub_en   : data.hero_sub_ka;
   }
@@ -603,6 +635,7 @@
     // Homepage-only: fetch hero + announcement in a single Sanity request
     if (_pageSlug === 'index') {
       sanityQuery(HOMEPAGE_GROQ).then(function (data) {
+        applySeo(data && data.seo);
         applyHero(data);
         applyAnnouncement(data);
       });
@@ -615,10 +648,24 @@
         '  "hero_title_ka": hero.heading_ka,',
         '  "hero_title_en": hero.heading_en,',
         '  "hero_sub_ka":   hero.sub_ka,',
-        '  "hero_sub_en":   hero.sub_en',
+        '  "hero_sub_en":   hero.sub_en,',
+        '  "seo": seo {',
+        '    metaTitle,',
+        '    metaDescription,',
+        '    keywords,',
+        '    "ogTitle": coalesce(ogTitle, metaTitle),',
+        '    "ogDescription": coalesce(ogDescription, metaDescription),',
+        '    "ogImage": ogImage.asset->url,',
+        '    "twitterTitle": coalesce(twitterTitle, ogTitle, metaTitle),',
+        '    "twitterDescription": coalesce(twitterDescription, ogDescription, metaDescription),',
+        '    noIndex',
+        '  }',
         '}',
       ].join('');
-      sanityQuery(pageGroq, {page: _pageSlug}).then(applyCategoryPageHero);
+      sanityQuery(pageGroq, {page: _pageSlug}).then(function (data) {
+        applySeo(data && data.seo);
+        applyCategoryPageHero(data);
+      });
     }
   }
 
