@@ -106,7 +106,9 @@
     '_id,',
     '"slug": slug.current,',
     'name_ka, name_en,',
-    'category, style,',
+    // Resolve category reference to its display names
+    '"category_ka": category->title_ka, "category_en": category->title,',
+    'filterTags, style,',
     'price, old_price,',
     'badge, discount_pct,',
     'description_ka, description_en,',
@@ -225,7 +227,7 @@
     var desc    = t(product, 'description');
     var article = document.createElement('article');
     article.className  = 'product-card';
-    article.setAttribute('data-category', product.category || 'indoor');
+    article.setAttribute('data-category', filterKey(product));
     article.setAttribute('data-price',    String(product.price || 0));
     article.setAttribute('data-style',    product.style || 'loft');
     article.setAttribute('data-slug',     product.slug || '');
@@ -248,7 +250,7 @@
         '</button>',
       '</div>',
       '<div class="product-info">',
-        '<span class="product-category">' + esc(categoryLabel(product.category)) + '</span>',
+        '<span class="product-category">' + esc(categoryLabel(product)) + '</span>',
         '<h3 class="product-name">' + esc(name) + '</h3>',
         '<p class="product-desc">' + esc(desc) + '</p>',
         '<div class="product-footer">',
@@ -274,19 +276,18 @@
     return article;
   }
 
-  function categoryLabel(val) {
+  // categoryLabel now reads the names resolved directly from Sanity
+  // (category->title_ka / category->title) so no local mapping is needed.
+  function categoryLabel(product) {
     var lang = getLang();
-    var labels = {
-      indoor:     { ka: 'შიდა ავეჯი',        en: 'Indoor Furniture' },
-      outdoor:    { ka: 'მთავარი ავეჯი',     en: 'Main Furniture' },
-      office:     { ka: 'საოფისე ავეჯი',      en: 'Office Furniture' },
-      loft:       { ka: 'ლითონის ნაკეთობა',     en: 'Metal Works' },
-      lighting:   { ka: 'განათება',           en: 'Lighting' },
-      decoration: { ka: 'დეკორაცია',          en: 'Decoration' }
-    };
-    var entry = labels[val];
-    if (!entry) return val || '';
-    return lang === 'en' ? entry.en : entry.ka;
+    return (lang === 'en' ? product.category_en : product.category_ka) || '';
+  }
+
+  // Returns the subcategory filter key from the first filterTag,
+  // stripping the 2-letter page prefix (e.g. "mf-magida" → "magida").
+  function filterKey(product) {
+    var tag = Array.isArray(product.filterTags) ? product.filterTags[0] : '';
+    return (tag || '').replace(/^[a-z]{2}-/, '');
   }
 
   /** Escape HTML entities to prevent XSS */
@@ -325,7 +326,7 @@
 
     var article = document.createElement('article');
     article.className = 'll-product-card';
-    article.setAttribute('data-category', product.category || 'loft');
+    article.setAttribute('data-category', filterKey(product));
     article.setAttribute('data-price',    String(product.price || 0));
     article.setAttribute('data-style',    product.style || 'loft');
     article.setAttribute('data-slug',     product.slug || '');
@@ -347,7 +348,7 @@
         '</button>',
       '</div>',
       '<div class="ll-prod-body">',
-        '<span class="ll-prod-cat">' + esc(categoryLabel(product.category)) + '</span>',
+        '<span class="ll-prod-cat">' + esc(categoryLabel(product)) + '</span>',
         '<h3 class="ll-prod-name">' + esc(name) + '</h3>',
         '<p class="ll-prod-material">' + esc(matStr) + '</p>',
         '<div class="ll-prod-footer"><div>',
@@ -463,19 +464,21 @@
 
   /* ── Homepage GROQ query (hero + announcement in one request) ── */
 
+  // Field aliases are kept identical so applyHero() / applyAnnouncement()
+  // require no changes — only the source paths are corrected to match the schema.
   var HOMEPAGE_GROQ = [
     '*[_type == "homepage" && _id == "homepage-singleton"][0] {',
-    '  "tag_ka":   heroSection.tag_ka,',
-    '  "tag_en":   heroSection.tag_en,',
-    '  "title_ka": heroSection.title_ka,',
-    '  "title_en": heroSection.title_en,',
-    '  "desc_ka":  heroSection.desc_ka,',
-    '  "desc_en":  heroSection.desc_en,',
-    '  "btn1_ka":  heroSection.btn1_ka,',
-    '  "btn1_en":  heroSection.btn1_en,',
-    '  "btn2_ka":  heroSection.btn2_ka,',
-    '  "btn2_en":  heroSection.btn2_en,',
-    '  "bg_image": heroSection.bg_image.asset->url,',
+    '  "tag_ka":   heroSection.label_ka,',
+    '  "tag_en":   heroSection.label_en,',
+    '  "title_ka": heroSection.heading_ka,',
+    '  "title_en": heroSection.heading_en,',
+    '  "desc_ka":  heroSection.sub_ka,',
+    '  "desc_en":  heroSection.sub_en,',
+    '  "btn1_ka":  heroSection.btnPrimary_ka,',
+    '  "btn1_en":  heroSection.btnPrimary_en,',
+    '  "btn2_ka":  heroSection.btnSecondary_ka,',
+    '  "btn2_en":  heroSection.btnSecondary_en,',
+    '  "bg_image": heroSection.bgImage.asset->url,',
     '  "text1_ka": announcementSection.text1_ka,',
     '  "text1_en": announcementSection.text1_en,',
     '  "text2_ka": announcementSection.text2_ka,',
@@ -561,8 +564,10 @@
     if (_pageSlug !== 'index') {
       var pageGroq = [
         '*[_type == "pageContent" && pageKey == $page][0] {',
-        '  hero_title_ka, hero_title_en,',
-        '  hero_sub_ka,   hero_sub_en',
+        '  "hero_title_ka": hero.heading_ka,',
+        '  "hero_title_en": hero.heading_en,',
+        '  "hero_sub_ka":   hero.sub_ka,',
+        '  "hero_sub_en":   hero.sub_en',
         '}',
       ].join('');
       sanityQuery(pageGroq, {page: _pageSlug}).then(applyCategoryPageHero);
