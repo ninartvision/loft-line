@@ -105,15 +105,20 @@
   var PRODUCT_PROJECTION = [
     '_id,',
     '"slug": slug.current,',
-    'name_ka, name_en,',
+    // Alias name_ka/name_en → title_ka/title_en so t(product, "title") works
+    '"title_ka": name_ka,',
+    '"title_en": name_en,',
     // Resolve category reference to its display names
     '"category_ka": category->title_ka, "category_en": category->title,',
     'filterTags, style,',
-    'price, old_price,',
+    'price,',
+    // Alias old_price → oldPrice
+    '"oldPrice": old_price,',
     'badge, discount_pct,',
     'description_ka, description_en,',
     'materials_ka, materials_en,',
-    '"image": image.asset->url,',
+    // Primary image: first gallery item; full gallery kept for quick-view
+    '"image": gallery[0].asset->url,',
     '"gallery": gallery[].asset->url,',
     'available, featured, page',
   ].join(' ');
@@ -217,13 +222,13 @@
   }
 
   function buildOldPrice(product) {
-    if (!product.old_price || product.old_price <= 0) return '';
-    return '<span class="product-old-price">₾' + product.old_price.toLocaleString() + '</span>';
+    if (!product.oldPrice || product.oldPrice <= 0) return '';
+    return '<span class="product-old-price">₾' + product.oldPrice.toLocaleString() + '</span>';
   }
 
   /** Build a product card article element from a product data object. */
   function buildProductCard(product) {
-    var name    = t(product, 'name');
+    var name    = t(product, 'title');
     var desc    = t(product, 'description');
     var article = document.createElement('article');
     article.className  = 'product-card';
@@ -283,11 +288,14 @@
     return (lang === 'en' ? product.category_en : product.category_ka) || '';
   }
 
-  // Returns the subcategory filter key from the first filterTag,
-  // stripping the 2-letter page prefix (e.g. "mf-magida" → "magida").
+  // Returns the subcategory filter key from the first filterTag.
+  // "mf-magida"         → "magida"
+  // "of-sakabi"         → "sakabi"
+  // "mf-some-long-key"  → "some-long-key"  (slice(1) keeps all segments after prefix)
   function filterKey(product) {
-    var tag = Array.isArray(product.filterTags) ? product.filterTags[0] : '';
-    return (tag || '').replace(/^[a-z]{2}-/, '');
+    var tags = product.filterTags;
+    if (!Array.isArray(tags) || !tags.length) return '';
+    return tags[0].split('-').slice(1).join('-');
   }
 
   /** Escape HTML entities to prevent XSS */
@@ -303,7 +311,7 @@
   /* ── Loft-line product card builder (System A pages) ───────── */
 
   function buildLoftCard(product) {
-    var name    = t(product, 'name');
+    var name    = t(product, 'title');
     var matArr  = getLang() === 'en' ? (product.materials_en || product.materials_ka || []) : (product.materials_ka || []);
     var matStr  = Array.isArray(matArr) ? matArr.join(' & ') : String(matArr || '');
 
@@ -315,8 +323,8 @@
       badgeHtml = '<span class="ll-badge ll-badge-sale">' + pct + '</span>';
     }
 
-    var oldPriceHtml = (product.old_price && product.old_price > 0)
-      ? '<span class="ll-prod-old-price">₾' + product.old_price.toLocaleString() + '</span>'
+    var oldPriceHtml = (product.oldPrice && product.oldPrice > 0)
+      ? '<span class="ll-prod-old-price">₾' + product.oldPrice.toLocaleString() + '</span>'
       : '';
 
     var waSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">'
