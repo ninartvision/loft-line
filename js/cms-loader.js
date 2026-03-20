@@ -317,6 +317,107 @@
     return Array.isArray(product.filterTags) ? product.filterTags.filter(Boolean) : [];
   }
 
+  var CATEGORY_PROJECTION = [
+    '"title_en": title,',
+    'title_ka,',
+    'filterKey,',
+    'pageKey,',
+    'sortOrder'
+  ].join(' ');
+
+  function loadCategories(pageSlug) {
+    if (!pageSlug || pageSlug === 'index') return Promise.resolve([]);
+
+    var groq = '*[_type == "category" && pageKey == $page] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
+    return sanityQuery(groq, {page: pageSlug}).then(processCategories);
+  }
+
+  function processCategories(categories) {
+    if (!Array.isArray(categories) || !categories.length) return [];
+    return categories
+      .filter(function (category) {
+        return category && category.filterKey;
+      })
+      .map(function (category) {
+        return {
+          title_ka: category.title_ka || category.title_en || '',
+          title_en: category.title_en || category.title_ka || '',
+          filterKey: String(category.filterKey || ''),
+          pageKey: category.pageKey || '',
+        };
+      });
+  }
+
+  function filterButtonIcon(isAll) {
+    if (isAll) {
+      return [
+        '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+          '<rect x="3" y="3" width="7" height="7" rx="1.5"/>',
+          '<rect x="14" y="3" width="7" height="7" rx="1.5"/>',
+          '<rect x="3" y="14" width="7" height="7" rx="1.5"/>',
+          '<rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+        '</svg>'
+      ].join('');
+    }
+
+    return [
+      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+        '<path d="M5 7h14"/>',
+        '<path d="M5 12h14"/>',
+        '<path d="M5 17h9"/>',
+        '<circle cx="17.5" cy="17" r="1.5" fill="currentColor" stroke="none"/>',
+      '</svg>'
+    ].join('');
+  }
+
+  function buildFilterButton(filterKey, label, isActive, isAll) {
+    var button = document.createElement('button');
+    button.className = 'll-iconcat-btn' + (isActive ? ' active' : '');
+    button.setAttribute('data-filter', filterKey);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    button.innerHTML = [
+      '<span class="ll-iconcat-circle">',
+        filterButtonIcon(isAll),
+      '</span>',
+      '<span class="ll-iconcat-label">' + esc(label) + '</span>'
+    ].join('');
+    return button;
+  }
+
+  function renderCategoryFilters(categories, bar) {
+    if (!bar) return;
+
+    var lang = getLang();
+    var activeFilter = bar.getAttribute('data-current-filter') || 'all';
+    var hasActiveFilter = activeFilter === 'all' || categories.some(function (category) {
+      return category.filterKey === activeFilter;
+    });
+
+    if (!hasActiveFilter) activeFilter = 'all';
+
+    bar.innerHTML = '';
+
+    if (!categories.length) {
+      bar.hidden = true;
+      bar.setAttribute('aria-hidden', 'true');
+      bar.setAttribute('data-current-filter', 'all');
+      return;
+    }
+
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(buildFilterButton('all', lang === 'en' ? 'All' : 'ყველა', activeFilter === 'all', true));
+
+    categories.forEach(function (category) {
+      var label = lang === 'en' ? category.title_en : category.title_ka;
+      fragment.appendChild(buildFilterButton(category.filterKey, label, category.filterKey === activeFilter, false));
+    });
+
+    bar.hidden = false;
+    bar.removeAttribute('aria-hidden');
+    bar.setAttribute('data-current-filter', activeFilter);
+    bar.appendChild(fragment);
+  }
+
   /** Escape HTML entities to prevent XSS */
   function esc(str) {
     return String(str || '')
@@ -618,17 +719,32 @@
     var grid         = isLoftSystem
       ? document.getElementById('sanity-product-grid')
       : document.getElementById('productGrid');
+    var filterBar    = isLoftSystem ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
+    var tasks        = [];
 
     if (grid) {
       // Immediately replace any static HTML placeholder cards with skeletons.
       // This prevents stale images from the baked-in HTML from ever being visible.
       showSkeletons(grid, isLoftSystem);
 
-      loadProducts(_pageSlug).then(function (products) {
+      tasks.push(loadProducts(_pageSlug).then(function (products) {
         if (gen !== _renderGen) return; // stale — a newer render is already in flight
         renderProducts(products, grid, cardBuilder);
-        dispatchReady(); // fires cms:ready → quick-view.js re-wires click triggers once
+      }));
+    }
+
+    if (filterBar && _pageSlug !== 'index') {
+      tasks.push(loadCategories(_pageSlug).then(function (categories) {
+        if (gen !== _renderGen) return;
+        renderCategoryFilters(categories, filterBar);
+      }));
+    }
+
+    if (tasks.length) {
+      Promise.all(tasks).then(function () {
+        if (gen !== _renderGen) return;
+        dispatchReady();
       });
     }
 

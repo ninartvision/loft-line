@@ -1,11 +1,8 @@
 /**
  * subcat-filter.js
- * Subcategory filter for the მთავარი ავეჯი page.
- *
- * Works with static product cards AND cards injected later by cms-loader.js.
- * Each product card needs:   data-category="magida"   (or skami / karada / taro /
- *                                                       fexsacmlis-karada / komodi)
- * Filter buttons need:       data-filter="magida"     (or "all" for reset)
+ * CMS-driven subcategory filter for category pages.
+ * Buttons are rendered by cms-loader.js from Sanity categories.
+ * Cards are matched directly via exact filterKey values in data-category.
  */
 (function () {
   'use strict';
@@ -48,6 +45,26 @@
     updateEmpty(grid);
   }
 
+  function resolveFilter(bar, filter) {
+    var buttons = Array.prototype.slice.call(bar.querySelectorAll('.' + BTN_CLASS));
+    var nextFilter = filter || 'all';
+    var exists = nextFilter === 'all' || buttons.some(function (button) {
+      return button.dataset.filter === nextFilter;
+    });
+    return exists ? nextFilter : 'all';
+  }
+
+  function setActiveButton(bar, filter) {
+    var activeFilter = resolveFilter(bar, filter);
+    bar.querySelectorAll('.' + BTN_CLASS).forEach(function (button) {
+      var isActive = button.dataset.filter === activeFilter;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    bar.setAttribute('data-current-filter', activeFilter);
+    return activeFilter;
+  }
+
   /* ── Wire up filter buttons ── */
   function init() {
     var bar  = document.querySelector('.' + BAR_CLASS);
@@ -58,15 +75,7 @@
       var btn = e.target.closest('.' + BTN_CLASS);
       if (!btn) return;
 
-      /* Update active state + ARIA */
-      bar.querySelectorAll('.' + BTN_CLASS).forEach(function (b) {
-        b.classList.remove('active');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-pressed', 'true');
-
-      currentFilter = btn.dataset.filter || 'all';
+      currentFilter = setActiveButton(bar, btn.dataset.filter || 'all');
       applyFilter(grid, currentFilter);
     });
 
@@ -81,8 +90,12 @@
     observer.observe(grid, { childList: true });
 
     document.addEventListener('cms:ready', function () {
+      currentFilter = setActiveButton(bar, bar.getAttribute('data-current-filter') || currentFilter);
       applyFilter(grid, currentFilter);
     });
+
+    currentFilter = setActiveButton(bar, bar.getAttribute('data-current-filter') || currentFilter);
+    applyFilter(grid, currentFilter);
   }
 
   /* Run after DOM is ready */
