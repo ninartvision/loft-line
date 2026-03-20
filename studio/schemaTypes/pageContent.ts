@@ -1,19 +1,22 @@
 import {defineField, defineType} from 'sanity'
 
-const PAGE_OPTIONS = [
-  {title: 'Main Furniture / მთავარი ავეჯი',     value: 'main-furniture'},
-  {title: 'Office Furniture / საოფისე ავეჯი',   value: 'office-furniture'},
-  {title: 'Loft Collection / ლოფტ კოლექცია',   value: 'loft-collection'},
-  {title: 'Lighting / განათება',                 value: 'lighting'},
-  {title: 'Decoration / დეკორაცია',              value: 'decoration'},
+export const PAGE_OPTIONS = [
+  {title: 'Main Furniture / მთავარი ავეჯი',    value: 'main-furniture'},
+  {title: 'Office Furniture / საოფისე ავეჯი',  value: 'office-furniture'},
+  {title: 'Loft Collection / ლოფტ კოლექცია',  value: 'loft-collection'},
+  {title: 'Lighting / განათება',                value: 'lighting'},
+  {title: 'Decoration / დეკორაცია',             value: 'decoration'},
 ]
 
 export default defineType({
   name: 'pageContent',
-  title: 'Category Page Content / კატეგორიის გვერდი',
+  title: 'Category Page / კატეგორიის გვერდი',
   type: 'document',
 
+  // One document per catalog page. Use pageKey as the identifier.
+
   fields: [
+    // ── Page Identity ─────────────────────────────────────────────
     defineField({
       name: 'pageKey',
       title: 'Page',
@@ -21,52 +24,84 @@ export default defineType({
       options: {list: PAGE_OPTIONS, layout: 'radio'},
       validation: (Rule) => Rule.required(),
     }),
+
+    // ── SEO ───────────────────────────────────────────────────────
     defineField({
-      name: 'hero_title_ka',
-      title: 'Hero Title (KA)',
-      type: 'string',
+      name: 'seo',
+      title: '🔍 SEO',
+      type: 'seo',
+      options: {collapsible: true, collapsed: false},
+    }),
+
+    // ── Hero Section ──────────────────────────────────────────────
+    defineField({
+      name: 'hero',
+      title: '① Hero Section',
+      type: 'heroSection',
+      options: {collapsible: true, collapsed: false},
+    }),
+
+    // ── Catalog Bar ───────────────────────────────────────────────
+    defineField({
+      name: 'catalogBar',
+      title: '② Catalog Bar',
+      type: 'object',
+      description: 'Text displayed in the bar above the product grid',
+      options: {collapsible: true, collapsed: true},
+      fields: [
+        defineField({
+          name: 'countSuffix_ka',
+          title: 'Count Suffix (KA)',
+          type: 'string',
+          initialValue: 'პროდუქტი',
+          description: 'Shown after product count: "8 პროდუქტი"',
+        }),
+        defineField({
+          name: 'countSuffix_en',
+          title: 'Count Suffix (EN)',
+          type: 'string',
+          initialValue: 'Products',
+        }),
+      ],
+    }),
+
+    // ── Pinned Products ───────────────────────────────────────────
+    defineField({
+      name: 'featuredProducts',
+      title: '③ Pinned / Featured Products',
+      type: 'array',
+      description: 'These products are always shown first in the grid (max 3)',
+      of: [{type: 'reference', to: [{type: 'product'}]}],
+      validation: (Rule) => Rule.max(3),
+    }),
+
+    // ── CTA Section ───────────────────────────────────────────────
+    defineField({
+      name: 'cta',
+      title: '④ CTA Section',
+      type: 'ctaSection',
+      options: {collapsible: true, collapsed: true},
+    }),
+
+    // ── Editorial Body ────────────────────────────────────────────
+    defineField({
+      name: 'body_ka',
+      title: '⑤ Page Body — Rich Text (KA)',
+      type: 'richTextBlock',
+      description: 'Optional editorial content shown below the product grid',
     }),
     defineField({
-      name: 'hero_title_en',
-      title: 'Hero Title (EN)',
-      type: 'string',
-    }),
-    defineField({
-      name: 'hero_sub_ka',
-      title: 'Hero Subtitle (KA)',
-      type: 'text',
-      rows: 2,
-    }),
-    defineField({
-      name: 'hero_sub_en',
-      title: 'Hero Subtitle (EN)',
-      type: 'text',
-      rows: 2,
-    }),
-    defineField({
-      name: 'hero_image',
-      title: 'Hero Background Image',
-      type: 'image',
-      options: {hotspot: true},
-    }),
-    defineField({
-      name: 'seo_title',
-      title: 'SEO Meta Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'seo_desc',
-      title: 'SEO Meta Description',
-      type: 'text',
-      rows: 2,
+      name: 'body_en',
+      title: '⑤ Page Body — Rich Text (EN)',
+      type: 'richTextBlock',
     }),
   ],
 
   preview: {
-    select: {title: 'pageKey', subtitle: 'hero_title_ka'},
-    prepare({title, subtitle}) {
-      const label = PAGE_OPTIONS.find((p) => p.value === title)?.title ?? title
-      return {title: label || 'Untitled', subtitle}
+    select: {key: 'pageKey', heading: 'hero.heading_ka'},
+    prepare({key, heading}: {key?: string; heading?: string}) {
+      const label = PAGE_OPTIONS.find((p) => p.value === key)?.title ?? key
+      return {title: label || 'Untitled', subtitle: heading ?? ''}
     },
   },
 })

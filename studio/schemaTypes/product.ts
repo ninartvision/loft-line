@@ -28,19 +28,17 @@ export default defineType({
     defineField({
       name: 'category',
       title: 'Category / კატეგორია',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Indoor Furniture / შიდა ავეჯი', value: 'indoor'},
-          {title: 'Outdoor Furniture / გარე ავეჯი', value: 'outdoor'},
-          {title: 'Office Furniture / საოფისე', value: 'office'},
-          {title: 'Loft Collection / ლოფტ კოლექცია', value: 'loft'},
-          {title: 'Lighting / განათება', value: 'lighting'},
-          {title: 'Decoration / დეკორაცია', value: 'decoration'},
-        ],
-        layout: 'radio',
-      },
+      type: 'reference',
+      to: [{type: 'category'}],
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'filterTags',
+      title: 'Filter Tags / ფილტრის თეგები',
+      type: 'array',
+      of: [{type: 'string'}],
+      description: 'HTML data-filter values for in-page filtering. e.g. mf-magida, lt-sakidi',
+      options: {layout: 'tags'},
     }),
     defineField({
       name: 'style',
@@ -102,12 +100,41 @@ export default defineType({
       title: 'Materials (KA) / მასალები',
       type: 'array',
       of: [{type: 'string'}],
+      options: {layout: 'tags'},
     }),
     defineField({
       name: 'materials_en',
       title: 'Materials (EN)',
       type: 'array',
       of: [{type: 'string'}],
+      options: {layout: 'tags'},
+    }),
+    defineField({
+      name: 'dimensions_ka',
+      title: 'Dimensions (KA) / ზომები',
+      type: 'string',
+      description: 'e.g. 120\u00d760\u00d775 სმ',
+    }),
+    defineField({
+      name: 'dimensions_en',
+      title: 'Dimensions (EN)',
+      type: 'string',
+      description: 'e.g. 120\u00d760\u00d775 cm',
+    }),
+    defineField({
+      name: 'guarantee',
+      title: 'Guarantee / გარანტია',
+      type: 'string',
+      options: {
+        list: [
+          {title: '2 წლის გარანტია', value: '2 წლის გარანტია'},
+          {title: '5 წლის გარანტია', value: '5 წლის გარანტია'},
+          {title: '1 წლის გარანტია', value: '1 წლის გარანტია'},
+          {title: 'გარანტიის გარეშე', value: ''},
+        ],
+        layout: 'radio',
+      },
+      initialValue: '2 წლის გარანტია',
     }),
     defineField({
       name: 'image',
@@ -133,6 +160,21 @@ export default defineType({
       title: 'Featured on Homepage / მთავარ გვერდზე',
       type: 'boolean',
       initialValue: false,
+    }),
+    defineField({
+      name: 'popularity',
+      title: 'Popularity Score (0–100)',
+      type: 'number',
+      description: 'Used for "sort by popularity". Higher = shown first.',
+      initialValue: 50,
+      validation: (Rule) => Rule.min(0).max(100),
+    }),
+    defineField({
+      name: 'sortOrder',
+      title: 'Manual Sort Order',
+      type: 'number',
+      description: 'Lower number = shown first in manual sort.',
+      initialValue: 100,
     }),
     defineField({
       name: 'page',
