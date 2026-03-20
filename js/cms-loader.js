@@ -180,15 +180,24 @@
     });
   }
 
+  var PLACEHOLDER_IMG = 'images/placeholder.svg';
+
   function processProducts(products) {
     if (!Array.isArray(products) || !products.length) return [];
     return products.map(function (p) {
-      // Optimise main image → WebP, max 600 px wide
-      if (p.image) p.image = buildImageUrl(p.image, {width: 600});
+      // Optimise main image → WebP, max 600 px wide; fall back to placeholder
+      if (p.image) {
+        p.image = buildImageUrl(p.image, {width: 600});
+      } else {
+        p.image = PLACEHOLDER_IMG;
+      }
       // Optimise gallery images → WebP, max 1200 px wide
       if (Array.isArray(p.gallery)) {
-        p.gallery = p.gallery.map(function (u) { return buildImageUrl(u, {width: 1200}); });
+        p.gallery = p.gallery.map(function (u) { return u ? buildImageUrl(u, {width: 1200}) : PLACEHOLDER_IMG; });
       }
+      // Safety: ensure numeric fields are numbers, not null/undefined
+      p.price    = p.price    || 0;
+      p.oldPrice = p.oldPrice || 0;
       return p;
     });
   }
