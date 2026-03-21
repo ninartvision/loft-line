@@ -692,7 +692,7 @@
     grid.innerHTML = '';
     // Always update the count badge, including the 0-products case
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
-    if (countEl) countEl.textContent = products.length + ' პროდუქტი';
+    if (countEl) countEl.textContent = products.length + ' ' + text('პროდუქტი', 'Products');
     if (!products.length) {
       var empty = document.createElement('p');
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';

@@ -1,19 +1,23 @@
+/* header-scroll.js — supplemental scroll/menu handlers.
+   NOTE: loft-line.js already handles these on all current pages.
+   This file is kept as a standalone utility but is not loaded by any HTML page.
+   If you include it, ensure you do NOT also include loft-line.js (they overlap). */
 document.addEventListener('DOMContentLoaded', () => {
-  const header = document.getElementById('siteHeader');
+  // Sticky header — matches the real header ID injected by site-components.js
+  const header = document.getElementById('llHeader');
 
-  // Sticky header on scroll
   function handleScroll() {
     if (!header) return;
-    header.classList.toggle('scrolled', window.scrollY > 120);
+    header.classList.toggle('elevated', window.scrollY > 40);
   }
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
-  // Mobile menu
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const mobileOverlay = document.getElementById('mobileMenuOverlay');
-  const mobileClose = document.getElementById('mobileMenuClose');
+  // Mobile drawer — matches IDs injected by site-components.js
+  const hamburgerBtn = document.getElementById('llHamburger');
+  const mobileMenu   = document.getElementById('llDrawer');
+  const mobileOverlay = document.getElementById('llOverlay');
+  const mobileClose  = document.getElementById('llDrawerClose');
 
   function openMenu() {
     if (!mobileMenu) return;

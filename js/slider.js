@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const visibleCount = getVisibleCount();
     const maxIndex = Math.max(0, sliderTrack.children.length - visibleCount);
     if (currentIndex > maxIndex) currentIndex = maxIndex;
-    const card = sliderTrack.querySelector('.product-card');
+    // Support both .product-card (homepage) and .ll-card (popular-products)
+    const card = sliderTrack.querySelector('.product-card, .ll-card');
     if (!card) return;
     const cardWidth = card.offsetWidth;
     const gap = parseInt(getComputedStyle(sliderTrack).gap) || 32;

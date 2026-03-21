@@ -18,14 +18,14 @@
   <meta property="og:description" content="ლოფტ სტილის მთავარი ავეჯი: სასადილო მაგიდები, სავარძლები, ბარის სკამები. ხელნაკეთი ხე &amp; ლითონი.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://loftline.store/main-furniture.html">
-  <meta property="og:image" content="https://loftline.store/images/cover1.png">
+  <meta property="og:image" content="https://loftline.store/images/cover.webp">
   <meta property="og:site_name" content="Loft Line">
   <meta property="og:locale" content="ka_GE">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="მთავარი ავეჯი – Loft Line">
   <meta name="twitter:description" content="Loft style living room furniture: dining tables, armchairs, bar stools, beds. Handcrafted in Georgia.">
-  <meta name="twitter:image" content="https://loftline.store/images/cover1.png">
+  <meta name="twitter:image" content="https://loftline.store/images/cover.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Georgian:wght@400;500;700&display=swap" rel="stylesheet">
@@ -112,11 +112,18 @@
   <div class="pqv-overlay" id="pqvOverlay" aria-hidden="true" role="presentation"></div>
   <div class="pqv-dialog" id="pqvDialog" role="dialog" aria-modal="true" aria-labelledby="pqvName" aria-hidden="true">
     <div class="pqv-image-panel">
-      <div class="pqv-main-img-wrap">
-        <img class="pqv-main-img" id="pqvMainImg" src="" alt="" width="600" height="600">
-        <div class="pqv-img-overlay" id="pqvImgOverlay"></div>
+      <div class="pqv-gallery" id="pqvGallery">
+        <div class="pqv-gallery-track-wrap">
+          <div class="pqv-gallery-track" id="pqvGalleryTrack"></div>
+        </div>
+        <button class="pqv-gallery-btn pqv-gallery-prev" id="pqvGalleryPrev" type="button" aria-label="წინა" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="pqv-gallery-btn pqv-gallery-next" id="pqvGalleryNext" type="button" aria-label="შემდეგი" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
-      <div class="pqv-thumbs" id="pqvThumbs"></div>
+      <div class="pqv-thumbs" id="pqvThumbs" hidden></div>
     </div>
     <div class="pqv-info-panel">
       <button class="pqv-close" id="pqvClose" type="button" aria-label="დახურვა">

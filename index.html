@@ -55,7 +55,7 @@
         "url": "https://loftline.store/",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://loftline.store/images/og-image.png"
+          "url": "https://loftline.store/images/og-image.jpg"
         },
         "description": "პრემიუმ ხელნაკეთი ლოფტ სტილის ავეჯი სახლისა და ოფისისთვის",
         "address": {
@@ -556,11 +556,18 @@
   <div class="pqv-overlay" id="pqvOverlay" aria-hidden="true" role="presentation"></div>
   <div class="pqv-dialog" id="pqvDialog" role="dialog" aria-modal="true" aria-labelledby="pqvName" aria-hidden="true">
     <div class="pqv-image-panel">
-      <div class="pqv-main-img-wrap">
-        <img class="pqv-main-img" id="pqvMainImg" src="" alt="" width="600" height="600">
-        <div class="pqv-img-overlay" id="pqvImgOverlay"></div>
+      <div class="pqv-gallery" id="pqvGallery">
+        <div class="pqv-gallery-track-wrap">
+          <div class="pqv-gallery-track" id="pqvGalleryTrack"></div>
+        </div>
+        <button class="pqv-gallery-btn pqv-gallery-prev" id="pqvGalleryPrev" type="button" aria-label="წინა" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="pqv-gallery-btn pqv-gallery-next" id="pqvGalleryNext" type="button" aria-label="შემდეგი" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
-      <div class="pqv-thumbs" id="pqvThumbs"></div>
+      <div class="pqv-thumbs" id="pqvThumbs" hidden></div>
     </div>
     <div class="pqv-info-panel">
       <button class="pqv-close" id="pqvClose" type="button" aria-label="დახურვა">
@@ -588,7 +595,7 @@
       </div>
       <button class="pqv-add-btn" id="pqvAddBtn" type="button">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-        <span data-i18n="pqv_add_btn">კალათაში დამატება</span>
+        <span data-i18n="pqv_order_btn">კალათაში დამატება</span>
       </button>
       <div class="pqv-payments">
         <span class="pqv-pay-icon"><svg width="28" height="18" viewBox="0 0 38 24"><rect width="38" height="24" rx="3" fill="#1A1F71"/><text x="19" y="16" font-family="Arial" font-size="10" font-weight="bold" fill="#F7A600" text-anchor="middle">VISA</text></svg></span>

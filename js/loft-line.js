@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Highlight active nav ──
-  const page = window.location.pathname.split('/').pop() || 'homepage.html';
+  const page = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.ll-nav a, .ll-drawer-nav a').forEach(a => {
     if (a.getAttribute('href') === page) a.classList.add('active');
   });
