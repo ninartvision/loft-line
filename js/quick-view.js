@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    LOFT LINE - Product Quick View System + Image Gallery
    Works on: index.html (product-card) + all loft pages (ll-product-card)
    ============================================================ */

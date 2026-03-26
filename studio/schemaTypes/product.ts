@@ -141,6 +141,47 @@ export default defineType({
       validation: (rule) => rule.unique().max(20),
     }),
 
+    // ── Dimensions (bilingual) ───────────────────────────────────
+    defineField({
+      name: 'dimensions_ka',
+      title: 'განზომილებები (KA)',
+      type: 'string',
+      description: 'e.g. სიგანე 120 სმ × სიღრმე 60 სმ × სიმაღლე 75 სმ',
+      validation: (rule) => rule.max(200),
+    }),
+    defineField({
+      name: 'dimensions_en',
+      title: 'Dimensions (EN)',
+      type: 'string',
+      description: 'e.g. W 120 cm × D 60 cm × H 75 cm',
+      validation: (rule) => rule.max(200),
+    }),
+
+    // ── Guarantee ────────────────────────────────────────────────
+    defineField({
+      name: 'guarantee',
+      title: 'Guarantee / გარანტია',
+      type: 'string',
+      description: 'e.g. "5 წელი" / "5 years"',
+      validation: (rule) => rule.max(80),
+    }),
+
+    // ── Sort & popularity ────────────────────────────────────────
+    defineField({
+      name: 'sortOrder',
+      title: 'Sort Order',
+      type: 'number',
+      description: 'Lower numbers appear first. Leave empty to sort by date.',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'popularity',
+      title: 'Popularity Score',
+      type: 'number',
+      description: 'Higher = more popular. Used for optional popularity sorting.',
+      validation: (rule) => rule.min(0),
+    }),
+
     // ── Style ────────────────────────────────────────────────────
     defineField({
       name: 'style',

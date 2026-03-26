@@ -313,11 +313,19 @@
     var groq, params;
 
     if (pageSlug === 'index') {
-      groq = '*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      groq = '*[_type == "product" && coalesce(available, true) == true] | order(coalesce(sortOrder, 9999) asc, _createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
       params = {};
       return sanityQuery(groq, params).then(function (response) {
+        var result = response.ok ? response.result : null;
+        if (!Array.isArray(result) || !result.length) {
+          cmsDebug('loadProducts:index-empty', {
+            ok: response.ok,
+            hint: 'No published products found. Verify products are PUBLISHED in Sanity Studio. ' +
+                  'Test: https://4n3g4zv5.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=="product"][0..2]{_id,name_ka,available}'
+          });
+        }
         return {
-          items: response.ok ? processProducts(response.result) : [],
+          items: response.ok ? processProducts(result) : [],
           error: response.ok ? null : response.error
         };
       });
@@ -342,6 +350,7 @@
       return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallbackResponse) {
         var fallback = fallbackResponse.ok ? fallbackResponse.result : null;
         if (Array.isArray(fallback) && fallback.length) {
+          cmsDebug('loadProducts:fallback1-hit', {page: pageSlug, count: fallback.length});
           return {items: processProducts(fallback), error: null};
         }
 
@@ -349,9 +358,25 @@
           return {items: [], error: fallbackResponse.error};
         }
 
-        // No broad fallback here: if page/category mapping is missing, keep the
-        // result empty so the UI renders the existing "No products found" state.
-        return {items: [], error: null};
+        // Last-resort: page and category->pageKey both missed.
+        // Return ALL available products so something renders rather than a blank grid.
+        // This typically means `page` field is not filled in Sanity Studio.
+        var broadGroq = '*[_type == "product" && coalesce(available, true) == true] | order(coalesce(sortOrder, 9999) asc, _createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+        cmsDebug('loadProducts:broad-fallback', {page: pageSlug, reason: 'page/category field unset in Sanity'});
+        return sanityQuery(broadGroq, {}).then(function (broadResponse) {
+          var broad = broadResponse.ok ? broadResponse.result : null;
+          if (Array.isArray(broad) && broad.length) {
+            cmsDebug('loadProducts:broad-fallback-hit', {count: broad.length});
+            return {items: processProducts(broad), error: null};
+          }
+          // Nothing at all — most likely all documents are still drafts.
+          cmsDebug('loadProducts:no-results', {
+            hint: 'Check that products are PUBLISHED in Sanity Studio (not just saved as drafts). ' +
+                  'Draft documents are invisible to the CDN API. ' +
+                  'Test directly: https://4n3g4zv5.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=="product"][0..2]{_id,name_ka,available,page}'
+          });
+          return {items: [], error: broadResponse.ok ? null : broadResponse.error};
+        });
       });
     });
   }

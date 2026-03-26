@@ -278,6 +278,90 @@
         "type": "array"
       },
       {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. სიგანე 120 სმ × სიღრმე 60 სმ × სიმაღლე 75 სმ",
+        "name": "dimensions_ka",
+        "type": "string",
+        "title": "განზომილებები (KA)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. W 120 cm × D 60 cm × H 75 cm",
+        "name": "dimensions_en",
+        "type": "string",
+        "title": "Dimensions (EN)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 80
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. \"5 წელი\" / \"5 years\"",
+        "name": "guarantee",
+        "type": "string",
+        "title": "Guarantee / გარანტია"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Lower numbers appear first. Leave empty to sort by date.",
+        "name": "sortOrder",
+        "type": "number"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Higher = more popular. Used for optional popularity sorting.",
+        "name": "popularity",
+        "type": "number",
+        "title": "Popularity Score"
+      },
+      {
         "options": {
           "list": [
             "loft",
