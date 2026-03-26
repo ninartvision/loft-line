@@ -1278,14 +1278,14 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-ghost);
+  color: var(--text-sub);
   text-align: center;
   max-width: 82px;
   line-height: 1.4;
   transition: color var(--dur) var(--ease);
 }
 
-.ll-iconcat-btn:hover .ll-iconcat-label   { color: var(--text-sub); }
+.ll-iconcat-btn:hover .ll-iconcat-label   { color: var(--text); }
 .ll-iconcat-btn.active .ll-iconcat-label  { color: var(--gold); }
 
 .ll-iconcat-btn:focus-visible .ll-iconcat-circle {
