@@ -1,0 +1,1547 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 2
+              },
+              {
+                "flag": "max",
+                "constraint": 120
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name_ka",
+        "type": "string",
+        "title": "სახელი (KA)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 120
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name_en",
+        "type": "string",
+        "title": "Name (EN)"
+      },
+      {
+        "options": {
+          "source": "name_ka",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Homepage",
+              "value": "index"
+            },
+            {
+              "title": "Main Furniture",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration",
+              "value": "decoration"
+            }
+          ],
+          "layout": "radio"
+        },
+        "description": "Which category page this product appears on.",
+        "name": "page",
+        "type": "string",
+        "title": "Page / გვერდი"
+      },
+      {
+        "to": [
+          {
+            "type": "category"
+          }
+        ],
+        "name": "category",
+        "type": "reference",
+        "title": "Category / კატეგორია"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "price",
+        "type": "number",
+        "title": "Price ₾"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "old_price",
+        "type": "number",
+        "title": "Old Price ₾ (strike-through)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              },
+              {
+                "flag": "max",
+                "constraint": 100
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Displayed as a badge (e.g. 20 → \"−20%\"). Auto-calculated if left empty.",
+        "name": "discount_pct",
+        "type": "number",
+        "title": "Discount %"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 20
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Short label shown on the card, e.g. \"NEW\", \"SALE\". Leave empty for none.",
+        "name": "badge",
+        "type": "string",
+        "title": "Badge label"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Fallback if no gallery images are provided.",
+        "name": "image",
+        "type": "image",
+        "title": "Main Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 12
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "First image is used as the product card thumbnail.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array"
+      },
+      {
+        "rows": 4,
+        "name": "description_ka",
+        "type": "text",
+        "title": "აღწერა (KA)"
+      },
+      {
+        "rows": 4,
+        "name": "description_en",
+        "type": "text",
+        "title": "Description (EN)"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "materials_ka",
+        "type": "array",
+        "title": "მასალები (KA)"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "materials_en",
+        "type": "array",
+        "title": "Materials (EN)"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 20
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Used by the on-page filter (e.g. \"wood\", \"metal\", \"fabric\").",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "filterTags",
+        "type": "array"
+      },
+      {
+        "options": {
+          "list": [
+            "loft",
+            "modern",
+            "classic",
+            "scandinavian",
+            "industrial"
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "loft",
+        "name": "style",
+        "type": "string"
+      },
+      {
+        "initialValue": true,
+        "name": "available",
+        "type": "boolean",
+        "title": "Available / ხელმისაწვდომია"
+      },
+      {
+        "initialValue": false,
+        "name": "featured",
+        "type": "boolean",
+        "title": "Featured / გამორჩეული"
+      }
+    ],
+    "name": "product",
+    "type": "document",
+    "title": "Product / პროდუქტი"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 2
+              },
+              {
+                "flag": "max",
+                "constraint": 80
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title_ka",
+        "type": "string",
+        "title": "სახელი (KA)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 80
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "English display name. Also used as the category reference title in CMS.",
+        "name": "title",
+        "type": "string",
+        "title": "Title (EN)"
+      },
+      {
+        "options": {
+          "source": "title_ka",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "regex",
+                "constraint": {
+                  "pattern": "/^[a-z0-9-]+$/",
+                  "name": "lowercase-slug",
+                  "invert": false
+                }
+              }
+            ],
+            "level": "warning",
+            "message": "Use only lowercase letters, numbers, and hyphens."
+          }
+        ],
+        "description": "Lowercase slug used by the front-end filter system (e.g. \"wood\", \"metal\").",
+        "name": "filterKey",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Homepage",
+              "value": "index"
+            },
+            {
+              "title": "Main Furniture",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration",
+              "value": "decoration"
+            }
+          ],
+          "layout": "radio"
+        },
+        "description": "Matches the data-page value of the HTML page that lists this category.",
+        "name": "pageKey",
+        "type": "string"
+      }
+    ],
+    "name": "category",
+    "type": "document",
+    "title": "Category / კატეგორია"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 2
+              },
+              {
+                "flag": "max",
+                "constraint": 100
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Examples: Popular, New Arrivals, Best Sellers.",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "to": [
+              {
+                "type": "product"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to product / პროდუქტი"
+          }
+        ],
+        "name": "products",
+        "type": "array"
+      }
+    ],
+    "name": "collection",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "name": "seo",
+        "type": "seo",
+        "title": "🔍 SEO"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": false
+        },
+        "name": "heroSection",
+        "type": "heroSection",
+        "title": "① Hero Section"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "fields": [
+          {
+            "initialValue": true,
+            "name": "visible",
+            "type": "boolean",
+            "title": "Show Bar"
+          },
+          {
+            "name": "text1_ka",
+            "type": "string",
+            "title": "Text 1 (KA)"
+          },
+          {
+            "name": "text1_en",
+            "type": "string",
+            "title": "Text 1 (EN)"
+          },
+          {
+            "name": "text2_ka",
+            "type": "string",
+            "title": "Text 2 (KA)"
+          },
+          {
+            "name": "text2_en",
+            "type": "string",
+            "title": "Text 2 (EN)"
+          },
+          {
+            "name": "text3_ka",
+            "type": "string",
+            "title": "Text 3 (KA)"
+          },
+          {
+            "name": "text3_en",
+            "type": "string",
+            "title": "Text 3 (EN)"
+          }
+        ],
+        "name": "announcementSection",
+        "type": "object",
+        "title": "② Announcement Bar"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "fields": [
+          {
+            "of": [
+              {
+                "fields": [
+                  {
+                    "name": "icon",
+                    "type": "string",
+                    "title": "Icon (emoji)"
+                  },
+                  {
+                    "name": "label_ka",
+                    "type": "string",
+                    "title": "Label (KA)"
+                  },
+                  {
+                    "name": "label_en",
+                    "type": "string",
+                    "title": "Label (EN)"
+                  },
+                  {
+                    "name": "desc_ka",
+                    "type": "string",
+                    "title": "Description (KA)"
+                  },
+                  {
+                    "name": "desc_en",
+                    "type": "string",
+                    "title": "Description (EN)"
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "USP Items"
+          }
+        ],
+        "name": "uspSection",
+        "type": "object",
+        "title": "③ USP Strip (Why Choose Us)"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "fields": [
+          {
+            "name": "heading_ka",
+            "type": "string",
+            "title": "Heading (KA)"
+          },
+          {
+            "name": "heading_en",
+            "type": "string",
+            "title": "Heading (EN)"
+          },
+          {
+            "of": [
+              {
+                "to": [
+                  {
+                    "type": "category"
+                  }
+                ],
+                "type": "reference",
+                "title": "Reference to category / კატეგორია"
+              }
+            ],
+            "name": "categories",
+            "type": "array",
+            "title": "Categories to Show"
+          }
+        ],
+        "name": "categoriesSection",
+        "type": "object",
+        "title": "④ Categories Grid"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "fields": [
+          {
+            "name": "heading_ka",
+            "type": "string",
+            "title": "Section Heading (KA)"
+          },
+          {
+            "name": "heading_en",
+            "type": "string",
+            "title": "Section Heading (EN)"
+          },
+          {
+            "name": "sub_ka",
+            "type": "string",
+            "title": "Subheading (KA)"
+          },
+          {
+            "name": "sub_en",
+            "type": "string",
+            "title": "Subheading (EN)"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "max",
+                    "constraint": 6
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "of": [
+              {
+                "to": [
+                  {
+                    "type": "product"
+                  }
+                ],
+                "type": "reference",
+                "title": "Reference to product / პროდუქტი"
+              }
+            ],
+            "name": "products",
+            "type": "array",
+            "title": "Featured Products (max 6)"
+          },
+          {
+            "name": "btnLabel_ka",
+            "type": "string",
+            "title": "Button Label (KA)"
+          },
+          {
+            "name": "btnLabel_en",
+            "type": "string",
+            "title": "Button Label (EN)"
+          },
+          {
+            "name": "btnUrl",
+            "type": "string",
+            "title": "Button URL"
+          }
+        ],
+        "name": "featuredSection",
+        "type": "object",
+        "title": "⑤ Featured Products"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "name": "aboutSection",
+        "type": "ctaSection",
+        "title": "⑥ About / Story Section"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "fields": [
+          {
+            "initialValue": true,
+            "name": "visible",
+            "type": "boolean",
+            "title": "Show section"
+          },
+          {
+            "name": "heading_ka",
+            "type": "string",
+            "title": "Heading (KA)"
+          },
+          {
+            "name": "heading_en",
+            "type": "string",
+            "title": "Heading (EN)"
+          },
+          {
+            "rows": 2,
+            "name": "desc_ka",
+            "type": "text",
+            "title": "Description (KA)"
+          },
+          {
+            "rows": 2,
+            "name": "desc_en",
+            "type": "text",
+            "title": "Description (EN)"
+          },
+          {
+            "name": "placeholder_ka",
+            "type": "string",
+            "title": "Input Placeholder (KA)"
+          },
+          {
+            "name": "placeholder_en",
+            "type": "string",
+            "title": "Input Placeholder (EN)"
+          },
+          {
+            "name": "btnLabel_ka",
+            "type": "string",
+            "title": "Button Label (KA)"
+          },
+          {
+            "name": "btnLabel_en",
+            "type": "string",
+            "title": "Button Label (EN)"
+          }
+        ],
+        "name": "newsletterSection",
+        "type": "object",
+        "title": "⑦ Newsletter Section"
+      }
+    ],
+    "name": "homepage",
+    "type": "document",
+    "title": "Homepage / მთავარი გვერდი"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Main Furniture / მთავარი ავეჯი",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture / საოფისე ავეჯი",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection / ლოფტ კოლექცია",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting / განათება",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration / დეკორაცია",
+              "value": "decoration"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "main-furniture",
+                  "office-furniture",
+                  "loft-collection",
+                  "lighting",
+                  "decoration"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "pageKey",
+        "type": "string",
+        "title": "Page"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": false
+        },
+        "name": "seo",
+        "type": "seo",
+        "title": "🔍 SEO"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": false
+        },
+        "name": "hero",
+        "type": "heroSection",
+        "title": "① Hero Section"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "description": "Text displayed in the bar above the product grid",
+        "fields": [
+          {
+            "initialValue": "პროდუქტი",
+            "description": "Shown after product count: \"8 პროდუქტი\"",
+            "name": "countSuffix_ka",
+            "type": "string",
+            "title": "Count Suffix (KA)"
+          },
+          {
+            "initialValue": "Products",
+            "name": "countSuffix_en",
+            "type": "string",
+            "title": "Count Suffix (EN)"
+          }
+        ],
+        "name": "catalogBar",
+        "type": "object",
+        "title": "② Catalog Bar"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 3
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "These products are always shown first in the grid (max 3)",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "product"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to product / პროდუქტი"
+          }
+        ],
+        "name": "featuredProducts",
+        "type": "array",
+        "title": "③ Pinned / Featured Products"
+      },
+      {
+        "options": {
+          "collapsible": true,
+          "collapsed": true
+        },
+        "name": "cta",
+        "type": "ctaSection",
+        "title": "④ CTA Section"
+      },
+      {
+        "description": "Optional editorial content shown below the product grid",
+        "name": "body_ka",
+        "type": "richTextBlock",
+        "title": "⑤ Page Body — Rich Text (KA)"
+      },
+      {
+        "name": "body_en",
+        "type": "richTextBlock",
+        "title": "⑤ Page Body — Rich Text (EN)"
+      }
+    ],
+    "name": "pageContent",
+    "type": "document",
+    "title": "Category Page / კატეგორიის გვერდი"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Gallery Title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 80
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "layout": "grid"
+        },
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              },
+              {
+                "name": "caption",
+                "type": "string"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array",
+        "title": "Images / სურათები"
+      }
+    ],
+    "name": "gallery",
+    "type": "document",
+    "title": "Gallery / გალერეა"
+  },
+  {
+    "fields": [
+      {
+        "description": "Fallback title used when a page has no specific title",
+        "name": "defaultMetaTitle",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "defaultMetaDescription",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Image used when sharing the site on social media (1200×630 px recommended)",
+        "name": "ogImage",
+        "type": "image",
+        "title": "Default OG Image"
+      },
+      {
+        "description": "e.g. @loftlinestore",
+        "name": "twitterHandle",
+        "type": "string",
+        "title": "Twitter / X Handle"
+      },
+      {
+        "name": "googleVerification",
+        "type": "string",
+        "title": "Google Search Console Verification"
+      }
+    ],
+    "name": "seoSettings",
+    "type": "document",
+    "title": "SEO Settings"
+  },
+  {
+    "fields": [
+      {
+        "name": "site_name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "site_url",
+        "type": "url",
+        "title": "Site URL"
+      },
+      {
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "facebook",
+        "type": "url",
+        "title": "Facebook URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "instagram",
+        "type": "url",
+        "title": "Instagram URL"
+      },
+      {
+        "description": "International format: +995XXXXXXXXX",
+        "name": "whatsapp_number",
+        "type": "string",
+        "title": "WhatsApp Number"
+      },
+      {
+        "initialValue": 200,
+        "name": "free_delivery_threshold",
+        "type": "number",
+        "title": "Free Delivery Threshold ₾"
+      },
+      {
+        "initialValue": "3–7 სამუშაო დღე",
+        "description": "Shown in product pages. e.g. 3–7 სამუშაო დღე",
+        "name": "delivery_days_ka",
+        "type": "string",
+        "title": "Delivery Time (KA)"
+      },
+      {
+        "initialValue": "3–7 business days",
+        "name": "delivery_days_en",
+        "type": "string",
+        "title": "Delivery Time (EN)"
+      },
+      {
+        "initialValue": "2 წლის გარანტია",
+        "name": "default_guarantee_ka",
+        "type": "string",
+        "title": "Default Guarantee Text (KA)"
+      },
+      {
+        "initialValue": "2-year guarantee",
+        "name": "default_guarantee_en",
+        "type": "string",
+        "title": "Default Guarantee Text (EN)"
+      },
+      {
+        "initialValue": "ორშაბათიდან პარასკევის 10:00–19:00",
+        "name": "working_hours_ka",
+        "type": "string",
+        "title": "Working Hours (KA)"
+      },
+      {
+        "initialValue": "Mon–Fri 10:00–19:00",
+        "name": "working_hours_en",
+        "type": "string",
+        "title": "Working Hours (EN)"
+      }
+    ],
+    "name": "globalSettings",
+    "type": "document",
+    "title": "Global Settings / გლობალური პარამეტრები"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 60
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Browser tab & Google results. Max 60 chars.",
+        "name": "metaTitle",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 160
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Google snippet. Max 160 chars.",
+        "name": "metaDescription",
+        "type": "text"
+      },
+      {
+        "description": "Comma-separated. e.g. სასადილო მაგიდა, loft furniture tbilisi",
+        "name": "keywords",
+        "type": "string"
+      },
+      {
+        "description": "Shown when sharing on Facebook/WhatsApp. Falls back to Meta Title.",
+        "name": "ogTitle",
+        "type": "string",
+        "title": "OG Title (Social Share)"
+      },
+      {
+        "rows": 2,
+        "name": "ogDescription",
+        "type": "text",
+        "title": "OG Description (Social Share)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Recommended: 1200×630 px",
+        "name": "ogImage",
+        "type": "image",
+        "title": "OG Image (Social Share)"
+      },
+      {
+        "name": "twitterTitle",
+        "type": "string",
+        "title": "Twitter / X Title"
+      },
+      {
+        "rows": 2,
+        "name": "twitterDescription",
+        "type": "text",
+        "title": "Twitter / X Description"
+      },
+      {
+        "initialValue": false,
+        "name": "noIndex",
+        "type": "boolean",
+        "title": "Hide from Search Engines (noindex)"
+      }
+    ],
+    "name": "seo",
+    "type": "object",
+    "title": "SEO"
+  },
+  {
+    "fields": [
+      {
+        "description": "Small tag above the title. e.g. ხელნაკეთი ლოფტ ავეჯი",
+        "name": "label_ka",
+        "type": "string",
+        "title": "Label Tag (KA)"
+      },
+      {
+        "name": "label_en",
+        "type": "string",
+        "title": "Label Tag (EN)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "heading_ka",
+        "type": "string",
+        "title": "Heading (KA)"
+      },
+      {
+        "name": "heading_en",
+        "type": "string",
+        "title": "Heading (EN)"
+      },
+      {
+        "rows": 2,
+        "name": "sub_ka",
+        "type": "text",
+        "title": "Subheading (KA)"
+      },
+      {
+        "rows": 2,
+        "name": "sub_en",
+        "type": "text",
+        "title": "Subheading (EN)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Recommended: 1600×700 px, WebP format",
+        "name": "bgImage",
+        "type": "image",
+        "title": "Background Image"
+      },
+      {
+        "name": "btnPrimary_ka",
+        "type": "string",
+        "title": "Primary Button Label (KA)"
+      },
+      {
+        "name": "btnPrimary_en",
+        "type": "string",
+        "title": "Primary Button Label (EN)"
+      },
+      {
+        "name": "btnPrimary_url",
+        "type": "string",
+        "title": "Primary Button URL"
+      },
+      {
+        "name": "btnSecondary_ka",
+        "type": "string",
+        "title": "Secondary Button Label (KA)"
+      },
+      {
+        "name": "btnSecondary_en",
+        "type": "string",
+        "title": "Secondary Button Label (EN)"
+      },
+      {
+        "name": "btnSecondary_url",
+        "type": "string",
+        "title": "Secondary Button URL"
+      }
+    ],
+    "name": "heroSection",
+    "type": "object"
+  },
+  {
+    "of": [
+      {
+        "marks": {
+          "annotations": [
+            {
+              "fields": [
+                {
+                  "validation": [
+                    {
+                      "rules": [
+                        {
+                          "flag": "uri",
+                          "constraint": {
+                            "options": {
+                              "scheme": [
+                                "/^http$/",
+                                "/^https$/"
+                              ],
+                              "allowRelative": false,
+                              "relativeOnly": false,
+                              "allowCredentials": false
+                            }
+                          }
+                        }
+                      ],
+                      "level": "error"
+                    }
+                  ],
+                  "name": "href",
+                  "type": "url",
+                  "title": "URL"
+                },
+                {
+                  "initialValue": false,
+                  "name": "newTab",
+                  "type": "boolean",
+                  "title": "Open in new tab"
+                }
+              ],
+              "name": "link",
+              "type": "object"
+            }
+          ],
+          "decorators": [
+            {
+              "value": "strong",
+              "title": "Bold"
+            },
+            {
+              "value": "em",
+              "title": "Italic"
+            },
+            {
+              "value": "underline",
+              "title": "Underline"
+            }
+          ]
+        },
+        "lists": [
+          {
+            "value": "bullet",
+            "title": "Bulleted list"
+          },
+          {
+            "value": "number",
+            "title": "Numbered list"
+          }
+        ],
+        "styles": [
+          {
+            "value": "normal",
+            "title": "Normal"
+          },
+          {
+            "value": "h2",
+            "title": "Heading 2"
+          },
+          {
+            "value": "h3",
+            "title": "Heading 3"
+          },
+          {
+            "value": "h4",
+            "title": "Heading 4"
+          },
+          {
+            "value": "blockquote",
+            "title": "Quote"
+          }
+        ],
+        "of": [],
+        "type": "block"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text (accessibility & SEO)"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "type": "image"
+      }
+    ],
+    "name": "richTextBlock",
+    "type": "array"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": true,
+        "name": "visible",
+        "type": "boolean",
+        "title": "Show this section"
+      },
+      {
+        "name": "heading_ka",
+        "type": "string",
+        "title": "Heading (KA)"
+      },
+      {
+        "name": "heading_en",
+        "type": "string",
+        "title": "Heading (EN)"
+      },
+      {
+        "rows": 3,
+        "name": "body_ka",
+        "type": "text",
+        "title": "Body Text (KA)"
+      },
+      {
+        "rows": 3,
+        "name": "body_en",
+        "type": "text",
+        "title": "Body Text (EN)"
+      },
+      {
+        "name": "btnLabel_ka",
+        "type": "string",
+        "title": "Button Label (KA)"
+      },
+      {
+        "name": "btnLabel_en",
+        "type": "string",
+        "title": "Button Label (EN)"
+      },
+      {
+        "name": "btnUrl",
+        "type": "string",
+        "title": "Button URL"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "bgImage",
+        "type": "image",
+        "title": "Background Image"
+      }
+    ],
+    "name": "ctaSection",
+    "type": "object",
+    "title": "CTA Section"
+  }
+]
