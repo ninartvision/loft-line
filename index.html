@@ -438,30 +438,31 @@
     <section class="contact-section" id="contact-form">
       <div class="container">
         <div class="section-header" data-animate>
-          <span class="section-tag">კონტაქტი</span>
-          <h2 class="section-title">მოგვწერეთ</h2>
-          <p class="section-desc">დაგვიტოვეთ შეტყობინება და დაგიკავშირდებით შეკვეთის ან ინდივიდუალური დამზადების საკითხებზე.</p>
+          <span class="section-tag" id="contactSectionTag">კონტაქტი</span>
+          <h2 class="section-title" id="contactSectionTitle">მოგვწერეთ WhatsApp-ზე</h2>
+          <p class="section-desc" id="contactSectionDesc">შეავსეთ ფორმა და ჩვენთვის წინასწარ მომზადებული შეტყობინება გაიხსნება WhatsApp-ში.</p>
+          <p class="section-desc" id="contactWhatsappNote">ეს ფორმა არ იგზავნება საიტიდან. ღილაკი გახსნის WhatsApp ჩატს თქვენი ინფორმაციით.</p>
         </div>
 
-        <form class="contact-form" id="contactForm" novalidate>
+        <form class="contact-form" id="contactForm" novalidate aria-describedby="contactWhatsappNote contactFeedback">
           <div class="contact-form-grid">
             <div class="contact-form-field">
-              <label for="cf-name">სახელი</label>
+              <label for="cf-name" id="contactLabelName">სახელი</label>
               <input type="text" id="cf-name" name="name" autocomplete="name" required>
             </div>
             <div class="contact-form-field">
-              <label for="cf-email">ელ-ფოსტა</label>
+              <label for="cf-email" id="contactLabelEmail">ელ-ფოსტა</label>
               <input type="email" id="cf-email" name="email" autocomplete="email" required>
             </div>
           </div>
 
           <div class="contact-form-field">
-            <label for="cf-message">შეტყობინება</label>
+            <label for="cf-message" id="contactLabelMessage">შეტყობინება</label>
             <textarea id="cf-message" name="message" rows="6" required></textarea>
           </div>
 
           <div class="contact-form-actions">
-            <button type="submit" class="btn btn-dark contact-submit">გაგზავნა</button>
+            <button type="submit" class="btn btn-dark contact-submit" id="contactSubmitButton">დაგვიკავშირდით WhatsApp-ზე</button>
             <p class="contact-form-feedback" id="contactFeedback" aria-live="polite"></p>
           </div>
         </form>

@@ -1,4 +1,165 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const LANG_STORAGE_KEY = 'loftline_lang';
+  const CONTACT_WHATSAPP_NUMBER = '995579388833';
+
+  function getRuntimeLang() {
+    try {
+      return localStorage.getItem(LANG_STORAGE_KEY) || 'ka';
+    } catch (e) {
+      return 'ka';
+    }
+  }
+
+  function runtimeText(key, kaText, enText) {
+    const lang = getRuntimeLang();
+    const table = typeof translations !== 'undefined' ? translations[lang] : null;
+    if (key && table && table[key] !== undefined) {
+      return table[key];
+    }
+    return lang === 'en' ? enText : kaText;
+  }
+
+  function filterCountText(count) {
+    return count + ' ' + runtimeText(null, 'პროდუქტი', 'Products');
+  }
+
+  function renderNoResults(node) {
+    if (!node) return;
+    node.innerHTML =
+      '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="8" x2="14" y2="14"/></svg><p>' +
+      runtimeText(null, 'პროდუქტი ვერ მოიძებნა.', 'No products found.') +
+      '</p>';
+  }
+
+  function setAddedCartLabel(button) {
+    const labelEl = button && button.querySelector('span');
+    if (labelEl) {
+      labelEl.textContent = runtimeText(null, 'დამატებულია ✓', 'Added ✓');
+    }
+  }
+
+  function setNewsletterSubscribedLabel(button) {
+    if (button) {
+      button.textContent = runtimeText(null, 'გამოწერილია ✓', 'Subscribed ✓');
+    }
+  }
+
+  function setContactIdleLabel(button) {
+    if (button) {
+      button.textContent = runtimeText(null, 'დაგვიკავშირდით WhatsApp-ზე', 'Contact via WhatsApp');
+    }
+  }
+
+  function setContactOpeningLabel(button) {
+    if (button) {
+      button.textContent = runtimeText(null, 'WhatsApp იხსნება...', 'Opening WhatsApp...');
+    }
+  }
+
+  function syncContactFormCopy() {
+    const sectionTag = document.getElementById('contactSectionTag');
+    const sectionTitle = document.getElementById('contactSectionTitle');
+    const sectionDesc = document.getElementById('contactSectionDesc');
+    const whatsappNote = document.getElementById('contactWhatsappNote');
+    const nameLabel = document.getElementById('contactLabelName');
+    const emailLabel = document.getElementById('contactLabelEmail');
+    const messageLabel = document.getElementById('contactLabelMessage');
+
+    if (sectionTag) {
+      sectionTag.textContent = runtimeText(null, 'კონტაქტი', 'Contact');
+    }
+
+    if (sectionTitle) {
+      sectionTitle.textContent = runtimeText(null, 'მოგვწერეთ WhatsApp-ზე', 'Contact Us on WhatsApp');
+    }
+
+    if (sectionDesc) {
+      sectionDesc.textContent = runtimeText(
+        null,
+        'შეავსეთ ფორმა და ჩვენთვის წინასწარ მომზადებული შეტყობინება გაიხსნება WhatsApp-ში.',
+        'Fill in the form and a prefilled message to us will open in WhatsApp.'
+      );
+    }
+
+    if (whatsappNote) {
+      whatsappNote.textContent = runtimeText(
+        null,
+        'ეს ფორმა არ იგზავნება საიტიდან. ღილაკი გახსნის WhatsApp ჩატს თქვენი ინფორმაციით.',
+        'This form does not submit on the site. The button opens a WhatsApp chat with your details.'
+      );
+    }
+
+    if (nameLabel) {
+      nameLabel.textContent = runtimeText(null, 'სახელი', 'Name');
+    }
+
+    if (emailLabel) {
+      emailLabel.textContent = runtimeText(null, 'ელ-ფოსტა', 'Email');
+    }
+
+    if (messageLabel) {
+      messageLabel.textContent = runtimeText(null, 'შეტყობინება', 'Message');
+    }
+  }
+
+  function renderContactFeedback(feedback, state, waUrl) {
+    if (!feedback || !state) return;
+
+    if (state === 'error-required') {
+      feedback.textContent = runtimeText(
+        null,
+        'გთხოვთ შეავსოთ ყველა სავალდებულო ველი, რათა WhatsApp-ში გააგრძელოთ.',
+        'Please fill in all required fields to continue in WhatsApp.'
+      );
+      feedback.className = 'contact-form-feedback error';
+      return;
+    }
+
+    if (state === 'success-whatsapp') {
+      feedback.innerHTML =
+        runtimeText(
+          null,
+          'WhatsApp იხსნება თქვენი წინასწარ შევსებული შეტყობინებით. თუ ავტომატურად არ გაიხსნა, გააგრძელეთ აქ: ',
+          'WhatsApp is opening with your prefilled message. If it did not open automatically, continue here: '
+        ) +
+        '<a href="' + waUrl + '" target="_blank" rel="noopener" style="color:var(--color-gold);text-decoration:underline;">WhatsApp</a>.';
+      feedback.className = 'contact-form-feedback success';
+    }
+  }
+
+  let applyRuntimeFilters = null;
+
+  function syncRuntimeLanguage() {
+    document.querySelectorAll('.add-to-cart-btn[data-runtime-state="added"]').forEach(setAddedCartLabel);
+
+    if (newsletterForm) {
+      const btn = newsletterForm.querySelector('button');
+      if (btn && btn.dataset.runtimeState === 'subscribed') {
+        setNewsletterSubscribedLabel(btn);
+      }
+    }
+
+    if (contactForm) {
+      const feedback = document.getElementById('contactFeedback');
+      const submitBtn = contactForm.querySelector('.contact-submit');
+
+      syncContactFormCopy();
+
+      if (submitBtn && submitBtn.dataset.runtimeState === 'opening-whatsapp') {
+        setContactOpeningLabel(submitBtn);
+      } else if (submitBtn) {
+        setContactIdleLabel(submitBtn);
+      }
+
+      if (feedback && feedback.dataset.runtimeState) {
+        renderContactFeedback(feedback, feedback.dataset.runtimeState, feedback.dataset.waUrl || '');
+      }
+    }
+
+    if (applyRuntimeFilters) {
+      applyRuntimeFilters();
+    }
+  }
 
   // ── Scroll Animations (IntersectionObserver) ──
   const animatedEls = document.querySelectorAll('[data-animate], [data-animate-stagger]');
@@ -183,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (filterCount) {
-        filterCount.textContent = visibleCount + ' \u10de\u10e0\u10dd\u10d3\u10e3\u10e5\u10e2\u10d8';
+        filterCount.textContent = filterCountText(visibleCount);
       }
 
       // No results message
@@ -192,15 +353,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!noResults) {
           noResults = document.createElement('div');
           noResults.className = 'filter-no-results is-visible';
-          noResults.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="8" x2="14" y2="14"/></svg><p>\u10de\u10e0\u10dd\u10d3\u10e3\u10e5\u10e2\u10d8 \u10d5\u10d4\u10e0 \u10db\u10dd\u10d8\u10eb\u10d4\u10d1\u10dc\u10d0</p>';
+          renderNoResults(noResults);
           productGrid.appendChild(noResults);
         } else {
+          renderNoResults(noResults);
           noResults.classList.add('is-visible');
         }
       } else if (noResults) {
         noResults.classList.remove('is-visible');
       }
     }
+
+    applyRuntimeFilters = applyFilters;
 
     // Checkbox change handlers
     filterDrawer.addEventListener('change', (e) => {
@@ -260,11 +424,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const labelEl = btn.querySelector('span');
     if (labelEl) {
-      const orig = labelEl.textContent;
-      labelEl.textContent = 'დამატებულია ✓';
+      btn.dataset.runtimeState = 'added';
+      setAddedCartLabel(btn);
       btn.disabled = true;
       setTimeout(() => {
-        labelEl.textContent = orig;
+        delete btn.dataset.runtimeState;
+        labelEl.textContent = runtimeText('btn_add_cart', 'კალათაში', 'Add to Cart');
         btn.disabled = false;
       }, 1400);
     }
@@ -279,7 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input && input.value) {
         const btn = newsletterForm.querySelector('button');
         if (btn) {
-          btn.textContent = 'გამოწერილია ✓';
+          btn.dataset.runtimeState = 'subscribed';
+          setNewsletterSubscribedLabel(btn);
           btn.disabled = true;
           input.disabled = true;
         }
@@ -290,38 +456,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Contact Form ──
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
+    const submitBtn = contactForm.querySelector('.contact-submit');
+
+    syncContactFormCopy();
+    setContactIdleLabel(submitBtn);
+
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const feedback = document.getElementById('contactFeedback');
-      const submitBtn = contactForm.querySelector('.contact-submit');
       const name = contactForm.querySelector('#cf-name').value.trim();
       const email = contactForm.querySelector('#cf-email').value.trim();
       const message = contactForm.querySelector('#cf-message').value.trim();
 
       if (!name || !email || !message) {
         if (feedback) {
-          feedback.textContent = 'გთხოვთ შეავსოთ ყველა სავალდებულო ველი.';
-          feedback.className = 'contact-form-feedback error';
+          feedback.dataset.runtimeState = 'error-required';
+          delete feedback.dataset.waUrl;
+          renderContactFeedback(feedback, 'error-required', '');
         }
         return;
       }
 
-      // Build WhatsApp fallback link with message content
+      // Open WhatsApp with a prefilled message instead of submitting to a backend.
       const waText = encodeURIComponent(
-        'სახელი: ' + name + '\nელ-ფოსტა: ' + email + '\n\n' + message
+        runtimeText(null, 'სახელი', 'Name') + ': ' + name + '\n' +
+        runtimeText(null, 'ელ-ფოსტა', 'Email') + ': ' + email + '\n\n' + message
       );
-      const waUrl = 'https://wa.me/995579388833?text=' + waText;
+      const waUrl = 'https://wa.me/' + CONTACT_WHATSAPP_NUMBER + '?text=' + waText;
 
       if (submitBtn) {
-        const origText = submitBtn.innerHTML;
-        submitBtn.textContent = 'იგზავნება...';
+        submitBtn.dataset.runtimeState = 'opening-whatsapp';
+        setContactOpeningLabel(submitBtn);
         submitBtn.disabled = true;
         setTimeout(function() {
           if (feedback) {
-            feedback.innerHTML = 'გმადლობთ! თქვენი შეტყობინება გაიგზავნება <a href="' + waUrl + '" target="_blank" rel="noopener" style="color:var(--color-gold);text-decoration:underline;">WhatsApp-ზე</a>.';
-            feedback.className = 'contact-form-feedback success';
+            feedback.dataset.runtimeState = 'success-whatsapp';
+            feedback.dataset.waUrl = waUrl;
+            renderContactFeedback(feedback, 'success-whatsapp', waUrl);
           }
-          submitBtn.innerHTML = origText;
+          delete submitBtn.dataset.runtimeState;
+          setContactIdleLabel(submitBtn);
           submitBtn.disabled = false;
           contactForm.reset();
           window.open(waUrl, '_blank', 'noopener');
@@ -356,6 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
     };
     window.addEventListener('scroll', toggleScrollBtn, { passive: true });
+
+  document.addEventListener('loftline:langchange', syncRuntimeLanguage);
     scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });

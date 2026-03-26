@@ -7,6 +7,7 @@
 
   /* State */
   var currentCard = null;
+  var currentCardSlug = '';
   var qty = 1;
   var galleryImages = [];
   var galleryIdx = 0;
@@ -14,6 +15,71 @@
   /* Helpers */
   function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
   function qsa(sel, ctx) { return (ctx || document).querySelectorAll(sel); }
+
+  function getRuntimeLang() {
+    try {
+      return localStorage.getItem('loftline_lang') || 'ka';
+    } catch (e) {
+      return 'ka';
+    }
+  }
+
+  function runtimeText(key, kaText, enText) {
+    var lang = getRuntimeLang();
+    var table = typeof translations !== 'undefined' ? translations[lang] : null;
+    if (key && table && table[key] !== undefined) {
+      return table[key];
+    }
+    return lang === 'en' ? enText : kaText;
+  }
+
+  function setAddButtonIdle() {
+    if (!domAddBtn) return;
+    domAddBtn.dataset.runtimeState = 'idle';
+    domAddBtn.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>' +
+      ' ' + runtimeText('pqv_add_btn', 'კალათაში დამატება', 'Add to Cart');
+  }
+
+  function setAddButtonAdded() {
+    if (!domAddBtn) return;
+    domAddBtn.dataset.runtimeState = 'added';
+    domAddBtn.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' +
+      ' ' + runtimeText(null, 'დამატებულია!', 'Added!');
+  }
+
+  function syncQuickViewRuntimeLanguage() {
+    if (!domAddBtn) return;
+    if (domAddBtn.dataset.runtimeState === 'added') {
+      setAddButtonAdded();
+      return;
+    }
+    setAddButtonIdle();
+  }
+
+  function findLiveCardBySlug() {
+    if (!currentCardSlug) return null;
+    var cards = document.querySelectorAll('.product-card, .ll-product-card');
+    for (var i = 0; i < cards.length; i++) {
+      if ((cards[i].getAttribute('data-slug') || '') === currentCardSlug) {
+        return cards[i];
+      }
+    }
+    return null;
+  }
+
+  function refreshOpenModalFromCurrentCard() {
+    if (!domDialog || !domDialog.classList.contains('is-open')) return;
+    var liveCard = findLiveCardBySlug();
+    var currentQty = qty;
+    if (liveCard) {
+      openModal(liveCard);
+      qty = currentQty;
+      if (domQtyNum) domQtyNum.textContent = String(qty);
+    }
+    syncQuickViewRuntimeLanguage();
+  }
 
   /* Build a thumbnail-sized URL for Sanity CDN assets */
   function thumbUrl(src) {
@@ -224,6 +290,7 @@
   function openModal(card) {
     if (!domDialog || !domOverlay) return;
     currentCard = card;
+    currentCardSlug = card ? (card.getAttribute('data-slug') || '') : '';
     qty = 1;
 
     var imgEl = qs('.product-image-wrap img, .ll-prod-img-wrap img', card);
@@ -286,9 +353,7 @@
     if (!domAddBtn) return;
     domAddBtn.classList.remove('pqv-added');
     domAddBtn.disabled = false;
-    domAddBtn.innerHTML =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>' +
-      ' კალათაში დამატება';
+    setAddButtonIdle();
   }
 
   /* Wire modal controls once. */
@@ -378,9 +443,7 @@
           badge.textContent = (parseInt(badge.textContent, 10) || 0) + qty;
         });
         domAddBtn.classList.add('pqv-added');
-        domAddBtn.innerHTML =
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' +
-          ' დამატებულია!';
+        setAddButtonAdded();
         setTimeout(resetAddBtn, 2000);
       });
     }
@@ -392,6 +455,9 @@
     setupDelegatedTriggers();
     wireModalControls();
   });
+
+  document.addEventListener('loftline:langchange', syncQuickViewRuntimeLanguage);
+  document.addEventListener('cms:ready', refreshOpenModalFromCurrentCard);
 
   // Backwards compatibility: external callers can still invoke
   // window.loftQuickView.init() safely. Delegation covers all cards.
