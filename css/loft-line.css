@@ -795,7 +795,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   flex-direction: column;
   transition: border-color var(--dur) var(--ease),
               transform 0.45s var(--ease),
-              box-shadow 0.45s var(--ease);
+              box-shadow 0.45s var(--ease),
+              opacity 0.35s var(--ease);
 }
 .ll-product-card:hover {
   border-color: var(--bdr-em);

@@ -381,10 +381,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let visibleCount = 0;
 
+      const allCatBoxes   = Array.from(getCategoryCheckboxes());
+      const allStyleBoxes = Array.from(getStyleCheckboxes());
+
       allCards.forEach(card => {
         const cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
-        const catMatch  = activeCategories.length === 0 || activeCategories.some(value => cardFilters.includes(value));
-        const styleMatch = activeStyles.length === 0 || !card.dataset.style || activeStyles.includes(card.dataset.style);
+        // catMatch: no filter when none OR all checked; uncategorised products always pass
+        const catAllChecked = allCatBoxes.length > 0 && activeCategories.length === allCatBoxes.length;
+        const catMatch = activeCategories.length === 0 || catAllChecked || !cardFilters.length ||
+                         activeCategories.some(value => cardFilters.includes(value));
+        // styleMatch: no filter when none OR all checked; blank style always passes
+        const styleAllChecked = allStyleBoxes.length > 0 && activeStyles.length === allStyleBoxes.length;
+        const styleMatch = activeStyles.length === 0 || styleAllChecked || !card.dataset.style ||
+                           activeStyles.includes(card.dataset.style);
         const matValues = (card.dataset.material || '').split(/\s+/).filter(Boolean);
         const matMatch  = activeMaterials.length === 0 || activeMaterials.some(v => matValues.includes(v));
         const price = parseInt(card.dataset.price, 10);

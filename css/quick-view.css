@@ -536,3 +536,8 @@ body.pqv-open {
   opacity: 0;
   pointer-events: none;
 }
+.product-card.filter-visible,
+.ll-product-card.filter-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
