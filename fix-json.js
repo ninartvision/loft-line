@@ -44,7 +44,7 @@ const categories = {
 
 const about = {
   tag_ka:'ჩვენ შესახებ',tag_en:'About Us',
-  title_ka:'ხელოსნობა და ხარისხი',title_en:'Craft & Quality',
+  title_ka:'ხელობა და ხარისხი',title_en:'Craft & Quality',
   para1_ka:'Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.',
   para1_en:'At Loft Line, we create furniture that combines the natural warmth of wood with the industrial character of metal. Every piece is crafted by hand by Georgian artisans.',
   para2_ka:'ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლოფტ სტილის უნიკალურ ნამუშევრებს, ასევე განათებასა და დეკორაციას.',

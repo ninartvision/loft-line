@@ -30,12 +30,15 @@
     if (key && table && table[key] !== undefined) {
       return table[key];
     }
+    if (arguments.length === 1) {
+      return '';
+    }
     return lang === 'en' ? enText : kaText;
   }
 
   function thumbAriaLabel(altText, index) {
-    var base = altText || runtimeText('pqv_color_name', 'ნატ. მუხა', 'Nat. Oak');
-    return runtimeText(null, 'სურათი', 'Image') + ' ' + (index + 1) + ': ' + base;
+    var base = altText || runtimeText('pqv_color_name');
+    return runtimeText('quickview_thumb_image') + ' ' + (index + 1) + ': ' + base;
   }
 
   function setModalStaticText() {
@@ -43,31 +46,31 @@
     var colorName = document.getElementById('pqvColorName');
 
     if (colorName && !colorName.dataset.dynamicColor) {
-      colorName.textContent = runtimeText('pqv_color_name', 'ნატ. მუხა', 'Nat. Oak');
+      colorName.textContent = runtimeText('pqv_color_name');
     }
 
     if (colorLabel && colorName) {
-      colorLabel.innerHTML = runtimeText('pqv_color_label', 'ფერი:', 'Color:') + ' <span id="pqvColorName">' + colorName.textContent + '</span>';
+      colorLabel.innerHTML = runtimeText('pqv_color_label') + ' <span id="pqvColorName">' + colorName.textContent + '</span>';
     }
 
     if (domGalleryPrev) {
-      domGalleryPrev.setAttribute('aria-label', runtimeText(null, 'წინა', 'Previous'));
+      domGalleryPrev.setAttribute('aria-label', runtimeText('aria_previous'));
     }
 
     if (domGalleryNext) {
-      domGalleryNext.setAttribute('aria-label', runtimeText(null, 'შემდეგი', 'Next'));
+      domGalleryNext.setAttribute('aria-label', runtimeText('aria_next'));
     }
 
     if (domClose) {
-      domClose.setAttribute('aria-label', runtimeText(null, 'დახურვა', 'Close'));
+      domClose.setAttribute('aria-label', runtimeText('aria_close'));
     }
 
     if (domQtyMinus) {
-      domQtyMinus.setAttribute('aria-label', runtimeText(null, 'შემცირება', 'Decrease quantity'));
+      domQtyMinus.setAttribute('aria-label', runtimeText('aria_decrease_quantity'));
     }
 
     if (domQtyPlus) {
-      domQtyPlus.setAttribute('aria-label', runtimeText(null, 'გაზრდა', 'Increase quantity'));
+      domQtyPlus.setAttribute('aria-label', runtimeText('aria_increase_quantity'));
     }
   }
 
@@ -76,7 +79,7 @@
     domAddBtn.dataset.runtimeState = 'idle';
     domAddBtn.innerHTML =
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>' +
-      ' ' + runtimeText('pqv_add_btn', 'კალათაში დამატება', 'Add to Cart');
+      ' ' + runtimeText('pqv_add_btn');
   }
 
   function setAddButtonAdded() {
@@ -84,7 +87,7 @@
     domAddBtn.dataset.runtimeState = 'added';
     domAddBtn.innerHTML =
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' +
-      ' ' + runtimeText(null, 'დამატებულია!', 'Added!');
+      ' ' + runtimeText('quickview_added');
   }
 
   function syncQuickViewRuntimeLanguage() {

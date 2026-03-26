@@ -14,6 +14,24 @@
 
   var currentFilter = 'all';
 
+  function getLang() {
+    try {
+      return localStorage.getItem('loftline_lang') || 'ka';
+    } catch (e) {
+      return 'ka';
+    }
+  }
+
+  function text(ka, en) {
+    return getLang() === 'en' ? en : ka;
+  }
+
+  function translate(key) {
+    var lang = getLang();
+    var table = typeof translations !== 'undefined' ? translations[lang] : null;
+    return table && table[key] !== undefined ? table[key] : '';
+  }
+
   function getGrid() {
     for (var i = 0; i < GRID_IDS.length; i++) {
       var grid = document.getElementById(GRID_IDS[i]);
@@ -31,9 +49,9 @@
         empty = document.createElement('p');
         empty.id = EMPTY_ID;
         empty.className = 'll-filter-empty';
-        empty.textContent = 'ამ კატეგორიაში პროდუქტი ვერ მოიძებნა.';
         grid.appendChild(empty);
       }
+      empty.textContent = translate('filter_empty_category');
     } else {
       if (empty) empty.remove();
     }
@@ -99,6 +117,10 @@
 
     document.addEventListener('cms:ready', function () {
       currentFilter = setActiveButton(bar, bar.getAttribute('data-current-filter') || currentFilter);
+      applyFilter(grid, currentFilter);
+    });
+
+    document.addEventListener('loftline:langchange', function () {
       applyFilter(grid, currentFilter);
     });
 

@@ -32,6 +32,9 @@
     if (key && table && table[key] !== undefined) {
       return table[key];
     }
+    if (arguments.length === 1) {
+      return '';
+    }
     return lang === 'en' ? enText : kaText;
   }
 
@@ -49,48 +52,48 @@
     var footerMade = document.getElementById('llFooterMade');
 
     if (logo) {
-      logo.setAttribute('aria-label', runtimeText('aria_logo_home', 'Loft Line მთავარი', 'Loft Line home'));
+      logo.setAttribute('aria-label', runtimeText('aria_logo_home'));
     }
 
     if (nav) {
-      nav.setAttribute('aria-label', runtimeText('aria_main_navigation', 'მთავარი ნავიგაცია', 'Main navigation'));
+      nav.setAttribute('aria-label', runtimeText('aria_main_navigation'));
     }
 
     if (searchBtn) {
-      searchBtn.setAttribute('aria-label', runtimeText('aria_search', 'ძიება', 'Search'));
+      searchBtn.setAttribute('aria-label', runtimeText('aria_search'));
     }
 
     if (langBtn) {
-      langBtn.setAttribute('aria-label', runtimeText('aria_language_switch', 'ენის შეცვლა', 'Switch language'));
+      langBtn.setAttribute('aria-label', runtimeText('aria_language_switch'));
     }
 
     if (cartBtn) {
-      cartBtn.setAttribute('aria-label', runtimeText('aria_cart', 'კალათა', 'Cart'));
+      cartBtn.setAttribute('aria-label', runtimeText('aria_cart'));
     }
 
     if (waHeaderBtn) {
-      waHeaderBtn.setAttribute('aria-label', runtimeText('aria_whatsapp', 'WhatsApp', 'WhatsApp'));
+      waHeaderBtn.setAttribute('aria-label', runtimeText('aria_whatsapp'));
     }
 
     if (menuBtn) {
-      menuBtn.setAttribute('aria-label', runtimeText('aria_menu', 'მენიუ', 'Menu'));
+      menuBtn.setAttribute('aria-label', runtimeText('aria_menu'));
     }
 
     if (drawer) {
-      drawer.setAttribute('aria-label', runtimeText('aria_side_menu', 'გვერდითი მენიუ', 'Side menu'));
+      drawer.setAttribute('aria-label', runtimeText('aria_side_menu'));
     }
 
     if (drawerClose) {
-      drawerClose.setAttribute('aria-label', runtimeText('aria_close', 'დახურვა', 'Close'));
+      drawerClose.setAttribute('aria-label', runtimeText('aria_close'));
     }
 
     if (drawerWa) {
-      var message = runtimeText(null, 'გამარჯობა! მინდა შეკვეთა.', 'Hello! I would like to place an order.');
+      var message = runtimeText('wa_prefill_order');
       drawerWa.href = 'https://wa.me/995579388833?text=' + encodeURIComponent(message);
     }
 
     if (footerMade) {
-      footerMade.textContent = runtimeText(null, 'დამზადებულია სიყვარულით საქართველოში', 'Made with love in Georgia');
+      footerMade.textContent = runtimeText('footer_made_love');
     }
   }
 
@@ -105,11 +108,11 @@
 <header class="ll-header" id="llHeader">
   <div class="container">
     <div class="ll-header-inner">
-      <a href="index.html" class="ll-logo" aria-label="Loft Line მთავარი">
+      <a href="index.html" class="ll-logo" aria-label="Loft Line მთავარი" data-i18n-aria="aria_logo_home">
         <span class="ll-logo-main">Loft</span>
         <span class="ll-logo-sub">line</span>
       </a>
-      <nav class="ll-nav" aria-label="მთავარი ნავიგაცია">
+      <nav class="ll-nav" aria-label="მთავარი ნავიგაცია" data-i18n-aria="aria_main_navigation">
         <a href="index.html" data-i18n="nav_home">მთავარი</a>
         <a href="main-furniture.html" data-i18n="nav_main_furniture">მთავარი ავეჯი</a>
         <a href="office-furniture.html" data-i18n="nav_office_full">საოფისე ავეჯი</a>
@@ -119,19 +122,19 @@
         <a href="index.html#contact-form" data-i18n="nav_contact">კონტაქტი</a>
       </nav>
       <div class="ll-header-actions">
-        <button class="ll-icon-btn" aria-label="ძიება">
+        <button class="ll-icon-btn" aria-label="ძიება" data-i18n-aria="aria_search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         </button>
-        <button id="langToggle" class="ll-lang-btn" aria-label="ენა">KA</button>
-        <button class="ll-icon-btn ll-cart-btn" aria-label="კალათა">
+        <button id="langToggle" class="ll-lang-btn" aria-label="ენის შეცვლა" data-i18n-aria="aria_language_switch">KA</button>
+        <button class="ll-icon-btn ll-cart-btn" aria-label="კალათა" data-i18n-aria="aria_cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="ll-cart-badge" id="cartBadge">0</span>
         </button>
-        <a href="https://wa.me/995579388833" target="_blank" rel="noopener" class="ll-wa-header-btn" aria-label="WhatsApp">
+        <a href="https://wa.me/995579388833" target="_blank" rel="noopener" class="ll-wa-header-btn" aria-label="WhatsApp" data-i18n-aria="aria_whatsapp">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.975 0C5.361 0 0 5.359 0 11.975c0 2.094.549 4.062 1.508 5.773L.055 23.455a.477.477 0 0 0 .574.603l5.898-1.543C8.163 23.43 10.047 24 11.975 24 18.589 24 24 18.641 24 12.025 24 5.41 18.589 0 11.975 0zm0 21.897c-1.84 0-3.596-.502-5.109-1.451l-.365-.217-3.783.99 1.008-3.666-.239-.378A9.916 9.916 0 0 1 2.079 12.025c0-5.463 4.44-9.901 9.896-9.901 5.456 0 9.896 4.438 9.896 9.901 0 5.462-4.44 9.872-9.896 9.872z"/></svg>
           <span class="wa-label">WhatsApp</span>
         </a>
-        <button class="ll-hamburger" id="llHamburger" aria-label="მენიუ" aria-controls="llDrawer" aria-expanded="false">
+        <button class="ll-hamburger" id="llHamburger" aria-label="მენიუ" data-i18n-aria="aria_menu" aria-controls="llDrawer" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -140,10 +143,10 @@
 </header>
 
 <div class="ll-overlay" id="llOverlay" aria-hidden="true"></div>
-<nav class="ll-drawer" id="llDrawer" aria-label="გვერდითი მენიუ" aria-hidden="true">
+<nav class="ll-drawer" id="llDrawer" aria-label="გვერდითი მენიუ" data-i18n-aria="aria_side_menu" aria-hidden="true">
   <div class="ll-drawer-head">
     <span class="ll-drawer-logo">Loft <span>Line</span></span>
-    <button class="ll-drawer-close" id="llDrawerClose" aria-label="დახურვა">&#x2715;</button>
+    <button class="ll-drawer-close" id="llDrawerClose" aria-label="დახურვა" data-i18n-aria="aria_close">&#x2715;</button>
   </div>
   <span class="ll-drawer-section-label" data-i18n="drawer_categories">კატეგორიები</span>
   <div class="ll-drawer-nav">
@@ -155,7 +158,7 @@
     <a href="decoration.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22c4.97 0 9-3.134 9-7s-4.03-7-9-7-9 3.134-9 7 4.03 7 9 7z"/><path d="M12 8V2m0 0L9 5m3-3 3 3"/></svg><span data-i18n="nav_decoration">დეკორაცია</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
   </div>
   <div class="ll-drawer-footer">
-    <a href="https://wa.me/995579388833?text=%E1%83%92%E1%83%90%E1%83%9B%E1%83%90%E1%83%A0%E1%83%AF%E1%83%9D%E1%83%91%E1%83%90!%20%E1%83%9B%E1%83%98%E1%83%9C%E1%83%93%E1%83%90%20%E1%83%A8%E1%83%94%E1%83%99%E1%83%95%E1%83%94%E1%83%97%E1%83%90." target="_blank" rel="noopener" class="ll-drawer-wa">
+    <a href="https://wa.me/995579388833" target="_blank" rel="noopener" class="ll-drawer-wa">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.975 0C5.361 0 0 5.359 0 11.975c0 2.094.549 4.062 1.508 5.773L.055 23.455a.477.477 0 0 0 .574.603l5.898-1.543C8.163 23.43 10.047 24 11.975 24 18.589 24 24 18.641 24 12.025 24 5.41 18.589 0 11.975 0zm0 21.897c-1.84 0-3.596-.502-5.109-1.451l-.365-.217-3.783.99 1.008-3.666-.239-.378A9.916 9.916 0 0 1 2.079 12.025c0-5.463 4.44-9.901 9.896-9.901 5.456 0 9.896 4.438 9.896 9.901 0 5.462-4.44 9.872-9.896 9.872z"/></svg>
       <span data-i18n="drawer_wa_btn">შეგვიკვეთეთ WhatsApp-ზე</span>
     </a>
@@ -207,7 +210,7 @@
     </div>
     <div class="ll-footer-bottom">
       <span data-i18n="footer_ll_copyright">&copy; 2026 Loft Line.</span>
-      <span id="llFooterMade">დამზადებულია სიყვარულით საქართველოში</span>
+      <span id="llFooterMade" data-i18n="footer_made_love">დამზადებულია სიყვარულით საქართველოში</span>
     </div>
   </div>
 </footer>`;

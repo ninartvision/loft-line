@@ -47,7 +47,23 @@
       }
     });
 
-    /* 4. Selector-based translations for repeated per-product elements
+    /* 4. data-i18n-alt → alt */
+    document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n-alt');
+      if (t[key] !== undefined) {
+        el.setAttribute('alt', t[key]);
+      }
+    });
+
+    /* 5. data-i18n-title → title */
+    document.querySelectorAll('[data-i18n-title]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n-title');
+      if (t[key] !== undefined) {
+        el.setAttribute('title', t[key]);
+      }
+    });
+
+    /* 6. Selector-based translations for repeated per-product elements
           (avoids needing data-i18n on every single product card) */
     var selectorMap = {
       '.add-to-cart-btn span':    'btn_add_cart',
@@ -65,7 +81,7 @@
       }
     });
 
-    /* 5. Update <html lang=""> */
+    /* 7. Update <html lang=""> */
     document.documentElement.lang = lang;
   }
 

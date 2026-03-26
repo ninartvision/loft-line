@@ -208,7 +208,7 @@ collections:
         fields:
           - { label: "ტეგი (KA)",    name: tag_ka,   widget: string, default: "ჩვენ შესახებ" }
           - { label: "Tag (EN)",      name: tag_en,   widget: string, default: "About Us" }
-          - { label: "სათაური (KA)", name: title_ka, widget: string, default: "ხელოსნობა და ხარისხი" }
+          - { label: "სათაური (KA)", name: title_ka, widget: string, default: "ხელობა და ხარისხი" }
           - { label: "Title (EN)",    name: title_en, widget: string, default: "Craft & Quality" }
           - { label: "პარ. 1 (KA)",  name: para1_ka, widget: text }
           - { label: "Paragraph 1 (EN)", name: para1_en, widget: text }
@@ -557,7 +557,7 @@ collections:
         fields:
           - { label: "ტეგი (KA)",    name: tag_ka,   widget: string, default: "ჩვენ შესახებ" }
           - { label: "Tag (EN)",      name: tag_en,   widget: string, default: "About Us" }
-          - { label: "სათაური (KA)", name: title_ka, widget: string, default: "ხელოსნობა და ხარისხი" }
+          - { label: "სათაური (KA)", name: title_ka, widget: string, default: "ხელობა და ხარისხი" }
           - { label: "Title (EN)",    name: title_en, widget: string, default: "Craft & Quality" }
           - { label: "პარ. 1 (KA)",  name: para1_ka, widget: text }
           - { label: "Paragraph 1 (EN)", name: para1_en, widget: text }

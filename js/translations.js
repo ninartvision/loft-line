@@ -46,6 +46,39 @@ const translations = {
     aria_increase_quantity:     "გაზრდა",
     aria_category_filter:       "კატეგორიის ფილტრი",
     aria_sort:                  "დალაგება",
+    aria_quick_view:            "სწრაფი ნახვა",
+    aria_add_to_cart:           "კალათაში დამატება",
+
+    /* Common labels and runtime states */
+    hero_scroll:                "ჩამოსქროლეთ",
+    newsletter_email_label:     "ელ-ფოსტა",
+    label_name:                 "სახელი",
+    label_email:                "ელ-ფოსტა",
+    label_message:              "შეტყობინება",
+    product_count_word:         "პროდუქტი",
+    state_no_products:          "პროდუქტი ვერ მოიძებნა.",
+    state_products_load_error:  "პროდუქტების ჩატვირთვა ვერ მოხერხდა. სცადეთ მოგვიანებით.",
+    state_categories_loading:   "კატეგორიები იტვირთება...",
+    state_categories_unavailable: "კატეგორიები დროებით მიუწვდომელია.",
+    state_added:                "დამატებულია ✓",
+    state_subscribed:           "გამოწერილია ✓",
+    filter_all:                 "ყველა",
+    filter_empty_category:      "ამ კატეგორიაში პროდუქტი ვერ მოიძებნა.",
+    badge_sale_word:            "ფასდაკლება",
+    badge_best:                 "რჩეული",
+    quickview_added:            "დამატებულია!",
+    quickview_thumb_image:      "სურათი",
+    footer_made_love:           "დამზადებულია სიყვარულით საქართველოში",
+    wa_prefill_order:           "გამარჯობა! მინდა შეკვეთა.",
+
+    /* Contact runtime */
+    contact_title_whatsapp:     "მოგვწერეთ WhatsApp-ზე",
+    contact_desc_whatsapp:      "შეავსეთ ფორმა და ჩვენთვის წინასწარ მომზადებული შეტყობინება გაიხსნება WhatsApp-ში.",
+    contact_note_whatsapp:      "ეს ფორმა არ იგზავნება საიტიდან. ღილაკი გახსნის WhatsApp ჩატს თქვენი ინფორმაციით.",
+    contact_submit_whatsapp:    "დაგვიკავშირდით WhatsApp-ზე",
+    contact_opening_whatsapp:   "WhatsApp იხსნება...",
+    contact_error_required:     "გთხოვთ შეავსოთ ყველა სავალდებულო ველი, რათა WhatsApp-ში გააგრძელოთ.",
+    contact_success_whatsapp:   "WhatsApp იხსნება თქვენი წინასწარ შევსებული შეტყობინებით. თუ ავტომატურად არ გაიხსნა, გააგრძელეთ აქ: ",
 
     /* Drawer */
     drawer_categories: "კატეგორიები",
@@ -72,6 +105,12 @@ const translations = {
     cat_decor_sub:      "აქსესუარები & სეზონური",
     cat_loft_title:     "ლოფტ სტილი",
     cat_loft_sub:       "ინდუსტრიული ხასიათი",
+    cat_outdoor_alt:    "მთავარი ავეჯი — მაგიდები და სკამები",
+    cat_office_alt:     "Loft Line საოფისე ავეჯის კოლექცია – ლოფტ სტილი",
+    cat_lighting_alt:   "Loft Line ლოფტ სტილის განათება – Edison ფანარები",
+    cat_decor_alt:      "Loft Line ლოფტ სტილის დეკორაცია – ინდუსტრიული ხე და ლითონი",
+    cat_loft_alt:       "ლითონის ნაკეთობა",
+    about_image_alt:    "Loft Line — ხელობა და ხარისხი",
 
     /* Products / collections section (index) */
     prod_section_tag:   "პოპულარული",
@@ -120,7 +159,7 @@ const translations = {
 
     /* About section (index) */
     about_tag:   "ჩვენ შესახებ",
-    about_title: "ხელოსნობა და ხარისხი",
+    about_title: "ხელობა და ხარისხი",
     about_p1:    "Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.",
     about_p2:    "ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლითონის უნიკალურ ნაკეთობებს, ასევე განათებასა და დეკორაციას.",
     about_btn:   "დაგვიკავშირდით",
@@ -255,6 +294,39 @@ const translations = {
     aria_increase_quantity:     "Increase quantity",
     aria_category_filter:       "Category filter",
     aria_sort:                  "Sort products",
+    aria_quick_view:            "Quick view",
+    aria_add_to_cart:           "Add to cart",
+
+    /* Common labels and runtime states */
+    hero_scroll:                "Scroll",
+    newsletter_email_label:     "Email",
+    label_name:                 "Name",
+    label_email:                "Email",
+    label_message:              "Message",
+    product_count_word:         "Products",
+    state_no_products:          "No products found.",
+    state_products_load_error:  "We could not load products right now. Please try again later.",
+    state_categories_loading:   "Loading categories...",
+    state_categories_unavailable: "Categories are temporarily unavailable.",
+    state_added:                "Added ✓",
+    state_subscribed:           "Subscribed ✓",
+    filter_all:                 "All",
+    filter_empty_category:      "No products found in this category.",
+    badge_sale_word:            "Sale",
+    badge_best:                 "Best",
+    quickview_added:            "Added!",
+    quickview_thumb_image:      "Image",
+    footer_made_love:           "Made with love in Georgia",
+    wa_prefill_order:           "Hello! I would like to place an order.",
+
+    /* Contact runtime */
+    contact_title_whatsapp:     "Contact Us on WhatsApp",
+    contact_desc_whatsapp:      "Fill in the form and a prefilled message to us will open in WhatsApp.",
+    contact_note_whatsapp:      "This form does not submit on the site. The button opens a WhatsApp chat with your details.",
+    contact_submit_whatsapp:    "Contact via WhatsApp",
+    contact_opening_whatsapp:   "Opening WhatsApp...",
+    contact_error_required:     "Please fill in all required fields to continue in WhatsApp.",
+    contact_success_whatsapp:   "WhatsApp is opening with your prefilled message. If it did not open automatically, continue here: ",
 
     /* Drawer */
     drawer_categories: "Categories",
@@ -281,6 +353,12 @@ const translations = {
     cat_decor_sub:      "Accessories & Seasonal",
     cat_loft_title:     "Loft Style",
     cat_loft_sub:       "Industrial Character",
+    cat_outdoor_alt:    "Main furniture — tables and chairs",
+    cat_office_alt:     "Loft Line office furniture collection – loft style",
+    cat_lighting_alt:   "Loft Line loft-style lighting – Edison lamps",
+    cat_decor_alt:      "Loft Line loft-style decor – industrial wood and metal",
+    cat_loft_alt:       "Metal works",
+    about_image_alt:    "Loft Line — craftsmanship and quality",
 
     /* Products / collections section (index) */
     prod_section_tag:   "Popular",

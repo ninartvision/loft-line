@@ -104,6 +104,12 @@
     return getLang() === 'en' ? en : ka;
   }
 
+  function translate(key) {
+    var lang = getLang();
+    var table = typeof translations !== 'undefined' ? translations[lang] : null;
+    return table && table[key] !== undefined ? table[key] : '';
+  }
+
   /* ── Load products from Sanity ───────────────────────────── */
 
   /*
@@ -232,14 +238,14 @@
   function buildBadgeHTML(product) {
     if (!product.badge) return '';
     if (product.badge === 'sale') {
-      var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : 'Sale';
+      var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : translate('badge_sale_word');
       return '<span class="product-badge badge-sale">' + pct + '</span>';
     }
     if (product.badge === 'new') {
-      return '<span class="product-badge badge-new">ახალი</span>';
+      return '<span class="product-badge badge-new">' + translate('badge_new') + '</span>';
     }
     if (product.badge === 'best') {
-      return '<span class="product-badge badge-best">Best</span>';
+      return '<span class="product-badge badge-best">' + translate('badge_best') + '</span>';
     }
     return '';
   }
@@ -281,7 +287,7 @@
       '<div class="product-image-wrap">',
         buildBadgeHTML(product),
         '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy" width="500" height="500">',
-        '<button class="product-quick-view" aria-label="სწრაფი ნახვა">',
+        '<button class="product-quick-view" aria-label="' + esc(translate('aria_quick_view')) + '">',
           '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
             '<circle cx="12" cy="12" r="3"/>',
@@ -301,13 +307,13 @@
             buildMaterialDots(product),
           '</div>',
         '</div>',
-        '<button class="add-to-cart-btn" aria-label="კალათაში დამატება">',
+        '<button class="add-to-cart-btn" aria-label="' + esc(translate('aria_add_to_cart')) + '">',
           '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>',
             '<line x1="3" y1="6" x2="21" y2="6"/>',
             '<path d="M16 10a4 4 0 01-8 0"/>',
           '</svg>',
-          '<span>კალათაში</span>',
+          '<span>' + esc(translate('btn_add_cart')) + '</span>',
         '</button>',
       '</div>'
     ].join('');
@@ -420,20 +426,19 @@
     if (!bar) return;
     bar.hidden = false;
     bar.removeAttribute('aria-hidden');
-    renderInlineState(bar, 'll-filter-empty', text('კატეგორიები იტვირთება...', 'Loading categories...'));
+    renderInlineState(bar, 'll-filter-empty', translate('state_categories_loading'));
   }
 
   function showCategoryFilterError(bar) {
     if (!bar) return;
     bar.hidden = false;
     bar.removeAttribute('aria-hidden');
-    renderInlineState(bar, 'll-filter-empty', text('კატეგორიები დროებით მიუწვდომელია.', 'Categories are temporarily unavailable.'));
+    renderInlineState(bar, 'll-filter-empty', translate('state_categories_unavailable'));
   }
 
   function renderCategoryFilters(categories, bar) {
     if (!bar) return;
 
-    var lang = getLang();
     var activeFilter = bar.getAttribute('data-current-filter') || 'all';
     var hasActiveFilter = activeFilter === 'all' || categories.some(function (category) {
       return category.filterKey === activeFilter;
@@ -451,7 +456,7 @@
     }
 
     var fragment = document.createDocumentFragment();
-    fragment.appendChild(buildFilterButton('all', lang === 'en' ? 'All' : 'ყველა', activeFilter === 'all', true));
+    fragment.appendChild(buildFilterButton('all', translate('filter_all'), activeFilter === 'all', true));
 
     categories.forEach(function (category) {
       var label = lang === 'en' ? category.title_en : category.title_ka;
@@ -466,12 +471,12 @@
 
   function showHomepageCategoryLoading(container) {
     if (!container) return;
-    renderInlineState(container, 'filter-loading', text('კატეგორიები იტვირთება...', 'Loading categories...'));
+    renderInlineState(container, 'filter-loading', translate('state_categories_loading'));
   }
 
   function showHomepageCategoryError(container) {
     if (!container) return;
-    renderInlineState(container, 'filter-loading', text('კატეგორიები დროებით მიუწვდომელია.', 'Categories are temporarily unavailable.'));
+    renderInlineState(container, 'filter-loading', translate('state_categories_unavailable'));
   }
 
   function renderHomepageCategoryFilters(categories, container) {
@@ -545,9 +550,9 @@
 
     var badgeHtml = '';
     if (product.badge === 'new') {
-      badgeHtml = '<span class="ll-badge ll-badge-new">ახალი</span>';
+      badgeHtml = '<span class="ll-badge ll-badge-new">' + esc(translate('badge_new')) + '</span>';
     } else if (product.badge === 'sale') {
-      var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : 'Sale';
+      var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : translate('badge_sale_word');
       badgeHtml = '<span class="ll-badge ll-badge-sale">' + pct + '</span>';
     }
 
@@ -576,7 +581,7 @@
       '<div class="ll-prod-img-wrap">',
         badgeHtml,
         '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy">',
-        '<button class="ll-quick-view" aria-label="სწრაფი ნახვა">',
+        '<button class="ll-quick-view" aria-label="' + esc(translate('aria_quick_view')) + '">',
           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
             '<circle cx="12" cy="12" r="3"/>',
@@ -592,8 +597,8 @@
           oldPriceHtml,
         '</div></div>',
         '<div class="ll-prod-actions">',
-          '<button class="btn-order">შეკვეთა</button>',
-          '<button class="btn-wa" aria-label="WhatsApp">' + waSvg + '</button>',
+          '<button class="btn-order">' + esc(translate('btn_order')) + '</button>',
+          '<button class="btn-wa" aria-label="' + esc(translate('aria_whatsapp')) + '">' + waSvg + '</button>',
         '</div>',
       '</div>'
     ].join('');
@@ -653,7 +658,7 @@
     grid.innerHTML = '';
     var error = document.createElement('p');
     error.className = isLoftSystem ? 'll-filter-empty' : 'filter-no-results is-visible';
-    error.textContent = text('პროდუქტების ჩატვირთვა ვერ მოხერხდა. სცადეთ მოგვიანებით.', 'We could not load products right now. Please try again later.');
+    error.textContent = translate('state_products_load_error');
     grid.appendChild(error);
   }
 
@@ -670,11 +675,11 @@
     grid.innerHTML = '';
     // Always update the count badge, including the 0-products case
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
-    if (countEl) countEl.textContent = products.length + ' ' + text('პროდუქტი', 'Products');
+    if (countEl) countEl.textContent = products.length + ' ' + translate('product_count_word');
     if (!products.length) {
       var empty = document.createElement('p');
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
-      empty.textContent = text('პროდუქტი ვერ მოიძებნა.', 'No products found.');
+      empty.textContent = translate('state_no_products');
       grid.appendChild(empty);
       return;
     }
