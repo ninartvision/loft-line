@@ -530,14 +530,20 @@ body.pqv-open {
   }
 }
 
-/* ── Animation for product cards filter-hidden state ── */
-.product-card.filter-hidden,
+/* ── Filter hidden/visible states ── */
+
+/* .product-card already gets position:absolute via filters.css;
+   apply the same treatment to .ll-product-card so the grid reflows */
 .ll-product-card.filter-hidden {
-  opacity: 0;
+  opacity: 0 !important;
+  position: absolute !important;
   pointer-events: none;
+  visibility: hidden;
 }
-.product-card.filter-visible,
+
 .ll-product-card.filter-visible {
   opacity: 1;
+  position: relative;
   pointer-events: auto;
+  visibility: visible;
 }

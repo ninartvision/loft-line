@@ -373,6 +373,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxPrice = rangeMax ? parseInt(rangeMax.value, 10) : SLIDER_MAX;
       const allCards = getCards();
 
+      console.log('[filter] applyFilters cards=' + allCards.length,
+        'cat=' + JSON.stringify(activeCategories),
+        'style=' + JSON.stringify(activeStyles),
+        'mat=' + JSON.stringify(activeMaterials),
+        'price=' + minPrice + '-' + maxPrice
+      );
+      if (allCards.length > 0) {
+        const c = allCards[0];
+        console.log('[filter] card[0] data:', {
+          category: c.dataset.category,
+          style: c.dataset.style,
+          price: c.dataset.price,
+          material: c.dataset.material
+        });
+      }
+
       if (categoryContainer) {
         categoryContainer.setAttribute('data-selected-values', JSON.stringify(activeCategories));
       }
@@ -405,15 +421,10 @@ document.addEventListener('DOMContentLoaded', () => {
           visibleCount++;
           card.classList.remove('filter-hidden');
           card.classList.add('filter-visible');
-          card.style.display = '';
+          card.removeAttribute('hidden');
         } else {
           card.classList.remove('filter-visible');
           card.classList.add('filter-hidden');
-          setTimeout(() => {
-            if (card.classList.contains('filter-hidden')) {
-              card.style.display = 'none';
-            }
-          }, 350);
         }
       });
 
@@ -455,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Checkbox change handlers
     filterDrawer.addEventListener('change', (e) => {
       if (!e.target.matches('input[name="category"], input[name="style"], input[name="material"]')) return;
+      console.log('[filter] change →', e.target.name, e.target.value, e.target.checked ? 'ON' : 'OFF');
       applyFilters();
     });
 

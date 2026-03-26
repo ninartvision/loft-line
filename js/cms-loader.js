@@ -982,11 +982,13 @@
         child.classList.contains('product-card') ||
         child.classList.contains('ll-product-card')
       )) {
-        child.classList.remove('filter-hidden');
-        child.classList.add('filter-visible');
+        // Only set default visible state if NO filter class is already present.
+        // applyFilters (main.js) sets these after cms:ready; don't overwrite.
+        if (!child.classList.contains('filter-hidden') && !child.classList.contains('filter-visible')) {
+          child.classList.add('filter-visible');
+        }
       }
 
-      child.style.removeProperty('display');
       child.style.removeProperty('opacity');
       child.style.removeProperty('visibility');
       child.style.removeProperty('transform');
