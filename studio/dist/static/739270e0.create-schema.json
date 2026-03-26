@@ -816,6 +816,7 @@
             ],
             "of": [
               {
+                "weak": true,
                 "to": [
                   {
                     "type": "product"
