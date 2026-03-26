@@ -70,7 +70,7 @@
       });
     }
     console.log('[CMS] query URL:', url);
-    return fetch(url, {cache: 'force-cache'})
+    return fetch(url, {cache: 'default'})
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status + ' for Sanity request');
         return r.json();
@@ -151,7 +151,7 @@
     }
 
     // Primary query: match by `page` field (exact schema value)
-    groq   = '*[_type == "product" && available != false && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+    groq   = '*[_type == "product" && coalesce(available, true) == true && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';  // coalesce handles null available field
     params = {page: pageSlug};
 
     return sanityQuery(groq, params).then(function (response) {
@@ -166,7 +166,7 @@
 
       // Fallback: if product.page is missing, derive membership from the referenced category.
       console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category->pageKey fallback.');
-      var fallbackGroq = '*[_type == "product" && available != false && category->pageKey == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      var fallbackGroq = '*[_type == "product" && coalesce(available, true) == true && category->pageKey == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';  // coalesce handles null available field
       return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallbackResponse) {
         var fallback = fallbackResponse.ok ? fallbackResponse.result : null;
         if (Array.isArray(fallback) && fallback.length) {
