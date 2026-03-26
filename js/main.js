@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (filterOverlay) filterOverlay.classList.add('is-active');
       document.body.classList.add('body-drawer-open');
       if (filterToggle) filterToggle.setAttribute('aria-expanded', 'true');
+      console.log('[filter-drawer] openDrawer called. Overlay:', filterOverlay ? filterOverlay.className : 'NOT FOUND', '| Drawer transform computed:', window.getComputedStyle(filterDrawer).transform);
     }
 
     function closeDrawer() {
@@ -313,7 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle button
     if (filterToggle) {
       filterToggle.addEventListener('click', () => {
-        filterDrawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
+        const wasOpen = filterDrawer.classList.contains('is-open');
+        console.log('[filter-toggle] click fired. Drawer currently:', wasOpen ? 'OPEN' : 'CLOSED');
+        wasOpen ? closeDrawer() : openDrawer();
+        console.log('[filter-toggle] Drawer class after toggle:', filterDrawer.className);
       });
     }
 
