@@ -2,6 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const LANG_STORAGE_KEY = 'loftline_lang';
   const CONTACT_WHATSAPP_NUMBER = '995579388833';
 
+  function isCmsDebugEnabled() {
+    try {
+      if (window.location.search.indexOf('cmsDebug=1') !== -1) return true;
+      return localStorage.getItem('loftline_cms_debug') === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function cmsDebug(label, payload) {
+    if (!isCmsDebugEnabled() || !window.console || typeof window.console.log !== 'function') return;
+    if (payload === undefined) {
+      window.console.log('[main.js]', label);
+      return;
+    }
+    window.console.log('[main.js]', label, payload);
+  }
+
   function getRuntimeLang() {
     try {
       return localStorage.getItem(LANG_STORAGE_KEY) || 'ka';
@@ -206,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (filterDrawer && productGrid) {
     const categoryContainer = filterDrawer.querySelector('[data-cms-home-categories]');
+    const homeIconFilterBar = document.querySelector('.ll-iconcat[data-home-icon-filters]');
     const SLIDER_MAX = 2000;
 
     function getCards() {
@@ -214,6 +233,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getCategoryCheckboxes() {
       return filterDrawer.querySelectorAll('input[name="category"]');
+    }
+
+    function syncHomeIconFilterBar() {
+      if (!homeIconFilterBar) return;
+
+      const categoryCheckboxes = Array.from(getCategoryCheckboxes());
+      const checked = categoryCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
+      const allValues = categoryCheckboxes.map(cb => cb.value);
+
+      let activeFilter = 'all';
+      if (checked.length === 1) {
+        activeFilter = checked[0];
+      } else if (checked.length > 1 && checked.length !== allValues.length) {
+        activeFilter = 'all';
+      }
+
+      homeIconFilterBar.setAttribute('data-current-filter', activeFilter);
+      homeIconFilterBar.querySelectorAll('.ll-iconcat-btn').forEach(btn => {
+        const isActive = (btn.dataset.filter || 'all') === activeFilter;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
     }
 
     function getStyleCheckboxes() {
@@ -303,6 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryContainer.setAttribute('data-selected-values', JSON.stringify(activeCategories));
       }
 
+      syncHomeIconFilterBar();
+
       let visibleCount = 0;
 
       allCards.forEach(card => {
@@ -334,6 +377,17 @@ document.addEventListener('DOMContentLoaded', () => {
         filterCount.textContent = filterCountText(visibleCount);
       }
 
+      productGrid.classList.add('is-visible');
+
+      cmsDebug('applyFilters', {
+        totalCards: allCards.length,
+        visibleCount,
+        activeCategories,
+        activeStyles,
+        minPrice,
+        maxPrice
+      });
+
       // No results message
       let noResults = productGrid.querySelector('.filter-no-results');
       if (visibleCount === 0) {
@@ -358,6 +412,27 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!e.target.matches('input[name="category"], input[name="style"]')) return;
       applyFilters();
     });
+
+    if (homeIconFilterBar) {
+      homeIconFilterBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ll-iconcat-btn');
+        if (!btn) return;
+
+        const filter = btn.dataset.filter || 'all';
+        const categoryCheckboxes = Array.from(getCategoryCheckboxes());
+        if (!categoryCheckboxes.length) return;
+
+        if (filter === 'all') {
+          categoryCheckboxes.forEach(cb => { cb.checked = true; });
+        } else {
+          categoryCheckboxes.forEach(cb => {
+            cb.checked = cb.value === filter;
+          });
+        }
+
+        applyFilters();
+      });
+    }
 
     // Range slider handlers
     if (rangeMin && rangeMax) {
@@ -393,7 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    document.addEventListener('cms:ready', applyFilters);
+    document.addEventListener('cms:ready', () => {
+      cmsDebug('cms:ready received', {
+        productCards: getCards().length
+      });
+      applyFilters();
+    });
   }
 
   // ── Cart Badge ──

@@ -28,6 +28,22 @@
   var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
   var QUERY_CACHE       = Object.create(null);
 
+  function isCmsDebugEnabled() {
+    try {
+      if (window.location.search.indexOf('cmsDebug=1') !== -1) return true;
+      return localStorage.getItem('loftline_cms_debug') === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function cmsDebug() {
+    if (!isCmsDebugEnabled() || !window.console || typeof window.console.log !== 'function') return;
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift('[cms-loader]');
+    window.console.log.apply(window.console, args);
+  }
+
   /* ── Sanity Helpers ──────────────────────────────────────── */
 
   /**
@@ -243,9 +259,9 @@
     '_id,',
     '_createdAt,',
     '"slug": slug.current,',
-    // Alias name_ka/name_en → title_ka/title_en so t(product, "title") works
-    '"title_ka": name_ka,',
-    '"title_en": name_en,',
+    // Support both the current name_* schema and any older title-based docs.
+    '"title_ka": coalesce(name_ka, title, name_en),',
+    '"title_en": coalesce(name_en, title, name_ka),',
     // Resolve category reference to its display names
     '"category_ka": category->title_ka, "category_en": category->title, "category_filter": category->filterKey,',
     'filterTags, style,',
@@ -506,6 +522,10 @@
     });
   }
 
+  function fetchCategories(pageSlug) {
+    return loadCategories(pageSlug);
+  }
+
   function processCategories(categories) {
     if (!Array.isArray(categories) || !categories.length) return [];
     return dedupeCategories(categories.map(normalizeCategory).filter(Boolean));
@@ -680,6 +700,15 @@
     bar.removeAttribute('aria-hidden');
     bar.setAttribute('data-current-filter', activeFilter);
     bar.appendChild(fragment);
+  }
+
+  function renderCategories(categories, target) {
+    if (!target) return;
+    if (target.hasAttribute('data-cms-home-categories')) {
+      renderHomepageCategoryFilters(categories, target);
+      return;
+    }
+    renderCategoryFilters(categories, target);
   }
 
   function showHomepageCategoryLoading(container) {
@@ -869,10 +898,29 @@
   function renderGridError(grid, isLoftSystem) {
     if (!grid) return;
     grid.innerHTML = '';
+    grid.classList.add('is-visible', 'in');
     var error = document.createElement('p');
     error.className = isLoftSystem ? 'll-filter-empty' : 'filter-no-results is-visible';
     error.textContent = translate('state_products_load_error');
     grid.appendChild(error);
+  }
+
+  function revealRenderedGrid(grid) {
+    if (!grid) return;
+
+    grid.classList.add('is-visible', 'in');
+
+    Array.prototype.forEach.call(grid.children, function (child) {
+      if (child.classList && child.classList.contains('product-card')) {
+        child.classList.remove('filter-hidden');
+        child.classList.add('filter-visible');
+      }
+
+      child.style.removeProperty('display');
+      child.style.removeProperty('opacity');
+      child.style.removeProperty('visibility');
+      child.style.removeProperty('transform');
+    });
   }
 
   /* ── Render products into the product grid ──────────────────── */
@@ -884,6 +932,11 @@
    */
   function renderProducts(products, grid, cardBuilder) {
     if (!grid) return;
+    cmsDebug('renderProducts:start', {
+      gridId: grid.id || '(no-id)',
+      productCount: Array.isArray(products) ? products.length : 0,
+      builder: cardBuilder === buildLoftCard ? 'loft' : 'default'
+    });
     // Always clear skeletons/placeholder cards — even when Sanity returns nothing
     grid.innerHTML = '';
     // Always update the count badge, including the 0-products case
@@ -894,6 +947,11 @@
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
       empty.textContent = translate('state_no_products');
       grid.appendChild(empty);
+      revealRenderedGrid(grid);
+      cmsDebug('renderProducts:empty', {
+        gridId: grid.id || '(no-id)',
+        childCount: grid.children.length
+      });
       return;
     }
     /* Batch all card insertions in one DOM operation to avoid layout thrash */
@@ -904,6 +962,12 @@
       frag.appendChild(card);
     });
     grid.appendChild(frag); // single reflow for the entire product list
+    revealRenderedGrid(grid);
+    cmsDebug('renderProducts:complete', {
+      gridId: grid.id || '(no-id)',
+      childCount: grid.children.length,
+      cmsCardCount: grid.querySelectorAll('[data-cms-card="1"]').length
+    });
   }
 
   function getSortMode(sortSelect) {
@@ -1108,12 +1172,20 @@
       || document.getElementById('productGrid')
       || document.getElementById('products');
     var isLoftSystem = !!grid && grid.id === 'sanity-product-grid';
-    var filterBar    = isLoftSystem ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
-    var homeCategoryContainer = !isLoftSystem ? document.querySelector('[data-cms-home-categories]') : null;
+    var filterBar    = document.querySelector('.ll-iconcat[data-cms-filters]');
+    var homeCategoryContainer = _pageSlug === 'index' ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
     var sortSelect   = document.querySelector('.ll-sort-select');
     var productPromise = Promise.resolve({items: [], error: null});
     var categoryPromise = Promise.resolve({items: [], error: null});
+
+    cmsDebug('init', {
+      page: _pageSlug,
+      gridId: grid && grid.id ? grid.id : null,
+      isLoftSystem: isLoftSystem,
+      hasFilterBar: !!filterBar,
+      hasHomeCategoryContainer: !!homeCategoryContainer
+    });
 
     _currentGrid = grid;
     _currentCardBuilder = cardBuilder;
@@ -1131,14 +1203,14 @@
       productPromise = loadProducts(_pageSlug);
     }
 
-    if (filterBar && _pageSlug !== 'index') {
+    if (filterBar) {
       showCategoryFilterLoading(filterBar);
-      categoryPromise = loadCategories(_pageSlug);
+      categoryPromise = fetchCategories(_pageSlug);
     }
 
     if (homeCategoryContainer && _pageSlug === 'index') {
       showHomepageCategoryLoading(homeCategoryContainer);
-      categoryPromise = loadCategories('index');
+      categoryPromise = fetchCategories('index');
     }
 
     Promise.all([productPromise, categoryPromise]).then(function (results) {
@@ -1148,6 +1220,14 @@
       var categoryPayload = results[1] || {items: [], error: null};
       var products = Array.isArray(productPayload.items) ? productPayload.items.slice() : [];
       var categories = resolveCategories(categoryPayload.items, products, _pageSlug);
+
+      cmsDebug('data:resolved', {
+        page: _pageSlug,
+        products: products.length,
+        categories: categories.length,
+        productError: !!productPayload.error,
+        categoryError: !!categoryPayload.error
+      });
 
       _currentProducts = products;
 
@@ -1159,9 +1239,9 @@
         }
       }
 
-      if (filterBar && _pageSlug !== 'index') {
+      if (filterBar) {
         if (categories.length) {
-          renderCategoryFilters(categories, filterBar);
+          renderCategories(categories, filterBar);
         } else if (categoryPayload.error) {
           showCategoryFilterError(filterBar);
         }
@@ -1169,7 +1249,7 @@
 
       if (homeCategoryContainer && _pageSlug === 'index') {
         if (categories.length) {
-          renderHomepageCategoryFilters(categories, homeCategoryContainer);
+          renderCategories(categories, homeCategoryContainer);
         } else if (categoryPayload.error) {
           showHomepageCategoryError(homeCategoryContainer);
         }
@@ -1222,5 +1302,10 @@
   } else {
     init();
   }
+
+  window.loftCategories = {
+    fetchCategories: fetchCategories,
+    renderCategories: renderCategories
+  };
 
 }());
