@@ -1,18 +1,18 @@
 ﻿/* ============================================================
-   LOFT LINE â€” Product Quick View System + Image Gallery
+   LOFT LINE - Product Quick View System + Image Gallery
    Works on: index.html (product-card) + all loft pages (ll-product-card)
    ============================================================ */
 (function () {
   'use strict';
 
-  /* â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  var currentCard   = null;
-  var qty           = 1;
+  /* State */
+  var currentCard = null;
+  var qty = 1;
   var galleryImages = [];
-  var galleryIdx    = 0;
+  var galleryIdx = 0;
 
-  /* â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  function qs(sel, ctx)  { return (ctx || document).querySelector(sel); }
+  /* Helpers */
+  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
   function qsa(sel, ctx) { return (ctx || document).querySelectorAll(sel); }
 
   /* Build a thumbnail-sized URL for Sanity CDN assets */
@@ -24,36 +24,36 @@
     return src;
   }
 
-  /* ── Wire Up Click Triggers (Event Delegation) ─────────────────────────
+  /*
+   * Wire up click triggers with event delegation.
    *
    * A single delegated listener on document.body handles clicks from every
-   * product card — static HTML or CMS-injected — past, present, and future.
-   * Because we never attach listeners to individual cards:
+   * product card, whether static HTML or CMS-injected, past, present, and future.
+   * Because listeners are not attached to individual cards:
    *
-   *   • No duplicate handlers regardless of how many times CMS re-renders.
-   *   • No listeners are orphaned on discarded DOM nodes (zero memory leaks).
-   *   • Re-renders, language switches, and filter changes need no re-wiring.
+   * - No duplicate handlers regardless of how many times CMS re-renders.
+   * - No listeners are orphaned on discarded DOM nodes.
+   * - Re-renders, language switches, and filter changes need no re-wiring.
    *
-   * setupTriggers() is kept as a no-op so that window.loftQuickView.init()
-   * and the cms:ready listener remain backwards-compatible without causing
-   * duplicate handlers.
-   * ── */
+   * setupTriggers() stays as a no-op so window.loftQuickView.init() and
+   * older integrations remain safe to call.
+   */
   var _delegatedSetup = false;
 
   function setupTriggers() {
     // No-op: real click wiring is performed once by setupDelegatedTriggers().
-    // Preserved for backwards-compatibility with window.loftQuickView.init
-    // and any external code that calls it — calling it is now always safe.
+    // Preserved for backwards compatibility with window.loftQuickView.init()
+    // and any external code that still calls it.
   }
 
   function setupDelegatedTriggers() {
-    if (_delegatedSetup) return;   // guard: wire the listener exactly once
+    if (_delegatedSetup) return;
     _delegatedSetup = true;
 
     document.body.addEventListener('click', function (e) {
       var target = e.target;
 
-      // ── Quick-view button (or any child element, e.g. the SVG icon) ─────
+      // Quick-view button, or any child element inside it.
       var qvBtn = target.closest
         ? target.closest('.product-quick-view, .ll-quick-view')
         : null;
@@ -63,11 +63,11 @@
           e.preventDefault();
           e.stopPropagation();
           openModal(card);
-          return; // handled — skip image-wrap branch
+          return;
         }
       }
 
-      // ── Image-wrap click ─────────────────────────────────────────────────
+      // Product image click.
       var imgWrap = target.closest
         ? target.closest('.product-image-wrap, .ll-prod-img-wrap')
         : null;
@@ -78,97 +78,99 @@
     });
   }
 
-  /* â”€â”€ Modal DOM Refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Modal DOM refs */
   var domOverlay, domDialog, domClose;
   var domGallery, domGalleryTrack, domGalleryPrev, domGalleryNext, domThumbs;
   var domCat, domName, domDesc, domPrice, domOldPrice;
   var domQtyMinus, domQtyNum, domQtyPlus, domAddBtn;
 
   function cacheModalElements() {
-    domOverlay      = document.getElementById('pqvOverlay');
-    domDialog       = document.getElementById('pqvDialog');
-    domClose        = document.getElementById('pqvClose');
-    domGallery      = document.getElementById('pqvGallery');
+    domOverlay = document.getElementById('pqvOverlay');
+    domDialog = document.getElementById('pqvDialog');
+    domClose = document.getElementById('pqvClose');
+    domGallery = document.getElementById('pqvGallery');
     domGalleryTrack = document.getElementById('pqvGalleryTrack');
-    domGalleryPrev  = document.getElementById('pqvGalleryPrev');
-    domGalleryNext  = document.getElementById('pqvGalleryNext');
-    domThumbs       = document.getElementById('pqvThumbs');
-    domCat          = document.getElementById('pqvCat');
-    domName         = document.getElementById('pqvName');
-    domDesc         = document.getElementById('pqvDesc');
-    domPrice        = document.getElementById('pqvPrice');
-    domOldPrice     = document.getElementById('pqvOldPrice');
-    domQtyMinus     = document.getElementById('pqvQtyMinus');
-    domQtyNum       = document.getElementById('pqvQtyNum');
-    domQtyPlus      = document.getElementById('pqvQtyPlus');
-    domAddBtn       = document.getElementById('pqvAddBtn');
+    domGalleryPrev = document.getElementById('pqvGalleryPrev');
+    domGalleryNext = document.getElementById('pqvGalleryNext');
+    domThumbs = document.getElementById('pqvThumbs');
+    domCat = document.getElementById('pqvCat');
+    domName = document.getElementById('pqvName');
+    domDesc = document.getElementById('pqvDesc');
+    domPrice = document.getElementById('pqvPrice');
+    domOldPrice = document.getElementById('pqvOldPrice');
+    domQtyMinus = document.getElementById('pqvQtyMinus');
+    domQtyNum = document.getElementById('pqvQtyNum');
+    domQtyPlus = document.getElementById('pqvQtyPlus');
+    domAddBtn = document.getElementById('pqvAddBtn');
   }
 
-  /* â”€â”€ Gallery: Build â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Gallery: build */
   function buildGallery(images, altText) {
     galleryImages = images;
-    galleryIdx    = 0;
+    galleryIdx = 0;
     if (!domGalleryTrack) return;
 
-    /* Build slide track â€” first image loads eagerly, rest lazy */
-    domGalleryTrack.innerHTML    = '';
+    /* Build slide track: first image loads eagerly, rest lazy. */
+    domGalleryTrack.innerHTML = '';
     domGalleryTrack.style.cssText = 'transition:none;transform:translateX(0)';
-    /* Batch all slide insertions in one DOM operation to avoid layout thrash */
-    var trackFrag = document.createDocumentFragment();    images.forEach(function (src, i) {
+
+    /* Batch slide insertions in one DOM operation to avoid layout thrash. */
+    var trackFrag = document.createDocumentFragment();
+    images.forEach(function (src, i) {
       var slide = document.createElement('div');
       slide.className = 'pqv-slide';
 
       var img = document.createElement('img');
       img.className = 'pqv-slide-img';
-      img.alt       = altText;
-      img.width     = 800;
-      img.height    = 800;
+      img.alt = altText;
+      img.width = 800;
+      img.height = 800;
 
       if (i === 0) {
-        img.src     = src;
+        img.src = src;
         img.loading = 'eager';
       } else {
-        img.loading          = 'lazy';
-        img.dataset.lazySrc  = src;
-        /* Transparent 1Ã—1 placeholder keeps layout stable */
+        img.loading = 'lazy';
+        img.dataset.lazySrc = src;
+        /* Transparent 1x1 placeholder keeps layout stable. */
         img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
       }
 
       slide.appendChild(img);
       trackFrag.appendChild(slide);
     });
-    domGalleryTrack.appendChild(trackFrag); // single reflow for all slides
+    domGalleryTrack.appendChild(trackFrag);
 
-    /* Show/hide controls based on whether there are multiple images */
+    /* Show or hide controls based on image count. */
     var multi = images.length > 1;
     if (domGalleryPrev) domGalleryPrev.hidden = !multi;
     if (domGalleryNext) domGalleryNext.hidden = !multi;
-    if (domThumbs)      domThumbs.hidden      = !multi;
+    if (domThumbs) domThumbs.hidden = !multi;
 
     if (multi) buildThumbs(images, altText);
 
-    /* Pre-load first two slides */
+    /* Preload the first two slides. */
     lazyLoadAdjacent(0);
   }
 
-  /* â”€â”€ Gallery: Navigate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Gallery: navigate */
   function goToSlide(idx) {
     var len = galleryImages.length;
     if (!len) return;
-    galleryIdx = ((idx % len) + len) % len;         /* wraps both directions */
+    galleryIdx = ((idx % len) + len) % len;
 
     domGalleryTrack.style.transition = 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1)';
-    domGalleryTrack.style.transform  = 'translateX(-' + (galleryIdx * 100) + '%)';
+    domGalleryTrack.style.transform = 'translateX(-' + (galleryIdx * 100) + '%)';
 
     lazyLoadAdjacent(galleryIdx);
     updateThumbActive();
   }
 
-  /* Eagerly load the current slide plus its neighbours */
+  /* Eagerly load the current slide plus its neighbors. */
   function lazyLoadAdjacent(idx) {
     var len = galleryImages.length;
     [-1, 0, 1].forEach(function (offset) {
-      var i     = ((idx + offset) % len + len) % len;
+      var i = ((idx + offset) % len + len) % len;
       var slide = domGalleryTrack && domGalleryTrack.children[i];
       if (!slide) return;
       var img = slide.querySelector('.pqv-slide-img');
@@ -179,75 +181,79 @@
     });
   }
 
-  /* â”€â”€ Gallery: Thumbnails â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Gallery: thumbnails */
   function buildThumbs(images, altText) {
     if (!domThumbs) return;
     domThumbs.innerHTML = '';
 
-    /* Batch all thumbnail buttons in one DOM operation to avoid layout thrash */
+    /* Batch thumbnail buttons in one DOM operation to avoid layout thrash. */
     var thumbFrag = document.createDocumentFragment();
     images.forEach(function (src, i) {
       var btn = document.createElement('button');
-      btn.type      = 'button';
+      btn.type = 'button';
       btn.className = 'pqv-thumb' + (i === 0 ? ' is-active' : '');
-      btn.setAttribute('aria-label', altText + ' â€” ' + (i + 1));
+      btn.setAttribute('aria-label', altText + ' - ' + (i + 1));
 
       var img = document.createElement('img');
-      img.src     = thumbUrl(src);
-      img.alt     = '';
+      img.src = thumbUrl(src);
+      img.alt = '';
       img.loading = 'lazy';
-      img.width   = 140;
-      img.height  = 140;
+      img.width = 140;
+      img.height = 140;
 
       btn.appendChild(img);
       btn.addEventListener('click', function () { goToSlide(i); });
       thumbFrag.appendChild(btn);
     });
-    domThumbs.appendChild(thumbFrag); // single reflow for all thumbnails
+    domThumbs.appendChild(thumbFrag);
   }
 
   function updateThumbActive() {
     if (!domThumbs) return;
     var thumbs = domThumbs.querySelectorAll('.pqv-thumb');
-    thumbs.forEach(function (t, i) {
-      t.classList.toggle('is-active', i === galleryIdx);
+    thumbs.forEach(function (thumb, i) {
+      thumb.classList.toggle('is-active', i === galleryIdx);
     });
     var active = thumbs[galleryIdx];
-    if (active) active.scrollIntoView({ inline: 'nearest', behavior: 'smooth', block: 'nearest' });
+    if (active) {
+      active.scrollIntoView({ inline: 'nearest', behavior: 'smooth', block: 'nearest' });
+    }
   }
 
-  /* â”€â”€ Open Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Open modal */
   function openModal(card) {
     if (!domDialog || !domOverlay) return;
     currentCard = card;
     qty = 1;
 
-    var imgEl   = qs('.product-image-wrap img, .ll-prod-img-wrap img', card);
-    var imgSrc  = imgEl ? (imgEl.getAttribute('src') || '') : '';
-    var nameEl  = qs('.product-name, .ll-prod-name',       card);
-    var descEl  = qs('.product-desc, .ll-prod-material',   card);
-    var catEl   = qs('.product-category, .ll-prod-cat',    card);
-    var priceEl = qs('.product-price, .ll-prod-price',     card);
-    var oldPEl  = qs('.product-old-price, .ll-prod-old-price', card);
+    var imgEl = qs('.product-image-wrap img, .ll-prod-img-wrap img', card);
+    var imgSrc = imgEl ? (imgEl.getAttribute('src') || '') : '';
+    var nameEl = qs('.product-name, .ll-prod-name', card);
+    var descEl = qs('.product-desc, .ll-prod-material', card);
+    var catEl = qs('.product-category, .ll-prod-cat', card);
+    var priceEl = qs('.product-price, .ll-prod-price', card);
+    var oldPEl = qs('.product-old-price, .ll-prod-old-price', card);
 
-    var nameText     = nameEl  ? nameEl.textContent.trim()  : '';
-    var oldPriceText = oldPEl  ? oldPEl.textContent.trim()  : '';
+    var nameText = nameEl ? nameEl.textContent.trim() : '';
+    var oldPriceText = oldPEl ? oldPEl.textContent.trim() : '';
 
-    if (domCat)   domCat.textContent  = catEl   ? catEl.textContent.trim()   : '';
-    if (domName)  domName.textContent = nameText;
-    if (domDesc)  domDesc.textContent = descEl  ? descEl.textContent.trim()  : '';
+    if (domCat) domCat.textContent = catEl ? catEl.textContent.trim() : '';
+    if (domName) domName.textContent = nameText;
+    if (domDesc) domDesc.textContent = descEl ? descEl.textContent.trim() : '';
     if (domPrice) domPrice.textContent = priceEl ? priceEl.textContent.trim() : '';
     if (domOldPrice) {
-      domOldPrice.textContent   = oldPriceText;
+      domOldPrice.textContent = oldPriceText;
       domOldPrice.style.display = oldPriceText ? '' : 'none';
     }
 
-    /* Build gallery â€” read image list from data-gallery (set by cms-loader) */
+    /* Read image list from data-gallery, which is set by cms-loader. */
     var images = [];
     try {
       var raw = card.getAttribute('data-gallery');
       if (raw) images = JSON.parse(raw);
-    } catch (e) { images = []; }
+    } catch (e) {
+      images = [];
+    }
     if (!images.length && imgSrc) images = [imgSrc];
     buildGallery(images, nameText);
 
@@ -260,10 +266,12 @@
     document.body.classList.add('pqv-open');
 
     resetAddBtn();
-    setTimeout(function () { if (domClose) domClose.focus(); }, 60);
+    setTimeout(function () {
+      if (domClose) domClose.focus();
+    }, 60);
   }
 
-  /* â”€â”€ Close Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Close modal */
   function closeModal() {
     if (!domDialog || !domOverlay) return;
     domOverlay.classList.remove('is-open');
@@ -273,7 +281,7 @@
     document.body.classList.remove('pqv-open');
   }
 
-  /* â”€â”€ Add-to-cart helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Add-to-cart helpers */
   function resetAddBtn() {
     if (!domAddBtn) return;
     domAddBtn.classList.remove('pqv-added');
@@ -283,36 +291,42 @@
       ' კალათაში დამატება';
   }
 
-  /* â”€â”€ Wire All Modal Controls (called once) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Wire modal controls once. */
   function wireModalControls() {
     if (!domDialog) return;
 
-    /* â”€â”€ Close â”€â”€ */
-    if (domClose)   domClose.addEventListener('click', closeModal);
-    if (domOverlay) domOverlay.addEventListener('click', function (e) {
-      if (e.target === domOverlay) closeModal();
-    });
+    /* Close controls */
+    if (domClose) domClose.addEventListener('click', closeModal);
+    if (domOverlay) {
+      domOverlay.addEventListener('click', function (e) {
+        if (e.target === domOverlay) closeModal();
+      });
+    }
 
-    /* â”€â”€ Gallery arrows â”€â”€ */
-    if (domGalleryPrev) domGalleryPrev.addEventListener('click', function (e) {
-      e.stopPropagation();
-      goToSlide(galleryIdx - 1);
-    });
-    if (domGalleryNext) domGalleryNext.addEventListener('click', function (e) {
-      e.stopPropagation();
-      goToSlide(galleryIdx + 1);
-    });
+    /* Gallery arrows */
+    if (domGalleryPrev) {
+      domGalleryPrev.addEventListener('click', function (e) {
+        e.stopPropagation();
+        goToSlide(galleryIdx - 1);
+      });
+    }
+    if (domGalleryNext) {
+      domGalleryNext.addEventListener('click', function (e) {
+        e.stopPropagation();
+        goToSlide(galleryIdx + 1);
+      });
+    }
 
-    /* â”€â”€ Swipe / touch â”€â”€ */
+    /* Swipe and touch navigation */
     if (domGallery) {
       var touchStartX = 0;
       var touchStartY = 0;
-      var swiping     = false;
+      var swiping = false;
 
       domGallery.addEventListener('touchstart', function (e) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        swiping     = false;
+        swiping = false;
       }, { passive: true });
 
       domGallery.addEventListener('touchmove', function (e) {
@@ -330,28 +344,38 @@
       });
     }
 
-    /* â”€â”€ Keyboard â”€â”€ */
+    /* Keyboard navigation */
     document.addEventListener('keydown', function (e) {
       if (!domDialog || !domDialog.classList.contains('is-open')) return;
-      if (e.key === 'Escape')                                  { closeModal(); return; }
-      if (e.key === 'ArrowLeft'  && galleryImages.length > 1)  goToSlide(galleryIdx - 1);
-      if (e.key === 'ArrowRight' && galleryImages.length > 1)  goToSlide(galleryIdx + 1);
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+      if (e.key === 'ArrowLeft' && galleryImages.length > 1) goToSlide(galleryIdx - 1);
+      if (e.key === 'ArrowRight' && galleryImages.length > 1) goToSlide(galleryIdx + 1);
     });
 
-    /* â”€â”€ Quantity â”€â”€ */
-    if (domQtyMinus) domQtyMinus.addEventListener('click', function () {
-      if (qty > 1) { qty--; if (domQtyNum) domQtyNum.textContent = qty; }
-    });
-    if (domQtyPlus) domQtyPlus.addEventListener('click', function () {
-      qty++;
-      if (domQtyNum) domQtyNum.textContent = qty;
-    });
+    /* Quantity controls */
+    if (domQtyMinus) {
+      domQtyMinus.addEventListener('click', function () {
+        if (qty > 1) {
+          qty--;
+          if (domQtyNum) domQtyNum.textContent = qty;
+        }
+      });
+    }
+    if (domQtyPlus) {
+      domQtyPlus.addEventListener('click', function () {
+        qty++;
+        if (domQtyNum) domQtyNum.textContent = qty;
+      });
+    }
 
-    /* â”€â”€ Add to cart â”€â”€ */
+    /* Add to cart */
     if (domAddBtn) {
       domAddBtn.addEventListener('click', function () {
-        document.querySelectorAll('#cartBadge, .bottom-bar-badge, .ll-cart-badge').forEach(function (b) {
-          b.textContent = (parseInt(b.textContent) || 0) + qty;
+        document.querySelectorAll('#cartBadge, .bottom-bar-badge, .ll-cart-badge').forEach(function (badge) {
+          badge.textContent = (parseInt(badge.textContent, 10) || 0) + qty;
         });
         domAddBtn.classList.add('pqv-added');
         domAddBtn.innerHTML =
@@ -362,18 +386,15 @@
     }
   }
 
-  /* â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* Init */
   document.addEventListener('DOMContentLoaded', function () {
     cacheModalElements();
-    setupDelegatedTriggers(); // one delegated listener — covers static + CMS cards
+    setupDelegatedTriggers();
     wireModalControls();
   });
 
-  // Backwards-compat: external callers (e.g. window.loftQuickView.init()) remain
-  // safe to invoke — setupTriggers() is a no-op; delegation covers all cards.
-  // cms:ready is still dispatched by cms-loader.js after each render, but
-  // quick-view no longer needs to listen for it: delegation requires no re-wiring.
+  // Backwards compatibility: external callers can still invoke
+  // window.loftQuickView.init() safely. Delegation covers all cards.
   window.loftQuickView = { init: setupTriggers };
-
 })();
 

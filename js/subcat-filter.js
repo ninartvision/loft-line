@@ -7,12 +7,20 @@
 (function () {
   'use strict';
 
-  var GRID_ID   = 'sanity-product-grid';
+  var GRID_IDS  = ['products', 'productGrid', 'sanity-product-grid'];
   var BAR_CLASS = 'll-iconcat';
   var BTN_CLASS = 'll-iconcat-btn';
   var EMPTY_ID  = 'll-filter-empty';
 
   var currentFilter = 'all';
+
+  function getGrid() {
+    for (var i = 0; i < GRID_IDS.length; i++) {
+      var grid = document.getElementById(GRID_IDS[i]);
+      if (grid) return grid;
+    }
+    return null;
+  }
 
   /* ── Derive visible count and toggle empty-state message ── */
   function updateEmpty(grid) {
@@ -68,7 +76,7 @@
   /* ── Wire up filter buttons ── */
   function init() {
     var bar  = document.querySelector('.' + BAR_CLASS);
-    var grid = document.getElementById(GRID_ID);
+    var grid = getGrid();
     if (!bar || !grid) return;
 
     bar.addEventListener('click', function (e) {

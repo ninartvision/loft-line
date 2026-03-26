@@ -690,13 +690,16 @@
 
   function getSortMode(sortSelect) {
     if (!sortSelect) return 'default';
-    if (sortSelect.value) return sortSelect.value;
+    var value = sortSelect.value || sortSelect.getAttribute('value') || 'default';
 
-    switch (sortSelect.selectedIndex) {
-      case 1: return 'price-asc';
-      case 2: return 'price-desc';
-      case 3: return 'newest';
-      default: return 'default';
+    switch (value) {
+      case 'price-asc':
+      case 'price-desc':
+      case 'newest':
+      case 'default':
+        return value;
+      default:
+        return 'default';
     }
   }
 
