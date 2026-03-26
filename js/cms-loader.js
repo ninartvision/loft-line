@@ -27,6 +27,13 @@
   var SANITY_API_VER    = '2024-01-01';
   var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
   var QUERY_CACHE       = Object.create(null);
+  var CATEGORY_PAGE_PATHS = {
+    '/main-furniture.html': true,
+    '/office-furniture.html': true,
+    '/loft-collection.html': true,
+    '/lighting.html': true,
+    '/decoration.html': true
+  };
 
   function isCmsDebugEnabled() {
     try {
@@ -42,6 +49,31 @@
     var args = Array.prototype.slice.call(arguments);
     args.unshift('[cms-loader]');
     window.console.log.apply(window.console, args);
+  }
+
+  function normalizePathname(pathname) {
+    var path = String(pathname || '/').trim();
+    if (!path) return '/';
+    if (path.charAt(0) !== '/') path = '/' + path;
+    return path.toLowerCase();
+  }
+
+  function getCurrentPathname() {
+    return normalizePathname(window.location.pathname || '/');
+  }
+
+  function shouldRenderCategoryUi() {
+    return !!CATEGORY_PAGE_PATHS[getCurrentPathname()];
+  }
+
+  function removeHomepageCategoryUi() {
+    if (shouldRenderCategoryUi()) return;
+
+    Array.prototype.forEach.call(document.querySelectorAll('.ll-iconcat[data-home-icon-filters]'), function (node) {
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    });
   }
 
   /* ── Sanity Helpers ──────────────────────────────────────── */
@@ -1166,13 +1198,17 @@
 
   function init() {
     var gen = ++_renderGen; // capture this render's generation token
+    var currentPath = getCurrentPathname();
+    var allowCategoryUi = shouldRenderCategoryUi();
+
+    removeHomepageCategoryUi();
 
     // Support all known product grid IDs without changing the existing render flow.
     var grid = document.getElementById('sanity-product-grid')
       || document.getElementById('productGrid')
       || document.getElementById('products');
     var isLoftSystem = !!grid && grid.id === 'sanity-product-grid';
-    var filterBar    = document.querySelector('.ll-iconcat[data-cms-filters]');
+    var filterBar    = allowCategoryUi ? document.querySelector('.ll-iconcat[data-cms-filters]:not([data-home-icon-filters])') : null;
     var homeCategoryContainer = _pageSlug === 'index' ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
     var sortSelect   = document.querySelector('.ll-sort-select');
@@ -1181,8 +1217,10 @@
 
     cmsDebug('init', {
       page: _pageSlug,
+      path: currentPath,
       gridId: grid && grid.id ? grid.id : null,
       isLoftSystem: isLoftSystem,
+      allowCategoryUi: allowCategoryUi,
       hasFilterBar: !!filterBar,
       hasHomeCategoryContainer: !!homeCategoryContainer
     });
