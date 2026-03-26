@@ -524,9 +524,13 @@
     return (lang === 'en' ? product.category_en : product.category_ka) || '';
   }
 
-  // Keep exact Sanity filter keys end-to-end.
+  // Normalize all filter keys to the same format used by filter buttons (makeFilterKey).
+  // Ensures "Office Tables", "office_tables", and "office-tables" all match "office-tables".
   function filterValues(product) {
-    return Array.isArray(product.filterTags) ? product.filterTags.filter(Boolean) : [];
+    var tags = Array.isArray(product.filterTags) && product.filterTags.length
+      ? product.filterTags
+      : (product.category_filter ? [product.category_filter] : []);
+    return tags.map(makeFilterKey).filter(Boolean);
   }
 
   var CATEGORY_PROJECTION = [
