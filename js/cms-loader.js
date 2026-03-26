@@ -1219,6 +1219,7 @@
   var _currentProducts = [];
   var _currentGrid = null;
   var _currentCardBuilder = null;
+  var _cachedHomepageData = null;  // cached so language switch re-applies instantly
 
   function rerenderSortedProducts() {
     if (!_currentGrid || !_currentCardBuilder) return;
@@ -1333,8 +1334,16 @@
 
     // Homepage-only: fetch hero + announcement in a single Sanity request
     if (_pageSlug === 'index') {
+      if (_cachedHomepageData) {
+        // Re-apply cached data immediately (e.g. language switch)
+        cmsDebug('homepage:cache-hit', _cachedHomepageData);
+        applyHero(_cachedHomepageData);
+        applyAnnouncement(_cachedHomepageData);
+      }
       sanityQuery(HOMEPAGE_GROQ).then(function (response) {
         var data = response.ok ? response.result : null;
+        cmsDebug('homepage:fetched', data);
+        if (data) _cachedHomepageData = data;
         applySeo(data && data.seo);
         applyHero(data);
         applyAnnouncement(data);
