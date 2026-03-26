@@ -859,11 +859,11 @@
   function init() {
     var gen = ++_renderGen; // capture this render's generation token
 
-    // System B (index.html) uses id="productGrid"; System A pages use id="sanity-product-grid"
-    var isLoftSystem = !!document.getElementById('sanity-product-grid');
-    var grid         = isLoftSystem
-      ? document.getElementById('sanity-product-grid')
-      : document.getElementById('productGrid');
+    // Support all known product grid IDs without changing the existing render flow.
+    var grid = document.getElementById('sanity-product-grid')
+      || document.getElementById('productGrid')
+      || document.getElementById('products');
+    var isLoftSystem = !!grid && grid.id === 'sanity-product-grid';
     var filterBar    = isLoftSystem ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
     var homeCategoryContainer = !isLoftSystem ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
