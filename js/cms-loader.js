@@ -25,7 +25,7 @@
   var SANITY_PROJECT_ID = '4n3g4zv5';
   var SANITY_DATASET    = 'production';
   var SANITY_API_VER    = '2024-01-01';
-  var SANITY_HOST       = 'https://' + SANITY_PROJECT_ID + '.apicdn.sanity.io';
+  var SANITY_HOST = "https://4n3g4zv5.apicdn.sanity.io";
   var QUERY_CACHE       = Object.create(null);
   var CATEGORY_PAGE_PATHS = {
     '/main-furniture.html': true,
