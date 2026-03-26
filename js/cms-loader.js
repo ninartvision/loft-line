@@ -294,8 +294,10 @@
     // Support both the current name_* schema and any older title-based docs.
     '"title_ka": coalesce(name_ka, title, name_en),',
     '"title_en": coalesce(name_en, title, name_ka),',
-    // Resolve category reference to its display names
-    '"category_ka": category->title_ka, "category_en": category->title, "category_filter": category->filterKey,',
+    // Resolve category reference to its display names.
+    // coalesce ensures we get a usable filter key even when filterKey is not filled
+    // in the Sanity category document — falling back to the category slug.
+    '"category_ka": category->title_ka, "category_en": category->title, "category_filter": coalesce(category->filterKey, category->slug.current),',
     'filterTags, style,',
     'price,',
     // Alias old_price → oldPrice
