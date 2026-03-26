@@ -25,6 +25,28 @@ const translations = {
     nav_metal:           "ლითონის ავეჯი",
     mobile_about:        "ჩვენ შესახებ",
 
+    /* Accessibility labels */
+    aria_logo_home:             "Loft Line მთავარი",
+    aria_main_navigation:       "მთავარი ნავიგაცია",
+    aria_search:                "ძიება",
+    aria_language_switch:       "ენის შეცვლა",
+    aria_cart:                  "კალათა",
+    aria_whatsapp:              "WhatsApp",
+    aria_menu:                  "მენიუ",
+    aria_side_menu:             "გვერდითი მენიუ",
+    aria_close:                 "დახურვა",
+    aria_filter_close:          "ფილტრის დახურვა",
+    aria_price_min:             "მინიმალური ფასი",
+    aria_price_max:             "მაქსიმალური ფასი",
+    aria_newsletter_form:       "სიახლეების გამოწერის ფორმა",
+    aria_mobile_quick_nav:      "სწრაფი მობილური ნავიგაცია",
+    aria_previous:              "წინა",
+    aria_next:                  "შემდეგი",
+    aria_decrease_quantity:     "შემცირება",
+    aria_increase_quantity:     "გაზრდა",
+    aria_category_filter:       "კატეგორიის ფილტრი",
+    aria_sort:                  "დალაგება",
+
     /* Drawer */
     drawer_categories: "კატეგორიები",
     drawer_wa_btn:     "შეგვიკვეთეთ WhatsApp-ზე",
@@ -166,22 +188,27 @@ const translations = {
     /* Page heroes (ll-pages) */
     lc_hero_label:  "ხელნაკეთი ლითონი",
     lc_hero_title:  "ლითონის ნაკეთობა",
+    lc_hero_sub:    "ლითონის ჩარჩოზე შექმნილი ლოფტ მაგიდები და აქცენტური ავეჯი.",
     lc_count:       "6 პროდუქტი",
 
     mf_hero_label:  "ხელნაკეთი ლოფტ ავეჯი",
     mf_hero_title:  "მთავარი ავეჯი",
+    mf_hero_sub:    "მაგიდები, სკამები და კანაპეები ყოველდღიური სივრცეებისთვის.",
     mf_count:       "8 პროდუქტი",
 
     of_hero_label:  "ერგონომიკული დიზაინი",
     of_hero_title:  "საოფისე ავეჯი",
+    of_hero_sub:    "ერგონომიული მაგიდები და სკამები კონცენტრირებული სამუშაო სივრცეებისთვის.",
     of_count:       "6 პროდუქტი",
 
     lt_hero_label:  "ხელნაკეთი სანათები",
     lt_hero_title:  "განათება",
+    lt_hero_sub:    "ინდუსტრიული და თანამედროვე სანათები ინტერიერის აქცენტისთვის.",
     lt_count:       "6 პროდუქტი",
 
     dc_hero_label:  "ხელნაკეთი დეკორი",
     dc_hero_title:  "დეკორაცია",
+    dc_hero_sub:    "კედლის დეკორი და ინტერიერის დეტალები სივრცის დასასრულებლად.",
     dc_count:       "6 პროდუქტი",
   },
 
@@ -206,6 +233,28 @@ const translations = {
     nav_wood:            "Wood Furniture",
     nav_metal:           "Metal Furniture",
     mobile_about:        "About Us",
+
+    /* Accessibility labels */
+    aria_logo_home:             "Loft Line home",
+    aria_main_navigation:       "Main navigation",
+    aria_search:                "Search",
+    aria_language_switch:       "Switch language",
+    aria_cart:                  "Cart",
+    aria_whatsapp:              "WhatsApp",
+    aria_menu:                  "Menu",
+    aria_side_menu:             "Side menu",
+    aria_close:                 "Close",
+    aria_filter_close:          "Close filters",
+    aria_price_min:             "Minimum price",
+    aria_price_max:             "Maximum price",
+    aria_newsletter_form:       "Newsletter subscription form",
+    aria_mobile_quick_nav:      "Mobile quick navigation",
+    aria_previous:              "Previous",
+    aria_next:                  "Next",
+    aria_decrease_quantity:     "Decrease quantity",
+    aria_increase_quantity:     "Increase quantity",
+    aria_category_filter:       "Category filter",
+    aria_sort:                  "Sort products",
 
     /* Drawer */
     drawer_categories: "Categories",
@@ -348,22 +397,27 @@ const translations = {
     /* Page heroes (ll-pages) */
     lc_hero_label:  "Handcrafted Metalwork",
     lc_hero_title:  "Metal Works",
+    lc_hero_sub:    "Loft tables and accent furniture built on metal frames.",
     lc_count:       "6 Products",
 
     mf_hero_label:  "Handcrafted Loft Furniture",
     mf_hero_title:  "Main Furniture",
+    mf_hero_sub:    "Tables, chairs, and sofas for everyday living spaces.",
     mf_count:       "8 Products",
 
     of_hero_label:  "Ergonomic Design",
     of_hero_title:  "Office Furniture",
+    of_hero_sub:    "Ergonomic desks and chairs for focused workspaces.",
     of_count:       "6 Products",
 
     lt_hero_label:  "Handcrafted Lighting",
     lt_hero_title:  "Lighting",
+    lt_hero_sub:    "Industrial and modern lighting for interior accents.",
     lt_count:       "6 Products",
 
     dc_hero_label:  "Handcrafted Decor",
     dc_hero_title:  "Decoration",
+    dc_hero_sub:    "Wall decor and interior details to complete the space.",
     dc_count:       "6 Products",
   }
 };

@@ -62,7 +62,7 @@
       <div class="ll-page-hero-content">
         <span class="ll-label" data-i18n="mf_hero_label">ხელნაკეთი ლოფტ ავეჯი</span>
         <h1 class="ll-hero-title" data-i18n="mf_hero_title">მთავარი ავეჯი</h1>
-        <p class="ll-hero-sub">მაგიდები, სკამები და კანაპეები ყოველდღიური სივრცეებისთვის.</p>
+        <p class="ll-hero-sub" data-i18n="mf_hero_sub">მაგიდები, სკამები და კანაპეები ყოველდღიური სივრცეებისთვის.</p>
       </div>
     </div>
   </div>
@@ -71,11 +71,11 @@
     <section class="ll-catalog">
       <div class="container">
         <!-- -- Category icon filter -- -->
-        <div class="ll-iconcat" role="group" aria-label="კატეგორიის ფილტრი" data-cms-filters hidden></div>
+        <div class="ll-iconcat" role="group" aria-label="კატეგორიის ფილტრი" data-i18n-aria="aria_category_filter" data-cms-filters hidden></div>
 
         <div class="ll-catalog-bar">
           <span class="ll-catalog-count" id="ll-catalog-count" data-i18n="mf_count">0 პროდუქტი</span>
-          <select class="ll-sort-select" aria-label="დალაგება">
+          <select class="ll-sort-select" aria-label="დალაგება" data-i18n-aria="aria_sort">
             <option value="default" data-i18n="sort_default">დალაგება: ნაგულისხმევი</option>
             <option value="price-asc" data-i18n="sort_price_asc">ფასი: ზრდადი</option>
             <option value="price-desc" data-i18n="sort_price_desc">ფასი: კლებადი</option>
@@ -100,17 +100,17 @@
         <div class="pqv-gallery-track-wrap">
           <div class="pqv-gallery-track" id="pqvGalleryTrack"></div>
         </div>
-        <button class="pqv-gallery-btn pqv-gallery-prev" id="pqvGalleryPrev" type="button" aria-label="წინა" hidden>
+        <button class="pqv-gallery-btn pqv-gallery-prev" id="pqvGalleryPrev" type="button" aria-label="წინა" data-i18n-aria="aria_previous" hidden>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
-        <button class="pqv-gallery-btn pqv-gallery-next" id="pqvGalleryNext" type="button" aria-label="შემდეგი" hidden>
+        <button class="pqv-gallery-btn pqv-gallery-next" id="pqvGalleryNext" type="button" aria-label="შემდეგი" data-i18n-aria="aria_next" hidden>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
       <div class="pqv-thumbs" id="pqvThumbs" hidden></div>
     </div>
     <div class="pqv-info-panel">
-      <button class="pqv-close" id="pqvClose" type="button" aria-label="დახურვა">
+      <button class="pqv-close" id="pqvClose" type="button" aria-label="დახურვა" data-i18n-aria="aria_close">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <span class="pqv-cat" id="pqvCat"></span>
@@ -128,9 +128,9 @@
       <div class="pqv-qty-wrap">
         <p class="pqv-qty-label" data-i18n="pqv_qty_label">რაოდენობა</p>
         <div class="pqv-qty-row">
-          <button class="pqv-qty-btn" id="pqvQtyMinus" type="button" aria-label="შემცირება">-</button>
+          <button class="pqv-qty-btn" id="pqvQtyMinus" type="button" aria-label="შემცირება" data-i18n-aria="aria_decrease_quantity">-</button>
           <span class="pqv-qty-num" id="pqvQtyNum">1</span>
-          <button class="pqv-qty-btn" id="pqvQtyPlus" type="button" aria-label="გაზრდა">+</button>
+          <button class="pqv-qty-btn" id="pqvQtyPlus" type="button" aria-label="გაზრდა" data-i18n-aria="aria_increase_quantity">+</button>
         </div>
       </div>
       <button class="pqv-add-btn" id="pqvAddBtn" type="button">

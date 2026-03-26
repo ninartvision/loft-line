@@ -33,6 +33,44 @@
     return lang === 'en' ? enText : kaText;
   }
 
+  function thumbAriaLabel(altText, index) {
+    var base = altText || runtimeText('pqv_color_name', 'ნატ. მუხა', 'Nat. Oak');
+    return runtimeText(null, 'სურათი', 'Image') + ' ' + (index + 1) + ': ' + base;
+  }
+
+  function setModalStaticText() {
+    var colorLabel = document.querySelector('.pqv-color-label');
+    var colorName = document.getElementById('pqvColorName');
+
+    if (colorName && !colorName.dataset.dynamicColor) {
+      colorName.textContent = runtimeText('pqv_color_name', 'ნატ. მუხა', 'Nat. Oak');
+    }
+
+    if (colorLabel && colorName) {
+      colorLabel.innerHTML = runtimeText('pqv_color_label', 'ფერი:', 'Color:') + ' <span id="pqvColorName">' + colorName.textContent + '</span>';
+    }
+
+    if (domGalleryPrev) {
+      domGalleryPrev.setAttribute('aria-label', runtimeText(null, 'წინა', 'Previous'));
+    }
+
+    if (domGalleryNext) {
+      domGalleryNext.setAttribute('aria-label', runtimeText(null, 'შემდეგი', 'Next'));
+    }
+
+    if (domClose) {
+      domClose.setAttribute('aria-label', runtimeText(null, 'დახურვა', 'Close'));
+    }
+
+    if (domQtyMinus) {
+      domQtyMinus.setAttribute('aria-label', runtimeText(null, 'შემცირება', 'Decrease quantity'));
+    }
+
+    if (domQtyPlus) {
+      domQtyPlus.setAttribute('aria-label', runtimeText(null, 'გაზრდა', 'Increase quantity'));
+    }
+  }
+
   function setAddButtonIdle() {
     if (!domAddBtn) return;
     domAddBtn.dataset.runtimeState = 'idle';
@@ -50,6 +88,7 @@
   }
 
   function syncQuickViewRuntimeLanguage() {
+    setModalStaticText();
     if (!domAddBtn) return;
     if (domAddBtn.dataset.runtimeState === 'added') {
       setAddButtonAdded();
@@ -168,6 +207,7 @@
     domQtyNum = document.getElementById('pqvQtyNum');
     domQtyPlus = document.getElementById('pqvQtyPlus');
     domAddBtn = document.getElementById('pqvAddBtn');
+    setModalStaticText();
   }
 
   /* Gallery: build */
@@ -258,7 +298,7 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'pqv-thumb' + (i === 0 ? ' is-active' : '');
-      btn.setAttribute('aria-label', altText + ' - ' + (i + 1));
+      btn.setAttribute('aria-label', thumbAriaLabel(altText, i));
 
       var img = document.createElement('img');
       img.src = thumbUrl(src);
@@ -312,6 +352,8 @@
       domOldPrice.textContent = oldPriceText;
       domOldPrice.style.display = oldPriceText ? '' : 'none';
     }
+
+    setModalStaticText();
 
     /* Read image list from data-gallery, which is set by cms-loader. */
     var images = [];
@@ -454,6 +496,7 @@
     cacheModalElements();
     setupDelegatedTriggers();
     wireModalControls();
+    syncQuickViewRuntimeLanguage();
   });
 
   document.addEventListener('loftline:langchange', syncQuickViewRuntimeLanguage);

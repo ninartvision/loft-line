@@ -16,6 +16,84 @@
 (function () {
   'use strict';
 
+  var LANG_STORAGE_KEY = 'loftline_lang';
+
+  function getRuntimeLang() {
+    try {
+      return localStorage.getItem(LANG_STORAGE_KEY) || 'ka';
+    } catch (e) {
+      return 'ka';
+    }
+  }
+
+  function runtimeText(key, kaText, enText) {
+    var lang = getRuntimeLang();
+    var table = typeof translations !== 'undefined' ? translations[lang] : null;
+    if (key && table && table[key] !== undefined) {
+      return table[key];
+    }
+    return lang === 'en' ? enText : kaText;
+  }
+
+  function updateSharedRuntimeText() {
+    var logo = document.querySelector('.ll-logo');
+    var nav = document.querySelector('.ll-nav');
+    var searchBtn = document.querySelector('.ll-header-actions .ll-icon-btn:not(.ll-cart-btn)');
+    var langBtn = document.getElementById('langToggle');
+    var cartBtn = document.querySelector('.ll-cart-btn');
+    var waHeaderBtn = document.querySelector('.ll-wa-header-btn');
+    var menuBtn = document.getElementById('llHamburger');
+    var drawer = document.getElementById('llDrawer');
+    var drawerClose = document.getElementById('llDrawerClose');
+    var drawerWa = document.querySelector('.ll-drawer-wa');
+    var footerMade = document.getElementById('llFooterMade');
+
+    if (logo) {
+      logo.setAttribute('aria-label', runtimeText('aria_logo_home', 'Loft Line მთავარი', 'Loft Line home'));
+    }
+
+    if (nav) {
+      nav.setAttribute('aria-label', runtimeText('aria_main_navigation', 'მთავარი ნავიგაცია', 'Main navigation'));
+    }
+
+    if (searchBtn) {
+      searchBtn.setAttribute('aria-label', runtimeText('aria_search', 'ძიება', 'Search'));
+    }
+
+    if (langBtn) {
+      langBtn.setAttribute('aria-label', runtimeText('aria_language_switch', 'ენის შეცვლა', 'Switch language'));
+    }
+
+    if (cartBtn) {
+      cartBtn.setAttribute('aria-label', runtimeText('aria_cart', 'კალათა', 'Cart'));
+    }
+
+    if (waHeaderBtn) {
+      waHeaderBtn.setAttribute('aria-label', runtimeText('aria_whatsapp', 'WhatsApp', 'WhatsApp'));
+    }
+
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-label', runtimeText('aria_menu', 'მენიუ', 'Menu'));
+    }
+
+    if (drawer) {
+      drawer.setAttribute('aria-label', runtimeText('aria_side_menu', 'გვერდითი მენიუ', 'Side menu'));
+    }
+
+    if (drawerClose) {
+      drawerClose.setAttribute('aria-label', runtimeText('aria_close', 'დახურვა', 'Close'));
+    }
+
+    if (drawerWa) {
+      var message = runtimeText(null, 'გამარჯობა! მინდა შეკვეთა.', 'Hello! I would like to place an order.');
+      drawerWa.href = 'https://wa.me/995579388833?text=' + encodeURIComponent(message);
+    }
+
+    if (footerMade) {
+      footerMade.textContent = runtimeText(null, 'დამზადებულია სიყვარულით საქართველოში', 'Made with love in Georgia');
+    }
+  }
+
   /* ─────────────────────────────────────────────────────────────────────────
      SHARED HEADER
      Includes: announcement bar · sticky header · mobile overlay · side drawer
@@ -77,7 +155,7 @@
     <a href="decoration.html"><svg class="dn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22c4.97 0 9-3.134 9-7s-4.03-7-9-7-9 3.134-9 7 4.03 7 9 7z"/><path d="M12 8V2m0 0L9 5m3-3 3 3"/></svg><span data-i18n="nav_decoration">დეკორაცია</span><svg class="dn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
   </div>
   <div class="ll-drawer-footer">
-    <a href="https://wa.me/995579388833?text=გამარჯობა! მინდა შეკვეთა." target="_blank" rel="noopener" class="ll-drawer-wa">
+    <a href="https://wa.me/995579388833?text=%E1%83%92%E1%83%90%E1%83%9B%E1%83%90%E1%83%A0%E1%83%AF%E1%83%9D%E1%83%91%E1%83%90!%20%E1%83%9B%E1%83%98%E1%83%9C%E1%83%93%E1%83%90%20%E1%83%A8%E1%83%94%E1%83%99%E1%83%95%E1%83%94%E1%83%97%E1%83%90." target="_blank" rel="noopener" class="ll-drawer-wa">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.975 0C5.361 0 0 5.359 0 11.975c0 2.094.549 4.062 1.508 5.773L.055 23.455a.477.477 0 0 0 .574.603l5.898-1.543C8.163 23.43 10.047 24 11.975 24 18.589 24 24 18.641 24 12.025 24 5.41 18.589 0 11.975 0zm0 21.897c-1.84 0-3.596-.502-5.109-1.451l-.365-.217-3.783.99 1.008-3.666-.239-.378A9.916 9.916 0 0 1 2.079 12.025c0-5.463 4.44-9.901 9.896-9.901 5.456 0 9.896 4.438 9.896 9.901 0 5.462-4.44 9.872-9.896 9.872z"/></svg>
       <span data-i18n="drawer_wa_btn">შეგვიკვეთეთ WhatsApp-ზე</span>
     </a>
@@ -129,7 +207,7 @@
     </div>
     <div class="ll-footer-bottom">
       <span data-i18n="footer_ll_copyright">&copy; 2026 Loft Line.</span>
-      <span>Made with ♥ in Georgia</span>
+      <span id="llFooterMade">დამზადებულია სიყვარულით საქართველოში</span>
     </div>
   </div>
 </footer>`;
@@ -156,6 +234,7 @@
   if (headerEl) {
     headerEl.outerHTML = HEADER_HTML;
     setActiveLinks();
+    updateSharedRuntimeText();
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
@@ -169,6 +248,10 @@
       footerEl.outerHTML = FOOTER_HTML;
       setActiveLinks();
     }
+
+    updateSharedRuntimeText();
   });
+
+  document.addEventListener('loftline:langchange', updateSharedRuntimeText);
 
 }());
