@@ -177,14 +177,15 @@
           return {items: [], error: fallbackResponse.error};
         }
 
-        // Last resort: log ALL products to help diagnose field values
-        console.warn('[CMS] category->pageKey fallback also empty. Loading all products to inspect field values...');
-        return sanityQuery('*[_type == "product"][0...10] { _id, page, "categoryPage": category->pageKey, "categoryFilter": category->filterKey, available, name_ka, filterTags }', {})
+        // Last resort: if page/category mapping is missing in Sanity, still render
+        // all available products rather than leaving the grid empty.
+        console.warn('[CMS] No page mapping found for "' + pageSlug + '". Falling back to all available products.');
+        return sanityQuery('*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }', {})
           .then(function (all) {
-            if (all.ok) {
-              console.log('[CMS] Sample documents in dataset:', JSON.stringify(all.result, null, 2));
-            }
-            return {items: [], error: null};
+            return {
+              items: all.ok ? processProducts(all.result) : [],
+              error: all.ok ? null : all.error
+            };
           });
       });
     });
