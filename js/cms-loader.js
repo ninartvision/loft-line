@@ -1232,7 +1232,10 @@
     var grid = document.getElementById('sanity-product-grid')
       || document.getElementById('productGrid')
       || document.getElementById('products');
-    var isLoftSystem = !!grid && grid.id === 'sanity-product-grid';
+    var isLoftSystem = grid && (
+  grid.id === 'sanity-product-grid' ||
+  grid.id === 'productGrid'
+);
     var filterBar    = allowCategoryUi ? document.querySelector('.ll-iconcat[data-cms-filters]:not([data-home-icon-filters])') : null;
     var homeCategoryContainer = _pageSlug === 'index' ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
