@@ -105,7 +105,7 @@ export default defineType({
           name: 'products',
           title: 'Featured Products (max 6)',
           type: 'array',
-          of: [{type: 'reference', to: [{type: 'product'}]}],
+          of: [{type: 'reference', to: [{type: 'product'}], weak: true}],
           validation: (Rule) => Rule.max(6),
         }),
         defineField({name: 'btnLabel_ka', title: 'Button Label (KA)', type: 'string'}),
