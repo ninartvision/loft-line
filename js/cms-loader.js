@@ -968,7 +968,10 @@
     grid.classList.add('is-visible', 'in');
 
     Array.prototype.forEach.call(grid.children, function (child) {
-      if (child.classList && child.classList.contains('product-card')) {
+      if (child.classList && (
+        child.classList.contains('product-card') ||
+        child.classList.contains('ll-product-card')
+      )) {
         child.classList.remove('filter-hidden');
         child.classList.add('filter-visible');
       }
