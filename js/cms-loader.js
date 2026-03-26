@@ -69,7 +69,6 @@
         url += '&$' + key + '=' + encodeURIComponent(JSON.stringify(params[key]));
       });
     }
-    console.log('[CMS] query URL:', url);
     return fetch(url, {cache: 'default'})
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status + ' for Sanity request');
@@ -77,10 +76,6 @@
       })
       .then(function (d) {
         var result = d ? d.result : null;
-        console.log('[CMS] result count:', Array.isArray(result) ? result.length : result);
-        if (Array.isArray(result) && result.length) {
-          console.log('[CMS] first document fields:', Object.keys(result[0]));
-        }
         var payload = {ok: true, result: result, error: null};
         QUERY_CACHE[cacheKey] = payload;
         return payload;
@@ -117,6 +112,7 @@
    */
   var PRODUCT_PROJECTION = [
     '_id,',
+    '_createdAt,',
     '"slug": slug.current,',
     // Alias name_ka/name_en → title_ka/title_en so t(product, "title") works
     '"title_ka": name_ka,',
@@ -165,7 +161,6 @@
       }
 
       // Fallback: if product.page is missing, derive membership from the referenced category.
-      console.warn('[CMS] No products matched page="' + pageSlug + '". Trying category->pageKey fallback.');
       var fallbackGroq = '*[_type == "product" && coalesce(available, true) == true && category->pageKey == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';  // coalesce handles null available field
       return sanityQuery(fallbackGroq, {page: pageSlug}).then(function (fallbackResponse) {
         var fallback = fallbackResponse.ok ? fallbackResponse.result : null;
@@ -177,16 +172,9 @@
           return {items: [], error: fallbackResponse.error};
         }
 
-        // Last resort: if page/category mapping is missing in Sanity, still render
-        // all available products rather than leaving the grid empty.
-        console.warn('[CMS] No page mapping found for "' + pageSlug + '". Falling back to all available products.');
-        return sanityQuery('*[_type == "product" && coalesce(available, true) == true] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }', {})
-          .then(function (all) {
-            return {
-              items: all.ok ? processProducts(all.result) : [],
-              error: all.ok ? null : all.error
-            };
-          });
+        // No broad fallback here: if page/category mapping is missing, keep the
+        // result empty so the UI renders the existing "No products found" state.
+        return {items: [], error: null};
       });
     });
   }
@@ -202,14 +190,6 @@
     if (!Array.isArray(products) || !products.length) return [];
     return products.map(function (item) {
       var p = Object.assign({}, item);
-
-      // ── Debug: flag documents that are missing critical fields ──
-      if (!p.title_ka && !p.title_en) {
-        console.warn('[CMS] product missing title — check name_ka/name_en in Sanity. _id:', p._id);
-      }
-      if (!p.image) {
-        console.warn('[CMS] product missing image, using placeholder. _id:', p._id);
-      }
 
       // ── Image ────────────────────────────────────────────────────
       // Always resolves to a non-empty string; <img src> will never be blank.
@@ -248,8 +228,6 @@
       return p;
     });
   }
-
-  /* ── Product card builder ──────────────────────────────────── */
 
   function buildBadgeHTML(product) {
     if (!product.badge) return '';
@@ -377,7 +355,6 @@
       };
     });
   }
-
   function processCategories(categories) {
     if (!Array.isArray(categories) || !categories.length) return [];
     return categories
@@ -711,6 +688,41 @@
     grid.appendChild(frag); // single reflow for the entire product list
   }
 
+  function getSortMode(sortSelect) {
+    if (!sortSelect) return 'default';
+    if (sortSelect.value) return sortSelect.value;
+
+    switch (sortSelect.selectedIndex) {
+      case 1: return 'price-asc';
+      case 2: return 'price-desc';
+      case 3: return 'newest';
+      default: return 'default';
+    }
+  }
+
+  function sortProducts(products, sortMode) {
+    var items = Array.isArray(products) ? products.slice() : [];
+
+    if (sortMode === 'price-asc') {
+      items.sort(function (a, b) { return a.price - b.price; });
+      return items;
+    }
+
+    if (sortMode === 'price-desc') {
+      items.sort(function (a, b) { return b.price - a.price; });
+      return items;
+    }
+
+    if (sortMode === 'newest') {
+      items.sort(function (a, b) {
+        return new Date(b._createdAt || 0).getTime() - new Date(a._createdAt || 0).getTime();
+      });
+      return items;
+    }
+
+    return items;
+  }
+
   /* ── Homepage Hero ──────────────────────────────────────────── */
 
   function applyHero(data) {
@@ -855,6 +867,17 @@
   var _pageSlug   = _thisScript ? (_thisScript.getAttribute('data-page') || 'index') : 'index';
   // Incremented on every init() call; lets async callbacks detect stale responses
   var _renderGen  = 0;
+  var _currentProducts = [];
+  var _currentGrid = null;
+  var _currentCardBuilder = null;
+
+  function rerenderSortedProducts() {
+    if (!_currentGrid || !_currentCardBuilder) return;
+    var sortSelect = document.querySelector('.ll-sort-select');
+    var sortedProducts = sortProducts(_currentProducts, getSortMode(sortSelect));
+    renderProducts(sortedProducts, _currentGrid, _currentCardBuilder);
+    dispatchReady();
+  }
 
   function init() {
     var gen = ++_renderGen; // capture this render's generation token
@@ -867,7 +890,17 @@
     var filterBar    = isLoftSystem ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
     var homeCategoryContainer = !isLoftSystem ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
+    var sortSelect   = document.querySelector('.ll-sort-select');
     var tasks        = [];
+
+    _currentGrid = grid;
+    _currentCardBuilder = cardBuilder;
+
+    if (sortSelect) {
+      sortSelect.onchange = function () {
+        rerenderSortedProducts();
+      };
+    }
 
     if (grid) {
       // Immediately replace any static HTML placeholder cards with skeletons.
@@ -880,7 +913,8 @@
           renderGridError(grid, isLoftSystem);
           return;
         }
-        renderProducts(payload.items, grid, cardBuilder);
+        _currentProducts = Array.isArray(payload.items) ? payload.items.slice() : [];
+        renderProducts(sortProducts(_currentProducts, getSortMode(sortSelect)), grid, cardBuilder);
       }));
     }
 

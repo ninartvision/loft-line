@@ -95,6 +95,9 @@
     saveLang(lang);
     applyTranslations(lang);
     updateButtons(lang);
+    document.dispatchEvent(new CustomEvent('loftline:langchange', {
+      detail: {lang: lang}
+    }));
   }
 
   /* ── bind click handlers ─────────────────────────────────── */

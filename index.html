@@ -442,7 +442,7 @@
             <h2 class="section-title section-title--left" data-i18n="about_title">ხელოსნობა და ხარისხი</h2>
             <p data-i18n="about_p1">Loft Line-ში ჩვენ ვქმნით ავეჯს, რომელიც აერთიანებს ხის ბუნებრივ სითბოს და ლითონის ინდუსტრიულ ხასიათს. ყოველი ნაწარმი იქმნება ხელით, ქართველი ოსტატების მიერ.</p>
             <p data-i18n="about_p2">ჩვენი კოლექციები მოიცავს მთავარ ავეჯს, საოფისე ავეჯს, ლითონის უნიკალურ ნაკეთობებს, ასევე განათებასა და დეკორაციას.</p>
-            <a href="#contact" class="btn btn-dark" data-i18n="about_btn">დაგვიკავშირდით</a>
+            <a href="#contact-form" class="btn btn-dark" data-i18n="about_btn">დაგვიკავშირდით</a>
           </div>
         </div>
       </div>
@@ -464,6 +464,39 @@
         </div>
       </div>
     </section>
+
+    <section class="contact-section" id="contact-form">
+      <div class="container">
+        <div class="section-header" data-animate>
+          <span class="section-tag">კონტაქტი</span>
+          <h2 class="section-title">მოგვწერეთ</h2>
+          <p class="section-desc">დაგვიტოვეთ შეტყობინება და დაგიკავშირდებით შეკვეთის ან ინდივიდუალური დამზადების საკითხებზე.</p>
+        </div>
+
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="contact-form-grid">
+            <div class="contact-form-field">
+              <label for="cf-name">სახელი</label>
+              <input type="text" id="cf-name" name="name" autocomplete="name" required>
+            </div>
+            <div class="contact-form-field">
+              <label for="cf-email">ელ-ფოსტა</label>
+              <input type="email" id="cf-email" name="email" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="contact-form-field">
+            <label for="cf-message">შეტყობინება</label>
+            <textarea id="cf-message" name="message" rows="6" required></textarea>
+          </div>
+
+          <div class="contact-form-actions">
+            <button type="submit" class="btn btn-dark contact-submit">გაგზავნა</button>
+            <p class="contact-form-feedback" id="contactFeedback" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
@@ -477,15 +510,15 @@
           </div>
           <p data-i18n="footer_brand_desc">პრემიუმ ხელნაკეთი ავეჯი ხისა და ლითონისგან. ინდუსტრიული დიზაინი, ქართული ხელობა.</p>
           <div class="footer-social">
-            <a href="#" aria-label="Facebook">
+            <span class="footer-social-placeholder" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-            </a>
-            <a href="#" aria-label="Instagram">
+            </span>
+            <span class="footer-social-placeholder" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            </a>
-            <a href="#" aria-label="Pinterest">
+            </span>
+            <span class="footer-social-placeholder" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.08 3.15 9.42 7.6 11.21-.1-.95-.19-2.41.04-3.45.21-.94 1.36-5.79 1.36-5.79s-.35-.7-.35-1.73c0-1.62.94-2.83 2.11-2.83.99 0 1.47.75 1.47 1.64 0 1-.64 2.5-.97 3.89-.27 1.16.58 2.1 1.72 2.1 2.07 0 3.66-2.18 3.66-5.33 0-2.79-2-4.74-4.87-4.74-3.32 0-5.27 2.49-5.27 5.07 0 1 .39 2.08.87 2.67.1.12.11.22.08.34-.09.37-.29 1.16-.33 1.32-.05.22-.17.26-.4.16-1.46-.68-2.37-2.82-2.37-4.54 0-3.69 2.68-7.08 7.73-7.08 4.06 0 7.21 2.89 7.21 6.76 0 4.03-2.54 7.28-6.07 7.28-1.19 0-2.3-.61-2.68-1.34l-.73 2.79c-.26 1.01-.97 2.28-1.45 3.05C9.58 23.82 10.76 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0z"/></svg>
-            </a>
+            </span>
           </div>
         </div>
 
@@ -505,8 +538,8 @@
           <ul>
             <li><a href="lighting.html" data-i18n="footer_lighting">განათება</a></li>
             <li><a href="decoration.html" data-i18n="footer_decor">დეკორაცია</a></li>
-            <li><a href="#" data-i18n="footer_seasonal">სეზონური</a></li>
-            <li><a href="#" data-i18n="footer_sale">ფასდაკლება</a></li>
+            <li><span data-i18n="footer_seasonal">სეზონური</span></li>
+            <li><span data-i18n="footer_sale">ფასდაკლება</span></li>
           </ul>
         </div>
 
@@ -514,9 +547,9 @@
           <h4 data-i18n="footer_company_h">კომპანია</h4>
           <ul>
             <li><a href="#about" data-i18n="footer_about">ჩვენ შესახებ</a></li>
-            <li><a href="#" data-i18n="footer_contact">კონტაქტი</a></li>
-            <li><a href="#" data-i18n="footer_delivery">მიტანის პირობები</a></li>
-            <li><a href="#" data-i18n="footer_return">დაბრუნების პოლიტიკა</a></li>
+            <li><a href="#contact-form" data-i18n="footer_contact">კონტაქტი</a></li>
+            <li><span data-i18n="footer_delivery">მიტანის პირობები</span></li>
+            <li><span data-i18n="footer_return">დაბრუნების პოლიტიკა</span></li>
           </ul>
         </div>
       </div>
@@ -541,12 +574,12 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       <span data-i18n="bottom_categories">კატეგორია</span>
     </a>
-    <a href="#" class="bottom-bar-item">
+    <span class="bottom-bar-item" aria-disabled="true">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span data-i18n="bottom_cart">კალათა</span>
       <span class="bottom-bar-badge">0</span>
-    </a>
-    <a href="#contact" class="bottom-bar-item">
+    </span>
+    <a href="#contact-form" class="bottom-bar-item">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 8-4 8-4s8 0 8 4"/></svg>
       <span data-i18n="bottom_account">ანგარიში</span>
     </a>

@@ -96,8 +96,8 @@
         <div class="ll-footer-logo"><span class="ll-fl-main">Loft</span><span class="ll-fl-sub">line</span></div>
         <p data-i18n="footer_ll_brand_desc">პრემიუმ ლოფტ სტილის ხელნაკეთი ავეჯი ხისა და შავი ლითონისგან.</p>
         <div class="ll-footer-social">
-          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <span class="ll-footer-social-placeholder" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></span>
+          <span class="ll-footer-social-placeholder" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span>
         </div>
       </div>
       <div class="ll-footer-col">
@@ -114,8 +114,8 @@
         <h4 data-i18n="footer_ll_info">ინფორმაცია</h4>
         <ul>
           <li><a href="index.html#about" data-i18n="footer_ll_about">ჩვენ შესახებ</a></li>
-          <li><a href="#" data-i18n="footer_ll_delivery">მიტანის პირობები</a></li>
-          <li><a href="#" data-i18n="footer_ll_warranty">გარანტია</a></li>
+          <li><span data-i18n="footer_ll_delivery">მიტანის პირობები</span></li>
+          <li><span data-i18n="footer_ll_warranty">გარანტია</span></li>
           <li><a href="index.html#contact-form" data-i18n="nav_contact">კონტაქტი</a></li>
         </ul>
       </div>
