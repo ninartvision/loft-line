@@ -313,7 +313,7 @@
     var groq, params;
 
     if (pageSlug === 'index') {
-      groq = '*[_type == "product" && coalesce(available, true) == true] | order(coalesce(sortOrder, 9999) asc, _createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
+      groq = '*[_type == "product" && coalesce(available, true) == true] | order(coalesce(featured, false) desc, coalesce(sortOrder, 9999) asc, _createdAt desc) [0...6] { ' + PRODUCT_PROJECTION + ' }';
       params = {};
       return sanityQuery(groq, params).then(function (response) {
         var result = response.ok ? response.result : null;

@@ -1296,6 +1296,16 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 /* hidden product cards during filter */
 .ll-product-card[hidden] { display: none !important; }
 
+/* "View All" button below homepage grid */
+.ll-view-all-wrap {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+.ll-view-all {
+  min-width: 220px;
+  display: inline-block;
+}
+
 /* empty-state message */
 .ll-filter-empty {
   grid-column: 1 / -1;

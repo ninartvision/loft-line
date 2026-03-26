@@ -90,6 +90,7 @@ const translations = {
     hero_desc:         "ინდუსტრიული დიზაინი • ხელნაკეთი ავეჯი • ბუნებრივი მასალები",
     hero_btn_view:     "კოლექციის ნახვა",
     hero_btn_products: "პროდუქციის ნახვა",
+    btn_view_all:      "ყველას ნახვა",
 
     /* Categories section */
     cat_section_tag:    "კატეგორიები",
@@ -338,6 +339,7 @@ const translations = {
     hero_desc:         "Industrial Design • Handcrafted Furniture • Natural Materials",
     hero_btn_view:     "View Collection",
     hero_btn_products: "Browse Products",
+    btn_view_all:      "View All Products",
 
     /* Categories section */
     cat_section_tag:    "Categories",
