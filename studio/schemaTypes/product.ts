@@ -47,6 +47,25 @@ export default defineType({
       },
     }),
 
+    // ── Additional pages (multi-page) ────────────────────────────
+    defineField({
+      name: 'pages',
+      title: 'Also Show On / ასევე გამოჩნდეს',
+      type: 'array',
+      of: [defineArrayMember({type: 'string'})],
+      description: 'Show this product on additional pages simultaneously (in addition to "Page" above).',
+      options: {
+        list: [
+          {title: 'Homepage',          value: 'index'},
+          {title: 'Main Furniture',    value: 'main-furniture'},
+          {title: 'Office Furniture',  value: 'office-furniture'},
+          {title: 'Loft Collection',   value: 'loft-collection'},
+          {title: 'Lighting',          value: 'lighting'},
+          {title: 'Decoration',        value: 'decoration'},
+        ],
+      },
+    }),
+
     // ── Category reference ───────────────────────────────────────
     defineField({
       name: 'category',

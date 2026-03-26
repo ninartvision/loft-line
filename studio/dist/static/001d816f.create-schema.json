@@ -99,6 +99,45 @@
         "title": "Page / გვერდი"
       },
       {
+        "options": {
+          "list": [
+            {
+              "title": "Homepage",
+              "value": "index"
+            },
+            {
+              "title": "Main Furniture",
+              "value": "main-furniture"
+            },
+            {
+              "title": "Office Furniture",
+              "value": "office-furniture"
+            },
+            {
+              "title": "Loft Collection",
+              "value": "loft-collection"
+            },
+            {
+              "title": "Lighting",
+              "value": "lighting"
+            },
+            {
+              "title": "Decoration",
+              "value": "decoration"
+            }
+          ]
+        },
+        "description": "Show this product on additional pages simultaneously (in addition to \"Page\" above).",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "pages",
+        "type": "array",
+        "title": "Also Show On / ასევე გამოჩნდეს"
+      },
+      {
         "to": [
           {
             "type": "category"

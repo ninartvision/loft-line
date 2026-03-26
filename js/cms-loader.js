@@ -306,7 +306,7 @@
     // Support both the current gallery-based data and the schema main image field.
     '"image": coalesce(gallery[0].asset->url, image.asset->url),',
     '"gallery": gallery[].asset->url,',
-    'available, featured, page',
+    'available, featured, page, pages',
   ].join(' ');
 
   function loadProducts(pageSlug) {
@@ -331,8 +331,8 @@
       });
     }
 
-    // Primary query: match by `page` field (exact schema value)
-    groq   = '*[_type == "product" && coalesce(available, true) == true && page == $page] | order(_createdAt desc) { ' + PRODUCT_PROJECTION + ' }';  // coalesce handles null available field
+    // Primary query: match by `page` field (single value) OR `pages` array (multi-page)
+    groq   = '*[_type == "product" && coalesce(available, true) == true && (page == $page || $page in coalesce(pages, []))] | order(coalesce(sortOrder, 9999) asc, _createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
     params = {page: pageSlug};
 
     return sanityQuery(groq, params).then(function (response) {
