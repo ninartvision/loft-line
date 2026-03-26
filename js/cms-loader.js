@@ -872,8 +872,14 @@
     article.className = 'll-product-card';
     article.setAttribute('data-category', filterValues(product).join(' '));
     article.setAttribute('data-price',    String(product.price));
-    article.setAttribute('data-style',    product.style);
+    article.setAttribute('data-style',    product.style || '');
     article.setAttribute('data-slug',     product.slug);
+
+    var matArr = Array.isArray(product.materials_en) && product.materials_en.length
+      ? product.materials_en
+      : (Array.isArray(product.materials_ka) ? product.materials_ka : []);
+    var matKeys = matArr.map(makeFilterKey).filter(Boolean).join(' ');
+    if (matKeys) article.setAttribute('data-material', matKeys);
 
     var _imgs = [product.image]
       .concat(Array.isArray(product.gallery) ? product.gallery : [])

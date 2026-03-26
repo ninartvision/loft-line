@@ -224,11 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (filterDrawer && productGrid) {
     const categoryContainer = filterDrawer.querySelector('[data-cms-home-categories]');
+    const materialContainer  = filterDrawer.querySelector('[data-cms-materials]');
     const homeIconFilterBar = document.querySelector('.ll-iconcat[data-home-icon-filters]');
     const SLIDER_MAX = 2000;
 
     function getCards() {
-      return productGrid.querySelectorAll('.product-card:not(.product-card--skeleton)');
+      return productGrid.querySelectorAll('.ll-product-card:not(.ll-product-card--skeleton)');
     }
 
     function getCategoryCheckboxes() {
@@ -259,6 +260,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getStyleCheckboxes() {
       return filterDrawer.querySelectorAll('input[name="style"]');
+    }
+
+    function getMaterialCheckboxes() {
+      return filterDrawer.querySelectorAll('input[name="material"]');
+    }
+
+    function buildMaterialFilters(container) {
+      if (!container) return;
+      const seen = {};
+      productGrid.querySelectorAll('.ll-product-card[data-material]').forEach(card => {
+        (card.dataset.material || '').split(/\s+/).filter(Boolean).forEach(key => {
+          if (!seen[key]) seen[key] = key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        });
+      });
+      const keys = Object.keys(seen).sort();
+      const group = container.closest('.filter-group');
+      if (!keys.length) {
+        if (group) group.hidden = true;
+        return;
+      }
+      container.innerHTML = '';
+      keys.forEach(key => {
+        container.insertAdjacentHTML('beforeend',
+          '<label class="filter-checkbox">' +
+            '<input type="checkbox" name="material" value="' + key + '">' +
+            '<span class="checkbox-mark"></span>' +
+            '<span class="checkbox-label">' + seen[key] + '</span>' +
+          '</label>'
+        );
+      });
+      if (group) group.hidden = false;
     }
 
     // Open / Close drawer helpers
@@ -335,7 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apply all active filters
     function applyFilters() {
       const activeCategories = getCheckedValues(getCategoryCheckboxes());
-      const activeStyles = getCheckedValues(getStyleCheckboxes());
+      const activeStyles     = getCheckedValues(getStyleCheckboxes());
+      const activeMaterials  = getCheckedValues(getMaterialCheckboxes());
       const minPrice = rangeMin ? parseInt(rangeMin.value, 10) : 0;
       const maxPrice = rangeMax ? parseInt(rangeMax.value, 10) : SLIDER_MAX;
       const allCards = getCards();
@@ -350,12 +383,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       allCards.forEach(card => {
         const cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
-        const catMatch = activeCategories.length === 0 || activeCategories.some(value => cardFilters.includes(value));
-        const styleMatch = activeStyles.length === 0 || activeStyles.includes(card.dataset.style);
+        const catMatch  = activeCategories.length === 0 || activeCategories.some(value => cardFilters.includes(value));
+        const styleMatch = activeStyles.length === 0 || !card.dataset.style || activeStyles.includes(card.dataset.style);
+        const matValues = (card.dataset.material || '').split(/\s+/).filter(Boolean);
+        const matMatch  = activeMaterials.length === 0 || activeMaterials.some(v => matValues.includes(v));
         const price = parseInt(card.dataset.price, 10);
-        const priceMatch = price >= minPrice && price <= maxPrice;
+        const priceMatch = isNaN(price) || (price >= minPrice && price <= maxPrice);
 
-        const show = catMatch && styleMatch && priceMatch;
+        const show = catMatch && styleMatch && priceMatch && matMatch;
 
         if (show) {
           visibleCount++;
@@ -384,6 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         visibleCount,
         activeCategories,
         activeStyles,
+        activeMaterials,
         minPrice,
         maxPrice
       });
@@ -409,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Checkbox change handlers
     filterDrawer.addEventListener('change', (e) => {
-      if (!e.target.matches('input[name="category"], input[name="style"]')) return;
+      if (!e.target.matches('input[name="category"], input[name="style"], input[name="material"]')) return;
       applyFilters();
     });
 
@@ -461,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filterClear.addEventListener('click', () => {
         getCategoryCheckboxes().forEach(cb => { cb.checked = true; });
         getStyleCheckboxes().forEach(cb => { cb.checked = true; });
+        getMaterialCheckboxes().forEach(cb => { cb.checked = false; });
         if (rangeMin) { rangeMin.value = 0; }
         if (rangeMax) { rangeMax.value = SLIDER_MAX; }
         updateSliderRange();
@@ -472,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cmsDebug('cms:ready received', {
         productCards: getCards().length
       });
+      buildMaterialFilters(materialContainer);
       applyFilters();
     });
   }
