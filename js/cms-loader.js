@@ -81,7 +81,6 @@
         return payload;
       })
       .catch(function (err) {
-        console.error('[CMS] fetch error:', err);
         return {ok: false, result: null, error: err};
       });
   }
@@ -108,6 +107,130 @@
     var lang = getLang();
     var table = typeof translations !== 'undefined' ? translations[lang] : null;
     return table && table[key] !== undefined ? table[key] : '';
+  }
+
+  function makeFilterKey(value) {
+    return String(value || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  var CATEGORY_FALLBACK_LIBRARY = {
+    tables: {title_ka: 'მაგიდები', title_en: 'Tables', iconKey: 'tables'},
+    chairs: {title_ka: 'სკამები', title_en: 'Chairs', iconKey: 'chairs'},
+    'office-tables': {title_ka: 'საოფისე მაგიდები', title_en: 'Office Tables', iconKey: 'office-tables'},
+    cabinets: {title_ka: 'კარადები', title_en: 'Cabinets', iconKey: 'cabinets'},
+    shelves: {title_ka: 'თაროები', title_en: 'Shelves', iconKey: 'shelves'},
+    lighting: {title_ka: 'განათება', title_en: 'Lighting', iconKey: 'lighting'},
+    decoration: {title_ka: 'დეკორაცია', title_en: 'Decoration', iconKey: 'decoration'},
+    'metal-works': {title_ka: 'ლითონის ნაკეთობა', title_en: 'Metal Works', iconKey: 'metal-works'},
+    wood: {title_ka: 'ხის ავეჯი', title_en: 'Wood Furniture', iconKey: 'wood'},
+    metal: {title_ka: 'ლითონის ავეჯი', title_en: 'Metal Furniture', iconKey: 'metal'}
+  };
+
+  var PAGE_FALLBACK_KEYS = {
+    index: ['tables', 'chairs', 'office-tables', 'cabinets', 'shelves'],
+    'main-furniture': ['tables', 'chairs', 'cabinets', 'shelves'],
+    'office-furniture': ['office-tables', 'cabinets', 'shelves'],
+    'loft-collection': ['metal-works', 'shelves'],
+    lighting: ['lighting'],
+    decoration: ['decoration', 'shelves']
+  };
+
+  function humanizeFilterKey(value) {
+    return String(value || '')
+      .replace(/[-_]+/g, ' ')
+      .replace(/\b\w/g, function (char) { return char.toUpperCase(); });
+  }
+
+  function normalizeCategory(category) {
+    if (!category) return null;
+
+    var titleKa = category.title_ka || category.title_en || '';
+    var titleEn = category.title_en || category.title_ka || '';
+    var rawKey = category.filterKey || category.slug || titleEn || titleKa || category._id;
+    var filterKey = makeFilterKey(rawKey);
+    var fallback = CATEGORY_FALLBACK_LIBRARY[filterKey] || null;
+
+    if (!titleKa && fallback) titleKa = fallback.title_ka;
+    if (!titleEn && fallback) titleEn = fallback.title_en;
+    if (!titleEn) titleEn = humanizeFilterKey(filterKey);
+    if (!titleKa) titleKa = titleEn;
+
+    return {
+      _id: category._id || '',
+      title_ka: titleKa,
+      title_en: titleEn,
+      filterKey: filterKey,
+      pageKey: category.pageKey || '',
+      slug: category.slug || '',
+      image: category.image || category.icon || '',
+      iconKey: category.iconKey || (fallback && fallback.iconKey) || filterKey
+    };
+  }
+
+  function dedupeCategories(categories) {
+    var seen = Object.create(null);
+    return categories.filter(function (category) {
+      if (!category || !category.filterKey || seen[category.filterKey]) return false;
+      seen[category.filterKey] = true;
+      return true;
+    });
+  }
+
+  function deriveCategoriesFromProducts(products) {
+    if (!Array.isArray(products) || !products.length) return [];
+
+    var derived = [];
+
+    products.forEach(function (product) {
+      var keys = filterValues(product);
+      if (!keys.length && product.category_filter) {
+        keys = [product.category_filter];
+      }
+
+      keys.forEach(function (key) {
+        var normalizedKey = makeFilterKey(key);
+        if (!normalizedKey) return;
+
+        derived.push(normalizeCategory({
+          _id: 'derived-' + normalizedKey,
+          filterKey: normalizedKey,
+          title_ka: product.category_ka || '',
+          title_en: product.category_en || '',
+          pageKey: product.page || '',
+          iconKey: normalizedKey
+        }));
+      });
+    });
+
+    return dedupeCategories(derived.filter(Boolean));
+  }
+
+  function defaultCategoriesForPage(pageSlug) {
+    var keys = PAGE_FALLBACK_KEYS[pageSlug] || PAGE_FALLBACK_KEYS.index;
+    return dedupeCategories(keys.map(function (key) {
+      var category = CATEGORY_FALLBACK_LIBRARY[key] || {title_ka: key, title_en: humanizeFilterKey(key), iconKey: key};
+      return normalizeCategory({
+        _id: 'fallback-' + key,
+        filterKey: key,
+        title_ka: category.title_ka,
+        title_en: category.title_en,
+        iconKey: category.iconKey
+      });
+    }).filter(Boolean));
+  }
+
+  function resolveCategories(categories, products, pageSlug) {
+    var normalized = dedupeCategories((categories || []).map(normalizeCategory).filter(Boolean));
+    if (normalized.length) return normalized;
+
+    var derived = deriveCategoriesFromProducts(products);
+    if (derived.length) return derived;
+
+    return defaultCategoriesForPage(pageSlug);
   }
 
   /* ── Load products from Sanity ───────────────────────────── */
@@ -334,50 +457,61 @@
   }
 
   var CATEGORY_PROJECTION = [
+    '_id,',
     '"title_en": title,',
     'title_ka,',
     'filterKey,',
     'pageKey,',
-    'sortOrder'
+    'sortOrder,',
+    '"slug": slug.current,',
+    '"image": image.asset->url'
   ].join(' ');
 
   function loadCategories(pageSlug) {
     var groq;
+    var fallbackGroq;
     var params = {};
 
     if (!pageSlug) return Promise.resolve({items: [], error: null});
 
     if (pageSlug === 'index') {
       groq = '*[_type == "category" && count(*[_type == "product" && coalesce(available, true) == true && references(^._id)]) > 0] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
+      fallbackGroq = '*[_type == "category" && _id in *[_type == "product" && coalesce(available, true) == true && defined(category._ref)].category._ref] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
     } else {
       groq = '*[_type == "category" && pageKey == $page] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
+      fallbackGroq = '*[_type == "category" && _id in *[_type == "product" && coalesce(available, true) == true && page == $page && defined(category._ref)].category._ref] | order(coalesce(sortOrder, 9999) asc, coalesce(title_ka, title) asc) { ' + CATEGORY_PROJECTION + ' }';
       params.page = pageSlug;
     }
 
     return sanityQuery(groq, params).then(function (response) {
+      var items = response.ok ? processCategories(response.result) : [];
+      if (items.length || !fallbackGroq) {
+        return {
+          items: items,
+          error: response.ok ? null : response.error
+        };
+      }
+
+      return sanityQuery(fallbackGroq, params).then(function (fallbackResponse) {
+        return {
+          items: fallbackResponse.ok ? processCategories(fallbackResponse.result) : [],
+          error: fallbackResponse.ok ? null : fallbackResponse.error
+        };
+      });
+    }).catch(function (err) {
       return {
-        items: response.ok ? processCategories(response.result) : [],
-        error: response.ok ? null : response.error
+        items: [],
+        error: err
       };
     });
   }
+
   function processCategories(categories) {
     if (!Array.isArray(categories) || !categories.length) return [];
-    return categories
-      .filter(function (category) {
-        return category && category.filterKey;
-      })
-      .map(function (category) {
-        return {
-          title_ka: category.title_ka || category.title_en || '',
-          title_en: category.title_en || category.title_ka || '',
-          filterKey: String(category.filterKey || ''),
-          pageKey: category.pageKey || '',
-        };
-      });
+    return dedupeCategories(categories.map(normalizeCategory).filter(Boolean));
   }
 
-  function filterButtonIcon(isAll) {
+  function filterButtonIcon(iconKey, isAll) {
     if (isAll) {
       return [
         '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
@@ -389,24 +523,101 @@
       ].join('');
     }
 
-    return [
-      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
-        '<path d="M5 7h14"/>',
-        '<path d="M5 12h14"/>',
-        '<path d="M5 17h9"/>',
-        '<circle cx="17.5" cy="17" r="1.5" fill="currentColor" stroke="none"/>',
-      '</svg>'
-    ].join('');
+    switch (iconKey) {
+      case 'tables':
+      case 'office-tables':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M4 8h16"/>',
+            '<path d="M6 8v8"/>',
+            '<path d="M18 8v8"/>',
+            '<path d="M4 16h16"/>',
+          '</svg>'
+        ].join('');
+      case 'chairs':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+            '<path d="M7 11h10v4H7z"/>',
+            '<path d="M8 15v3"/>',
+            '<path d="M16 15v3"/>',
+          '</svg>'
+        ].join('');
+      case 'cabinets':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<rect x="5" y="4" width="14" height="16" rx="1.5"/>',
+            '<path d="M12 4v16"/>',
+            '<circle cx="10" cy="12" r="0.8" fill="currentColor" stroke="none"/>',
+            '<circle cx="14" cy="12" r="0.8" fill="currentColor" stroke="none"/>',
+          '</svg>'
+        ].join('');
+      case 'shelves':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M5 6h14"/>',
+            '<path d="M5 12h14"/>',
+            '<path d="M5 18h14"/>',
+            '<path d="M7 6v12"/>',
+            '<path d="M17 6v12"/>',
+          '</svg>'
+        ].join('');
+      case 'lighting':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M12 3v3"/>',
+            '<path d="M8 10a4 4 0 1 1 8 0c0 1.6-.8 2.6-1.8 3.8-.7.8-1.2 1.6-1.2 2.7"/>',
+            '<path d="M10 20h4"/>',
+            '<path d="M10.5 17h3"/>',
+          '</svg>'
+        ].join('');
+      case 'decoration':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M12 4c3 2.2 5 4.6 5 7.2A5 5 0 0 1 7 11.2C7 8.6 9 6.2 12 4z"/>',
+            '<path d="M12 14v6"/>',
+            '<path d="M9 20h6"/>',
+          '</svg>'
+        ].join('');
+      case 'metal-works':
+      case 'metal':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l2.3-2.3a4 4 0 0 1-5.3 5.3l-5.9 5.9a1.8 1.8 0 1 1-2.6-2.6l5.9-5.9a4 4 0 0 1 5.3-5.3z"/>',
+          '</svg>'
+        ].join('');
+      case 'wood':
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M12 3c3 2.2 5 4.9 5 7.8A5 5 0 0 1 7 10.8C7 7.9 9 5.2 12 3z"/>',
+            '<path d="M12 9v10"/>',
+            '<path d="M9 14c1 .2 2 1 3 2 1-1 2-1.8 3-2"/>',
+          '</svg>'
+        ].join('');
+      default:
+        return [
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+            '<path d="M5 7h14"/>',
+            '<path d="M5 12h14"/>',
+            '<path d="M5 17h9"/>',
+            '<circle cx="17.5" cy="17" r="1.5" fill="currentColor" stroke="none"/>',
+          '</svg>'
+        ].join('');
+    }
   }
 
-  function buildFilterButton(filterKey, label, isActive, isAll) {
+  function buildFilterButton(category, label, isActive, isAll) {
+    var filterKey = category && category.filterKey ? category.filterKey : 'all';
+    var visual = category && category.image && !isAll
+      ? '<img src="' + esc(buildImageUrl(category.image, {width: 96, height: 96, quality: 80})) + '" alt="" loading="lazy">'
+      : filterButtonIcon(category && category.iconKey, isAll);
     var button = document.createElement('button');
     button.className = 'll-iconcat-btn' + (isActive ? ' active' : '');
     button.setAttribute('data-filter', filterKey);
     button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     button.innerHTML = [
       '<span class="ll-iconcat-circle">',
-        filterButtonIcon(isAll),
+        visual,
       '</span>',
       '<span class="ll-iconcat-label">' + esc(label) + '</span>'
     ].join('');
@@ -439,6 +650,7 @@
   function renderCategoryFilters(categories, bar) {
     if (!bar) return;
 
+    var lang = getLang();
     var activeFilter = bar.getAttribute('data-current-filter') || 'all';
     var hasActiveFilter = activeFilter === 'all' || categories.some(function (category) {
       return category.filterKey === activeFilter;
@@ -448,19 +660,20 @@
 
     bar.innerHTML = '';
 
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(buildFilterButton({filterKey: 'all', iconKey: 'all'}, translate('filter_all'), activeFilter === 'all', true));
+
     if (!categories.length) {
-      bar.hidden = true;
-      bar.setAttribute('aria-hidden', 'true');
+      bar.hidden = false;
+      bar.removeAttribute('aria-hidden');
       bar.setAttribute('data-current-filter', 'all');
+      bar.appendChild(fragment);
       return;
     }
 
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(buildFilterButton('all', translate('filter_all'), activeFilter === 'all', true));
-
     categories.forEach(function (category) {
       var label = lang === 'en' ? category.title_en : category.title_ka;
-      fragment.appendChild(buildFilterButton(category.filterKey, label, category.filterKey === activeFilter, false));
+      fragment.appendChild(buildFilterButton(category, label, category.filterKey === activeFilter, false));
     });
 
     bar.hidden = false;
@@ -899,7 +1112,8 @@
     var homeCategoryContainer = !isLoftSystem ? document.querySelector('[data-cms-home-categories]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
     var sortSelect   = document.querySelector('.ll-sort-select');
-    var tasks        = [];
+    var productPromise = Promise.resolve({items: [], error: null});
+    var categoryPromise = Promise.resolve({items: [], error: null});
 
     _currentGrid = grid;
     _currentCardBuilder = cardBuilder;
@@ -914,48 +1128,55 @@
       // Immediately replace any static HTML placeholder cards with skeletons.
       // This prevents stale images from the baked-in HTML from ever being visible.
       showSkeletons(grid, isLoftSystem);
-
-      tasks.push(loadProducts(_pageSlug).then(function (payload) {
-        if (gen !== _renderGen) return; // stale — a newer render is already in flight
-        if (payload.error) {
-          renderGridError(grid, isLoftSystem);
-          return;
-        }
-        _currentProducts = Array.isArray(payload.items) ? payload.items.slice() : [];
-        renderProducts(sortProducts(_currentProducts, getSortMode(sortSelect)), grid, cardBuilder);
-      }));
+      productPromise = loadProducts(_pageSlug);
     }
 
     if (filterBar && _pageSlug !== 'index') {
       showCategoryFilterLoading(filterBar);
-      tasks.push(loadCategories(_pageSlug).then(function (payload) {
-        if (gen !== _renderGen) return;
-        if (payload.error) {
-          showCategoryFilterError(filterBar);
-          return;
-        }
-        renderCategoryFilters(payload.items, filterBar);
-      }));
+      categoryPromise = loadCategories(_pageSlug);
     }
 
     if (homeCategoryContainer && _pageSlug === 'index') {
       showHomepageCategoryLoading(homeCategoryContainer);
-      tasks.push(loadCategories('index').then(function (payload) {
-        if (gen !== _renderGen) return;
-        if (payload.error) {
-          showHomepageCategoryError(homeCategoryContainer);
-          return;
-        }
-        renderHomepageCategoryFilters(payload.items, homeCategoryContainer);
-      }));
+      categoryPromise = loadCategories('index');
     }
 
-    if (tasks.length) {
-      Promise.all(tasks).then(function () {
-        if (gen !== _renderGen) return;
-        dispatchReady();
-      });
-    }
+    Promise.all([productPromise, categoryPromise]).then(function (results) {
+      if (gen !== _renderGen) return;
+
+      var productPayload = results[0] || {items: [], error: null};
+      var categoryPayload = results[1] || {items: [], error: null};
+      var products = Array.isArray(productPayload.items) ? productPayload.items.slice() : [];
+      var categories = resolveCategories(categoryPayload.items, products, _pageSlug);
+
+      _currentProducts = products;
+
+      if (grid) {
+        if (productPayload.error) {
+          renderGridError(grid, isLoftSystem);
+        } else {
+          renderProducts(sortProducts(_currentProducts, getSortMode(sortSelect)), grid, cardBuilder);
+        }
+      }
+
+      if (filterBar && _pageSlug !== 'index') {
+        if (categories.length) {
+          renderCategoryFilters(categories, filterBar);
+        } else if (categoryPayload.error) {
+          showCategoryFilterError(filterBar);
+        }
+      }
+
+      if (homeCategoryContainer && _pageSlug === 'index') {
+        if (categories.length) {
+          renderHomepageCategoryFilters(categories, homeCategoryContainer);
+        } else if (categoryPayload.error) {
+          showHomepageCategoryError(homeCategoryContainer);
+        }
+      }
+
+      dispatchReady();
+    });
 
     // Homepage-only: fetch hero + announcement in a single Sanity request
     if (_pageSlug === 'index') {

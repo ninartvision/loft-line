@@ -1188,12 +1188,29 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 /* ── CIRCULAR ICON CATEGORY FILTER ── */
 .ll-iconcat {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   gap: 12px 28px;
   padding: 36px 0 44px;
   border-bottom: 1px solid var(--bdr);
   margin-bottom: 44px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-bdr) transparent;
+}
+
+.ll-iconcat::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ll-iconcat::-webkit-scrollbar-thumb {
+  background: var(--gold-bdr);
+  border-radius: 999px;
+}
+
+.ll-iconcat::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .ll-iconcat-btn {
@@ -1210,6 +1227,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 
 .ll-iconcat-circle {
+  flex-shrink: 0;
   width: 76px;
   height: 76px;
   border-radius: 50%;
@@ -1224,6 +1242,13 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
               color var(--dur) var(--ease),
               transform var(--dur) var(--ease),
               box-shadow var(--dur) var(--ease);
+}
+
+.ll-iconcat-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .ll-iconcat-btn:hover .ll-iconcat-circle {
