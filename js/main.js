@@ -300,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (filterOverlay) filterOverlay.classList.add('is-active');
       document.body.classList.add('body-drawer-open');
       if (filterToggle) filterToggle.setAttribute('aria-expanded', 'true');
-      console.log('[filter-drawer] openDrawer called. Overlay:', filterOverlay ? filterOverlay.className : 'NOT FOUND', '| Drawer transform computed:', window.getComputedStyle(filterDrawer).transform);
     }
 
     function closeDrawer() {
@@ -333,8 +332,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Apply button closes drawer
     if (filterApplyBtn) {
-      filterApplyBtn.addEventListener('click', closeDrawer);
-    }
+  filterApplyBtn.addEventListener('click', () => {
+    applyFilters();
+    closeDrawer();
+  });
+}
 
     // Escape key closes drawer
     document.addEventListener('keydown', (e) => {
@@ -468,11 +470,16 @@ document.addEventListener('DOMContentLoaded', () => {
     applyRuntimeFilters = applyFilters;
 
     // Checkbox change handlers
-    filterDrawer.addEventListener('change', (e) => {
-      if (!e.target.matches('input[name="category"], input[name="style"], input[name="material"]')) return;
-      console.log('[filter] change →', e.target.name, e.target.value, e.target.checked ? 'ON' : 'OFF');
-      applyFilters();
-    });
+    document.addEventListener('change', (e) => {
+  if (!e.target.matches(
+    '#filterDrawer input[name="category"], ' +
+    '#filterDrawer input[name="style"], ' +
+    '#filterDrawer input[name="material"]'
+  )) return;
+
+  console.log('[filter] change →', e.target.name, e.target.value);
+  applyFilters();
+});
 
     if (homeIconFilterBar) {
       homeIconFilterBar.addEventListener('click', (e) => {
@@ -653,16 +660,20 @@ document.addEventListener('DOMContentLoaded', () => {
     activateBottomItem();
   }
 
-  // ── Scroll-to-Top Button ──
-  const scrollTopBtn = document.getElementById('scrollTopBtn');
-  if (scrollTopBtn) {
-    const toggleScrollBtn = () => {
-      scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
-    };
-    window.addEventListener('scroll', toggleScrollBtn, { passive: true });
+ // ── Scroll-to-Top Button ──
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+if (scrollTopBtn) {
+  const toggleScrollBtn = () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+  };
+
+  window.addEventListener('scroll', toggleScrollBtn, { passive: true });
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 
   document.addEventListener('loftline:langchange', syncRuntimeLanguage);
-    scrollTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
+});
