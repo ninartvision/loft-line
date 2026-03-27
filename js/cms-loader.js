@@ -546,6 +546,9 @@
     // filterTags may contain multiple unrelated keys and is only used as a last resort
     // when the product has no category reference at all in Sanity.
     var primary = product.category_filter ? makeFilterKey(product.category_filter) : '';
+    if (!primary && product.page) {
+  primary = makeFilterKey(product.page);
+}
     if (primary) return [primary];
 
     var tags = Array.isArray(product.filterTags) ? product.filterTags : [];
