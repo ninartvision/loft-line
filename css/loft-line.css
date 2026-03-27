@@ -1117,13 +1117,24 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 
 /* ── PAGE HERO (category pages) ── */
+/*
+ * --header-h: actual sticky header height. Keep in sync with
+ * .ll-header-inner { height } (currently 70px).
+ */
+:root { --header-h: 70px; }
+
 .ll-page-hero {
   position: relative;
-  height: clamp(180px, 28vw, 320px);
+  /* Min ensures usable height even on small phones after the header takes space */
+  min-height: clamp(260px, 36vw, 420px);
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  /* Push content toward the bottom while keeping it off the absolute bottom edge */
+  justify-content: flex-end;
   overflow: hidden;
-  padding-bottom: 44px;
+  /* Top padding reserves space so text never overlaps a visible header shadow */
+  padding-top: calc(var(--header-h) + clamp(24px, 4vw, 48px));
+  padding-bottom: clamp(32px, 5vw, 56px);
 }
 .ll-page-hero-bg {
   position: absolute;
@@ -1139,14 +1150,26 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   background: linear-gradient(to top, rgba(14,14,14,0.96) 0%, transparent 60%);
   z-index: 1;
 }
-.ll-page-hero-content { position: relative; z-index: 2; }
-.ll-page-hero-content .ll-label { display: block; margin-bottom: 10px; }
+.ll-page-hero-content {
+  position: relative;
+  z-index: 2;
+  /* Limit line length on very wide screens */
+  max-width: 680px;
+}
+.ll-page-hero-content .ll-label { display: block; margin-bottom: 12px; }
 .ll-page-hero-content h1 {
   font-family: var(--f-h);
   font-size: clamp(2rem, 5vw, 3.4rem);
   font-weight: 700;
   color: var(--text);
   line-height: 1.1;
+  margin-bottom: 12px;
+}
+.ll-page-hero-content .ll-hero-sub {
+  color: var(--text-sub);
+  font-size: clamp(13px, 1.5vw, 15px);
+  line-height: 1.65;
+  max-width: 480px;
 }
 
 /* ── CATALOG (category page) ── */
@@ -1425,6 +1448,13 @@ html.js [data-animate-stagger].in > *:nth-child(8){transition-delay:560ms}
   .ll-sec-head       { margin-bottom: 36px; }
   .ll-hero-title     { font-size: clamp(2.5rem, 10vw, 3.8rem); }
   .ll-hero-scroll    { display: none; }
+  /* Page hero: more comfortable spacing on tablet/large phone */
+  .ll-page-hero {
+    min-height: clamp(240px, 50vw, 360px);
+    padding-top: calc(var(--header-h) + 28px);
+    padding-bottom: clamp(28px, 6vw, 44px);
+  }
+  .ll-page-hero-content h1 { font-size: clamp(1.75rem, 7vw, 2.6rem); }
 }
 @media (max-width: 560px) {
   .ll-product-grid   { gap: 10px; }
@@ -1438,6 +1468,13 @@ html.js [data-animate-stagger].in > *:nth-child(8){transition-delay:560ms}
   .ll-cta-btns       { flex-direction: column; align-items: center; }
   .ll-cat-grid       { grid-template-columns: 1fr 1fr; gap: 8px; }
   .ll-header-inner   { gap: 8px; }
+  /* Page hero: compact but never cramped on small phones */
+  .ll-page-hero {
+    min-height: clamp(220px, 55vw, 300px);
+    padding-top: calc(var(--header-h) + 20px);
+    padding-bottom: 28px;
+  }
+  .ll-page-hero-content h1 { font-size: clamp(1.55rem, 8vw, 2rem); }
 }
 @media (max-width: 380px) {
   .ll-product-grid   { grid-template-columns: 1fr; }
