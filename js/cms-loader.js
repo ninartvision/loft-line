@@ -360,25 +360,22 @@
           return {items: [], error: fallbackResponse.error};
         }
 
-        // Last-resort: page and category->pageKey both missed.
-        // Return ALL available products so something renders rather than a blank grid.
-        // This typically means `page` field is not filled in Sanity Studio.
-        var broadGroq = '*[_type == "product" && coalesce(available, true) == true] | order(coalesce(sortOrder, 9999) asc, _createdAt desc) { ' + PRODUCT_PROJECTION + ' }';
-        cmsDebug('loadProducts:broad-fallback', {page: pageSlug, reason: 'page/category field unset in Sanity'});
-        return sanityQuery(broadGroq, {}).then(function (broadResponse) {
-          var broad = broadResponse.ok ? broadResponse.result : null;
-          if (Array.isArray(broad) && broad.length) {
-            cmsDebug('loadProducts:broad-fallback-hit', {count: broad.length});
-            return {items: processProducts(broad), error: null};
-          }
-          // Nothing at all — most likely all documents are still drafts.
-          cmsDebug('loadProducts:no-results', {
-            hint: 'Check that products are PUBLISHED in Sanity Studio (not just saved as drafts). ' +
-                  'Draft documents are invisible to the CDN API. ' +
-                  'Test directly: https://4n3g4zv5.apicdn.sanity.io/v2024-01-01/data/query/production?query=*[_type=="product"][0..2]{_id,name_ka,available,page}'
-          });
-          return {items: [], error: broadResponse.ok ? null : broadResponse.error};
+        // Both the page-field query and the category->pageKey query returned nothing.
+        // Do NOT fall back to loading all products globally — that would dump every product
+        // onto every category page, breaking both page-level separation and subcategory
+        // filtering (products with data-category from another page would still show in
+        // the "All" tab of the wrong page).
+        // Fix in Sanity Studio: set the `page` field on each product to its target page slug
+        // (e.g. "main-furniture", "office-furniture", "lighting", etc.).
+        cmsDebug('loadProducts:no-results', {
+          page: pageSlug,
+          hint: 'No products found for this page. ' +
+                'Ensure products have `page` set to "' + pageSlug + '" in Sanity Studio. ' +
+                'Draft documents are invisible to the CDN API. ' +
+                'Test: https://4n3g4zv5.apicdn.sanity.io/v2024-01-01/data/query/production' +
+                '?query=*[_type=="product"&&page=="' + pageSlug + '"]{_id,name_ka,page}'
         });
+        return {items: [], error: null};
       });
     });
   }
@@ -529,9 +526,15 @@
   // Normalize all filter keys to the same format used by filter buttons (makeFilterKey).
   // Ensures "Office Tables", "office_tables", and "office-tables" all match "office-tables".
   function filterValues(product) {
-    var tags = Array.isArray(product.filterTags) && product.filterTags.length
-      ? product.filterTags
-      : (product.category_filter ? [product.category_filter] : []);
+    // category_filter is the canonical single category from the Sanity category reference
+    // (projected as coalesce(category->filterKey, category->slug.current)).
+    // Always prefer it so a product is matched to exactly ONE subcategory.
+    // filterTags may contain multiple unrelated keys and is only used as a last resort
+    // when the product has no category reference at all in Sanity.
+    var primary = product.category_filter ? makeFilterKey(product.category_filter) : '';
+    if (primary) return [primary];
+
+    var tags = Array.isArray(product.filterTags) ? product.filterTags : [];
     return tags.map(makeFilterKey).filter(Boolean);
   }
 
