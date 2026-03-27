@@ -132,13 +132,17 @@ function applyFilter(grid, filter) {
     });
 
     /* Re-apply filter whenever cms-loader injects new cards */
-    var observer = new MutationObserver(function (mutations) {
-      var hasNew = mutations.some(function (m) { return m.addedNodes.length > 0; });
-      if (hasNew) {
-        applyFilter(grid, currentFilter);
-      }
-    });
-    observer.observe(grid, { childList: true });
+   var observer = new MutationObserver(function (mutations) {
+  var hasNew = mutations.some(function (m) { return m.addedNodes.length > 0; });
+
+  if (hasNew) {
+    setTimeout(function () {
+      applyFilter(grid, currentFilter);
+    }, 200); // ⏱ delay
+  }
+});
+
+observer.observe(grid, { childList: true, subtree: true });
 
     /* Re-sync after products finish rendering */
     document.addEventListener('cms:ready', function () {
