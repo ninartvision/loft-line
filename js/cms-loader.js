@@ -409,7 +409,7 @@
       // ── Image ────────────────────────────────────────────────────
       // Always resolves to a non-empty string; <img src> will never be blank.
       p.image = p.image
-        ? buildImageUrl(p.image, {width: 600})
+        ? buildImageUrl(p.image, {width: 600, height: 600})
         : PLACEHOLDER_IMG;
 
       // ── Gallery ──────────────────────────────────────────────────
@@ -917,7 +917,7 @@
     article.innerHTML = [
       '<div class="ll-prod-img-wrap">',
         badgeHtml,
-        '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy">',
+        '<img src="' + esc(product.image) + '" alt="' + esc(name) + '" loading="lazy" width="600" height="600" decoding="async">',
         '<button class="ll-quick-view" aria-label="' + esc(translate('aria_quick_view')) + '">',
           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
             '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>',
@@ -1063,12 +1063,6 @@
    */
   function renderProducts(products, grid, cardBuilder) {
     if (!grid) return;
-    // Always-on tracing — visible in DevTools without cmsDebug flag
-    console.log('[cms-loader] renderProducts called —',
-      'grid:', grid.id || '(no-id)',
-      'products:', Array.isArray(products) ? products.length : 0,
-      'builder:', cardBuilder === buildLoftCard ? 'loft' : 'default'
-    );
     cmsDebug('renderProducts:start', {
       gridId: grid.id || '(no-id)',
       productCount: Array.isArray(products) ? products.length : 0,
@@ -1080,7 +1074,7 @@
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
     if (countEl) countEl.textContent = products.length + ' ' + translate('product_count_word');
     if (!products.length) {
-      console.warn('[cms-loader] renderProducts: 0 products — showing empty state');
+      cmsDebug('renderProducts:empty-state', { gridId: grid.id || '(no-id)' });
       var empty = document.createElement('p');
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
       empty.textContent = translate('state_no_products');
@@ -1105,13 +1099,9 @@
     var domCards = grid.querySelectorAll('[data-cms-card="1"]').length;
     var hiddenCards = grid.querySelectorAll('[hidden]').length;
     var filterHiddenCards = grid.querySelectorAll('.filter-hidden').length;
-    console.log('[cms-loader] renderProducts DONE —',
-      'DOM cards:', domCards,
-      'hidden attr:', hiddenCards,
-      'filter-hidden class:', filterHiddenCards
-    );
+    cmsDebug('renderProducts:done', { domCards: domCards, hiddenAttr: hiddenCards, filterHidden: filterHiddenCards });
     if (hiddenCards > 0 || filterHiddenCards > 0) {
-      console.warn('[cms-loader] Some cards hidden after render! Forcing visible...');
+      cmsDebug('renderProducts:fixing-hidden', { hiddenAttr: hiddenCards, filterHidden: filterHiddenCards });
       Array.prototype.forEach.call(grid.querySelectorAll('[data-cms-card="1"]'), function (card) {
         card.removeAttribute('hidden');
         card.classList.remove('filter-hidden');
@@ -1386,15 +1376,8 @@
       var products = Array.isArray(productPayload.items) ? productPayload.items.slice() : [];
       var categories = resolveCategories(categoryPayload.items, products, _pageSlug);
 
-      // Always-on tracing — visible in DevTools without cmsDebug flag
-      console.log('[cms-loader] data resolved —',
-        'page:', _pageSlug,
-        'products:', products.length,
-        'categories:', categories.length,
-        'error:', !!productPayload.error
-      );
       if (products.length) {
-        console.log('[cms-loader] first product sample:', {
+        cmsDebug('data:sample', {
           title: products[0].title_ka || products[0].title_en,
           page: products[0].page,
           category_filter: products[0].category_filter,

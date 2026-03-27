@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    LOFT LINE - Product Quick View System + Image Gallery
    Works on: index.html (product-card) + all loft pages (ll-product-card)
    ============================================================ */
@@ -11,6 +11,26 @@
   var qty = 1;
   var galleryImages = [];
   var galleryIdx = 0;
+
+  /* ── Cart persistence (localStorage) ─────────────────────── */
+  var CART_KEY = 'loftline_cart_count';
+
+  function getCartCount() {
+    try { return Math.max(0, parseInt(localStorage.getItem(CART_KEY), 10) || 0); }
+    catch (e) { return 0; }
+  }
+
+  function setCartCount(n) {
+    try { localStorage.setItem(CART_KEY, String(Math.max(0, n))); } catch (e) {}
+  }
+
+  function syncCartBadges() {
+    var count = getCartCount();
+    var text  = count > 0 ? String(count) : '';
+    document.querySelectorAll('#cartBadge, .bottom-bar-badge, .ll-cart-badge').forEach(function (badge) {
+      badge.textContent = text;
+    });
+  }
 
   /* Helpers */
   function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
@@ -484,8 +504,10 @@
     /* Add to cart */
     if (domAddBtn) {
       domAddBtn.addEventListener('click', function () {
+        var newCount = getCartCount() + qty;
+        setCartCount(newCount);
         document.querySelectorAll('#cartBadge, .bottom-bar-badge, .ll-cart-badge').forEach(function (badge) {
-          badge.textContent = (parseInt(badge.textContent, 10) || 0) + qty;
+          badge.textContent = String(newCount);
         });
         domAddBtn.classList.add('pqv-added');
         setAddButtonAdded();
@@ -497,6 +519,7 @@
   /* Init */
   document.addEventListener('DOMContentLoaded', function () {
     cacheModalElements();
+    syncCartBadges();
     setupDelegatedTriggers();
     wireModalControls();
     syncQuickViewRuntimeLanguage();

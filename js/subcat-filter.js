@@ -142,7 +142,7 @@ function applyFilter(grid, filter) {
   }
 });
 
-observer.observe(grid, { childList: true, subtree: true });
+observer.observe(grid, { childList: true });
 
     /* Re-sync after products finish rendering */
     document.addEventListener('cms:ready', function () {
