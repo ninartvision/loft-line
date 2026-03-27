@@ -64,7 +64,11 @@
     cards.forEach(function (card) {
       var cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
 
-      if (filter === 'all' || cardFilters.indexOf(filter) !== -1) {
+      // Show card if:
+      //   - filter is 'all' (show everything), OR
+      //   - card has no category (uncategorised → always visible), OR
+      //   - card's categories include the active filter
+      if (filter === 'all' || !cardFilters.length || cardFilters.indexOf(filter) !== -1) {
         card.removeAttribute('hidden');
         // Coordinate with CSS class-based visibility (quick-view.css / filters.css)
         card.classList.remove('filter-hidden');

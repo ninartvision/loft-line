@@ -546,21 +546,19 @@
     // filterTags may contain multiple unrelated keys and is only used as a last resort
     // when the product has no category reference at all in Sanity.
     var primary = product.category_filter ? makeFilterKey(product.category_filter) : '';
-    if (!primary && product.page) {
-      primary = makeFilterKey(product.page);
-    }
     if (primary) return [primary];
 
     var tags = Array.isArray(product.filterTags) ? product.filterTags : [];
     var mapped = tags.map(makeFilterKey).filter(Boolean);
-    // Safety: never return an empty array — cards with data-category="" can slip
-    // through filter logic and become invisible. Fall back to the product's
-    // style or a generic key so subcat-filter always has something to match.
-    if (!mapped.length) {
-      var styleFallback = product.style ? makeFilterKey(product.style) : '';
-      return styleFallback ? [styleFallback] : ['all'];
-    }
-    return mapped;
+    if (mapped.length) return mapped;
+
+    // No category reference and no filterTags — return empty array.
+    // The filter logic in subcat-filter.js treats cards with empty data-category
+    // as "uncategorised" and shows them under every filter (including specific ones).
+    // Do NOT fall back to product.page or product.style — those values don't match
+    // any Sanity category filterKey, so the card would be hidden whenever a specific
+    // subcategory filter is active.
+    return [];
   }
 
   var CATEGORY_PROJECTION = [
@@ -1438,6 +1436,19 @@
         }
       }
 
+      dispatchReady();
+    }).catch(function (err) {
+      console.error('[cms-loader] render pipeline error:', err);
+      // Ensure grid is visible even if rendering partially failed
+      if (grid) {
+        grid.classList.add('is-visible', 'in');
+        Array.prototype.forEach.call(grid.querySelectorAll('.ll-product-card, .product-card'), function (card) {
+          card.removeAttribute('hidden');
+          card.classList.remove('filter-hidden');
+          card.classList.add('filter-visible');
+          card.style.opacity = '1';
+        });
+      }
       dispatchReady();
     });
 
