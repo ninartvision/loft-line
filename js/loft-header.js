@@ -19,3 +19,5 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('loft-menu-open');
     }
   });
+
+}); // ✅ ეს აუცილებლად უნდა იყოს
