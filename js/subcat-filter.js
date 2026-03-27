@@ -57,32 +57,40 @@
     }
   }
 
-  /* Show/hide cards based on filter key */
-  function applyFilter(grid, filter) {
-    var cards = grid.querySelectorAll('.ll-product-card');
+  function showCard(card) {
+  card.removeAttribute('hidden');
+  card.classList.remove('filter-hidden');
+  card.classList.add('filter-visible');
+}
 
-    cards.forEach(function (card) {
-      var cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
+function hideCard(card) {
+  card.setAttribute('hidden', '');
+  card.classList.remove('filter-visible');
+  card.classList.add('filter-hidden');
+}
 
-      // Show card if:
-      //   - filter is 'all' (show everything), OR
-      //   - card has no category (uncategorised → always visible), OR
-      //   - card's categories include the active filter
-      if (filter === 'all' || !cardFilters.length || cardFilters.indexOf(filter) !== -1) {
-        card.removeAttribute('hidden');
-        // Coordinate with CSS class-based visibility (quick-view.css / filters.css)
-        card.classList.remove('filter-hidden');
-        card.classList.add('filter-visible');
-      } else {
-        card.setAttribute('hidden', '');
-        card.classList.remove('filter-visible');
-        card.classList.add('filter-hidden');
-      }
-    });
+function applyFilter(grid, filter) {
+  var cards = grid.querySelectorAll('.ll-product-card');
 
-    updateEmpty(grid);
-  }
+  cards.forEach(function (card) {
+    var cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
 
+    if (filter === 'all') {
+      showCard(card);
+
+    } else if (!card.dataset.category) {
+      showCard(card);
+
+    } else if (cardFilters.includes(filter)) {
+      showCard(card);
+
+    } else {
+      hideCard(card);
+    }
+  });
+
+  updateEmpty(grid);
+}
   /* Validate that a filter value actually exists as a button */
   function resolveFilter(bar, filter) {
     var buttons = Array.prototype.slice.call(bar.querySelectorAll('.' + BTN_CLASS));
