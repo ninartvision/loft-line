@@ -540,16 +540,6 @@
   // Normalize all filter keys to the same format used by filter buttons (makeFilterKey).
   // Ensures "Office Tables", "office_tables", and "office-tables" all match "office-tables".
   function filterValues(product) {
-  var primary = product.category_filter ? makeFilterKey(product.category_filter) : '';
-  
-  if (primary) return [primary];
-
-  // 👉 fallback (მთავარი fix)
-  if (product.page) return [makeFilterKey(product.page)];
-
-  var tags = Array.isArray(product.filterTags) ? product.filterTags : [];
-  return tags.map(makeFilterKey).filter(Boolean);
-}
     // category_filter is the canonical single category from the Sanity category reference
     // (projected as coalesce(category->filterKey, category->slug.current)).
     // Always prefer it so a product is matched to exactly ONE subcategory.
