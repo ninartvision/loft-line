@@ -25,7 +25,11 @@
   var SANITY_PROJECT_ID = '4n3g4zv5';
   var SANITY_DATASET    = 'production';
   var SANITY_API_VER    = '2024-01-01';
-  var SANITY_HOST = "https://4n3g4zv5.apicdn.sanity.io";
+  // Use the direct API host (api.sanity.io) instead of the CDN host (apicdn.sanity.io).
+  // The CDN caches responses for several minutes, which is why newly published products
+  // appear on localhost (fresh request each time) but lag on the live site.
+  // The direct API always returns the current published state with no CDN delay.
+  var SANITY_HOST = "https://4n3g4zv5.api.sanity.io";
   var QUERY_CACHE       = Object.create(null);
   var CATEGORY_PAGE_PATHS = {
     '/main-furniture.html': true,
@@ -117,7 +121,11 @@
         url += '&$' + key + '=' + encodeURIComponent(JSON.stringify(params[key]));
       });
     }
-    return fetch(url, {cache: 'default'})
+    // 'no-store' prevents the browser from writing this response to its HTTP disk cache.
+    // Combined with the direct API host above, this ensures products published in Sanity
+    // appear on the next page load without any caching delay.
+    // The in-memory QUERY_CACHE above still deduplicates duplicate calls within a session.
+    return fetch(url, {cache: 'no-store'})
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status + ' for Sanity request');
         return r.json();
