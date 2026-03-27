@@ -181,6 +181,7 @@ html.js [data-animate] {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  will-change: opacity, transform;
 }
 
 html.js [data-animate].is-visible {
@@ -201,6 +202,7 @@ html.js [data-animate-stagger] > * {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  will-change: opacity, transform;
 }
 
 html.js [data-animate-stagger].is-visible > *:nth-child(1) { transition-delay: 0s; }

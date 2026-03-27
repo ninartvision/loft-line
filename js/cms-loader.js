@@ -973,6 +973,15 @@
       frag.appendChild(article);
     }
     grid.appendChild(frag);
+    // Immediately reveal skeleton cards — CSS hides children of [data-animate-stagger]
+    // grids at opacity:0, which produces solid black blocks against the dark body
+    // background during the Sanity fetch. Forcing opacity:1 here prevents that flash.
+    grid.classList.add('in', 'is-visible');
+    var skels = grid.children;
+    for (var j = 0; j < skels.length; j++) {
+      skels[j].style.opacity = '1';
+      skels[j].style.transform = 'none';
+    }
   }
 
   function renderGridError(grid, isLoftSystem) {
@@ -990,7 +999,17 @@
 
     grid.classList.add('is-visible', 'in');
 
+    // Force every child to full opacity immediately using inline styles.
+    // child.style.removeProperty() only removes inline overrides — the CSS stagger
+    // rule `[data-animate-stagger] > *` still holds opacity:0 with per-child
+    // transition-delays (up to 560 ms), causing cards to flash in one by one as
+    // black blocks. Setting opacity:1 + transition:none as inline styles overrides
+    // the CSS rule and shows all cards at once without any stagger flash.
     Array.prototype.forEach.call(grid.children, function (child) {
+      child.style.opacity = '1';
+      child.style.transform = 'none';
+      child.style.transition = 'none';
+
       if (child.classList && (
         child.classList.contains('product-card') ||
         child.classList.contains('ll-product-card')
@@ -1001,10 +1020,21 @@
           child.classList.add('filter-visible');
         }
       }
+    });
 
-      child.style.removeProperty('opacity');
-      child.style.removeProperty('visibility');
-      child.style.removeProperty('transform');
+    // After two animation frames the inline overrides can be safely removed:
+    // the grid has .in/.is-visible so CSS computed opacity is already 1 and no
+    // stagger transition will re-trigger. Removing the overrides restores normal
+    // hover/filter transitions on the cards.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        Array.prototype.forEach.call(grid.children, function (child) {
+          child.style.removeProperty('opacity');
+          child.style.removeProperty('visibility');
+          child.style.removeProperty('transform');
+          child.style.removeProperty('transition');
+        });
+      });
     });
   }
 
