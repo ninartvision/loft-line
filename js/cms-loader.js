@@ -25,11 +25,14 @@
   var SANITY_PROJECT_ID = '4n3g4zv5';
   var SANITY_DATASET    = 'production';
   var SANITY_API_VER    = '2024-01-01';
-  // Use the direct API host (api.sanity.io) instead of the CDN host (apicdn.sanity.io).
-  // The CDN caches responses for several minutes, which is why newly published products
-  // appear on localhost (fresh request each time) but lag on the live site.
-  // The direct API always returns the current published state with no CDN delay.
-  var SANITY_HOST = "https://4n3g4zv5.api.sanity.io";
+  // Use the CDN host (apicdn.sanity.io) for all public-dataset reads.
+  // api.sanity.io (the direct API) requires every requesting origin to be explicitly
+  // allowlisted in the Sanity project's CORS settings, AND the browser's Fetch standard
+  // adds a "Cache-Control: no-cache" header when cache:'no-store' is used — both together
+  // cause the CORS preflight to be rejected on production origins (GitHub Pages, etc.),
+  // returning 403 Forbidden even when the dataset is public.
+  // apicdn.sanity.io serves public datasets without any CORS configuration needed.
+  var SANITY_HOST = "https://" + SANITY_PROJECT_ID + ".apicdn.sanity.io";
   var QUERY_CACHE       = Object.create(null);
   var CATEGORY_PAGE_PATHS = {
     '/main-furniture.html': true,
@@ -121,11 +124,14 @@
         url += '&$' + key + '=' + encodeURIComponent(JSON.stringify(params[key]));
       });
     }
-    // 'no-store' prevents the browser from writing this response to its HTTP disk cache.
-    // Combined with the direct API host above, this ensures products published in Sanity
-    // appear on the next page load without any caching delay.
-    // The in-memory QUERY_CACHE above still deduplicates duplicate calls within a session.
-    return fetch(url, {cache: 'no-store'})
+    // Plain GET — no custom request headers.
+    // Adding fetch options like {cache:'no-store'} causes the browser (per the Fetch
+    // Standard §4.6 steps 18-19) to inject a 'Cache-Control: no-cache' request header,
+    // which makes this a non-simple CORS request and triggers a preflight. If the server's
+    // Access-Control-Allow-Headers does not list Cache-Control the preflight is rejected
+    // and the response is a 403 even though the dataset is public.
+    // The in-memory QUERY_CACHE above deduplicates identical queries within the session.
+    return fetch(url)
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status + ' for Sanity request');
         return r.json();
