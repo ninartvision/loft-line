@@ -547,12 +547,20 @@
     // when the product has no category reference at all in Sanity.
     var primary = product.category_filter ? makeFilterKey(product.category_filter) : '';
     if (!primary && product.page) {
-  primary = makeFilterKey(product.page);
-}
+      primary = makeFilterKey(product.page);
+    }
     if (primary) return [primary];
 
     var tags = Array.isArray(product.filterTags) ? product.filterTags : [];
-    return tags.map(makeFilterKey).filter(Boolean);
+    var mapped = tags.map(makeFilterKey).filter(Boolean);
+    // Safety: never return an empty array — cards with data-category="" can slip
+    // through filter logic and become invisible. Fall back to the product's
+    // style or a generic key so subcat-filter always has something to match.
+    if (!mapped.length) {
+      var styleFallback = product.style ? makeFilterKey(product.style) : '';
+      return styleFallback ? [styleFallback] : ['all'];
+    }
+    return mapped;
   }
 
   var CATEGORY_PROJECTION = [
@@ -1023,11 +1031,12 @@
         child.classList.contains('product-card') ||
         child.classList.contains('ll-product-card')
       )) {
-        // Only set default visible state if NO filter class is already present.
-        // applyFilters (main.js) sets these after cms:ready; don't overwrite.
-        if (!child.classList.contains('filter-hidden') && !child.classList.contains('filter-visible')) {
-          child.classList.add('filter-visible');
-        }
+        // Always ensure filter-visible is present and filter-hidden is removed.
+        // This guarantees products are visible on initial render — filter scripts
+        // (subcat-filter.js / main.js) may refine visibility later via cms:ready.
+        child.classList.remove('filter-hidden');
+        child.classList.add('filter-visible');
+        child.removeAttribute('hidden');
       }
     });
 
@@ -1056,6 +1065,12 @@
    */
   function renderProducts(products, grid, cardBuilder) {
     if (!grid) return;
+    // Always-on tracing — visible in DevTools without cmsDebug flag
+    console.log('[cms-loader] renderProducts called —',
+      'grid:', grid.id || '(no-id)',
+      'products:', Array.isArray(products) ? products.length : 0,
+      'builder:', cardBuilder === buildLoftCard ? 'loft' : 'default'
+    );
     cmsDebug('renderProducts:start', {
       gridId: grid.id || '(no-id)',
       productCount: Array.isArray(products) ? products.length : 0,
@@ -1067,6 +1082,7 @@
     var countEl = document.getElementById('ll-catalog-count') || document.getElementById('filterCount');
     if (countEl) countEl.textContent = products.length + ' ' + translate('product_count_word');
     if (!products.length) {
+      console.warn('[cms-loader] renderProducts: 0 products — showing empty state');
       var empty = document.createElement('p');
       empty.className = grid.id === 'sanity-product-grid' ? 'll-filter-empty' : 'filter-no-results is-visible';
       empty.textContent = translate('state_no_products');
@@ -1087,10 +1103,27 @@
     });
     grid.appendChild(frag); // single reflow for the entire product list
     revealRenderedGrid(grid);
+    // Post-render DOM verification
+    var domCards = grid.querySelectorAll('[data-cms-card="1"]').length;
+    var hiddenCards = grid.querySelectorAll('[hidden]').length;
+    var filterHiddenCards = grid.querySelectorAll('.filter-hidden').length;
+    console.log('[cms-loader] renderProducts DONE —',
+      'DOM cards:', domCards,
+      'hidden attr:', hiddenCards,
+      'filter-hidden class:', filterHiddenCards
+    );
+    if (hiddenCards > 0 || filterHiddenCards > 0) {
+      console.warn('[cms-loader] Some cards hidden after render! Forcing visible...');
+      Array.prototype.forEach.call(grid.querySelectorAll('[data-cms-card="1"]'), function (card) {
+        card.removeAttribute('hidden');
+        card.classList.remove('filter-hidden');
+        card.classList.add('filter-visible');
+      });
+    }
     cmsDebug('renderProducts:complete', {
       gridId: grid.id || '(no-id)',
       childCount: grid.children.length,
-      cmsCardCount: grid.querySelectorAll('[data-cms-card="1"]').length
+      cmsCardCount: domCards
     });
   }
 
@@ -1355,6 +1388,22 @@
       var products = Array.isArray(productPayload.items) ? productPayload.items.slice() : [];
       var categories = resolveCategories(categoryPayload.items, products, _pageSlug);
 
+      // Always-on tracing — visible in DevTools without cmsDebug flag
+      console.log('[cms-loader] data resolved —',
+        'page:', _pageSlug,
+        'products:', products.length,
+        'categories:', categories.length,
+        'error:', !!productPayload.error
+      );
+      if (products.length) {
+        console.log('[cms-loader] first product sample:', {
+          title: products[0].title_ka || products[0].title_en,
+          page: products[0].page,
+          category_filter: products[0].category_filter,
+          filterValues: filterValues(products[0]),
+          price: products[0].price
+        });
+      }
       cmsDebug('data:resolved', {
         page: _pageSlug,
         products: products.length,

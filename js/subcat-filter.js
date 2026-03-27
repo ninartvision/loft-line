@@ -66,8 +66,13 @@
 
       if (filter === 'all' || cardFilters.indexOf(filter) !== -1) {
         card.removeAttribute('hidden');
+        // Coordinate with CSS class-based visibility (quick-view.css / filters.css)
+        card.classList.remove('filter-hidden');
+        card.classList.add('filter-visible');
       } else {
         card.setAttribute('hidden', '');
+        card.classList.remove('filter-visible');
+        card.classList.add('filter-hidden');
       }
     });
 
