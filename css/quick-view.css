@@ -112,8 +112,10 @@
 .pqv-slide-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background: #111;
 }
 
 /* ── Gallery: Navigation Arrows ── */
@@ -260,6 +262,12 @@
   height: 1px;
   background: rgba(255, 255, 255, 0.08);
   margin-bottom: 20px;
+}
+
+/* ── Color / Quantity: hidden per design requirement ── */
+.pqv-color-wrap,
+.pqv-qty-wrap {
+  display: none;
 }
 
 /* ── Quantity Selector ── */

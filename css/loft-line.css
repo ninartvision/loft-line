@@ -474,13 +474,15 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .btn-outline {
   background: transparent;
-  color: var(--text);
-  border: 1px solid var(--bdr-em);
+  color: var(--gold);
+  border: 1px solid var(--gold-bdr);
 }
 .btn-outline:hover {
   border-color: var(--gold);
   color: var(--gold);
+  background: var(--gold-dim);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,169,110,0.15);
 }
 .btn-dark {
   background: var(--bg-card);
