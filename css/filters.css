@@ -33,6 +33,25 @@
   transition: transform var(--duration) var(--ease);
 }
 
+/* Active-filter state: gold border + dot badge */
+.filter-toggle.has-active-filters {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  position: relative;
+}
+
+.filter-toggle.has-active-filters::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+}
+
 /* -- Overlay -- */
 .filter-overlay {
   position: fixed;

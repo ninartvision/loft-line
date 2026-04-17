@@ -311,9 +311,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Toggle button
+    // Smart toggle: if filters are active → clear all on click; otherwise open drawer.
+    function hasActiveFilters() {
+      const allCatBoxes = Array.from(getCategoryCheckboxes());
+      const allStyleBoxes = Array.from(getStyleCheckboxes());
+      const activeMats = Array.from(getMaterialCheckboxes()).filter(cb => cb.checked);
+      const catPartial = allCatBoxes.length > 0 &&
+        Array.from(allCatBoxes).some(cb => !cb.checked);
+      const stylePartial = allStyleBoxes.length > 0 &&
+        Array.from(allStyleBoxes).some(cb => !cb.checked);
+      const matActive = activeMats.length > 0;
+      const priceActive = (rangeMin && parseInt(rangeMin.value, 10) > 0) ||
+                          (rangeMax && parseInt(rangeMax.value, 10) < SLIDER_MAX);
+      return catPartial || stylePartial || matActive || priceActive;
+    }
+
+    function syncFilterToggleState() {
+      if (!filterToggle) return;
+      const active = hasActiveFilters();
+      filterToggle.classList.toggle('has-active-filters', active);
+      filterToggle.setAttribute('aria-label',
+        active ? runtimeText('filter_btn_clear', 'ფილტრი გასუფთავება', 'Clear Filters') : '');
+    }
+
     if (filterToggle) {
       filterToggle.addEventListener('click', () => {
-        filterDrawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
+        if (hasActiveFilters()) {
+          // Filters are active — clear everything and show all products
+          getCategoryCheckboxes().forEach(cb => { cb.checked = true; });
+          getStyleCheckboxes().forEach(cb => { cb.checked = true; });
+          getMaterialCheckboxes().forEach(cb => { cb.checked = false; });
+          if (rangeMin) rangeMin.value = 0;
+          if (rangeMax) rangeMax.value = SLIDER_MAX;
+          updateSliderRange();
+          applyFilters();
+          // Scroll user smoothly to the product grid
+          if (productGrid) {
+            productGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          filterDrawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
+        }
       });
     }
 
@@ -423,6 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       productGrid.classList.add('is-visible');
+
+      syncFilterToggleState();
 
       cmsDebug('applyFilters', {
         totalCards: allCards.length,
