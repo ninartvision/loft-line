@@ -225,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (filterDrawer && productGrid) {
     const categoryContainer = filterDrawer.querySelector('[data-cms-home-categories]');
     const materialContainer  = filterDrawer.querySelector('[data-cms-materials]');
-    const homeIconFilterBar = document.querySelector('.ll-iconcat[data-home-icon-filters]');
     const SLIDER_MAX = 2000;
 
     function getCards() {
@@ -234,28 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getCategoryCheckboxes() {
       return filterDrawer.querySelectorAll('input[name="category"]');
-    }
-
-    function syncHomeIconFilterBar() {
-      if (!homeIconFilterBar) return;
-
-      const categoryCheckboxes = Array.from(getCategoryCheckboxes());
-      const checked = categoryCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
-      const allValues = categoryCheckboxes.map(cb => cb.value);
-
-      let activeFilter = 'all';
-      if (checked.length === 1) {
-        activeFilter = checked[0];
-      } else if (checked.length > 1 && checked.length !== allValues.length) {
-        activeFilter = 'all';
-      }
-
-      homeIconFilterBar.setAttribute('data-current-filter', activeFilter);
-      homeIconFilterBar.querySelectorAll('.ll-iconcat-btn').forEach(btn => {
-        const isActive = (btn.dataset.filter || 'all') === activeFilter;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      });
     }
 
     function getStyleCheckboxes() {
@@ -420,8 +397,6 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryContainer.setAttribute('data-selected-values', JSON.stringify(activeCategories));
       }
 
-      syncHomeIconFilterBar();
-
       let visibleCount = 0;
 
       const allCatBoxes   = Array.from(getCategoryCheckboxes());
@@ -504,58 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
       )) return;
       applyFilters();
     });
-
-    if (homeIconFilterBar) {
-      homeIconFilterBar.addEventListener('click', (e) => {
-        const btn = e.target.closest('.ll-iconcat-btn');
-        if (!btn) return;
-
-        const filter = btn.dataset.filter || 'all';
-        const categoryCheckboxes = Array.from(getCategoryCheckboxes());
-
-        if (categoryCheckboxes.length) {
-          // Drawer checkboxes exist — sync them so the full multi-axis filter runs.
-          if (filter === 'all') {
-            // "All" means no specific category is selected — show everything
-            categoryCheckboxes.forEach(cb => { cb.checked = false; });
-          } else {
-            categoryCheckboxes.forEach(cb => {
-              cb.checked = cb.value === filter;
-            });
-          }
-          applyFilters();
-        } else {
-          // No drawer checkboxes yet (CMS still loading or returned no categories).
-          // Apply a direct data-category filter so clicking icon buttons always works.
-          const allCards = getCards();
-          let visibleCount = 0;
-          allCards.forEach(card => {
-            const cardCats = (card.dataset.category || '').split(/\s+/).filter(Boolean);
-            // Products with no category only appear under "All", not in specific filters.
-            const show = filter === 'all' || cardCats.includes(filter);
-            if (show) {
-              visibleCount++;
-              card.classList.remove('filter-hidden');
-              card.classList.add('filter-visible');
-              card.removeAttribute('hidden');
-            } else {
-              card.classList.remove('filter-visible');
-              card.classList.add('filter-hidden');
-              card.setAttribute('hidden', '');
-            }
-          });
-          if (filterCount) filterCount.textContent = filterCountText(visibleCount);
-
-          // Keep icon bar active state in sync
-          homeIconFilterBar.setAttribute('data-current-filter', filter);
-          homeIconFilterBar.querySelectorAll('.ll-iconcat-btn').forEach(b => {
-            const isActive = (b.dataset.filter || 'all') === filter;
-            b.classList.toggle('active', isActive);
-            b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-          });
-        }
-      });
-    }
 
     // Range slider handlers
     if (rangeMin && rangeMax) {

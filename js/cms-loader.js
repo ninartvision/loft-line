@@ -73,20 +73,6 @@
     return !!CATEGORY_PAGE_PATHS[getCurrentPathname()];
   }
 
-  function removeHomepageCategoryUi() {
-    // [data-home-icon-filters] is a homepage-only element used by the quick icon
-    // filter bar above the product grid. Keep it on the homepage so it can be
-    // populated with category buttons. Only remove stray copies that somehow appear
-    // on category pages (shouldn't happen since the element is only in index.html).
-    if (!shouldRenderCategoryUi()) return;
-
-    Array.prototype.forEach.call(document.querySelectorAll('.ll-iconcat[data-home-icon-filters]'), function (node) {
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
-    });
-  }
-
   /* ── Sanity Helpers ──────────────────────────────────────── */
 
   /**
@@ -1318,8 +1304,6 @@
     var currentPath = getCurrentPathname();
     var allowCategoryUi = shouldRenderCategoryUi();
 
-    removeHomepageCategoryUi();
-
     // Support all known product grid IDs without changing the existing render flow.
     var grid = document.getElementById('sanity-product-grid')
       || document.getElementById('productGrid')
@@ -1328,9 +1312,8 @@
       grid.id === 'sanity-product-grid' ||
       grid.id === 'productGrid'
     );
-    var filterBar    = allowCategoryUi ? document.querySelector('.ll-iconcat[data-cms-filters]:not([data-home-icon-filters])') : null;
+    var filterBar    = allowCategoryUi ? document.querySelector('.ll-iconcat[data-cms-filters]') : null;
     var homeCategoryContainer = _pageSlug === 'index' ? document.querySelector('[data-cms-home-categories]') : null;
-    var homeIconBar  = _pageSlug === 'index' ? document.querySelector('.ll-iconcat[data-home-icon-filters]') : null;
     var cardBuilder  = isLoftSystem ? buildLoftCard : buildProductCard;
     var sortSelect   = document.querySelector('.ll-sort-select');
     var productPromise = Promise.resolve({items: [], error: null});
@@ -1343,8 +1326,7 @@
       isLoftSystem: isLoftSystem,
       allowCategoryUi: allowCategoryUi,
       hasFilterBar: !!filterBar,
-      hasHomeCategoryContainer: !!homeCategoryContainer,
-      hasHomeIconBar: !!homeIconBar
+      hasHomeCategoryContainer: !!homeCategoryContainer
     });
 
     _currentGrid = grid;
@@ -1422,12 +1404,6 @@
         } else if (categoryPayload.error) {
           showHomepageCategoryError(homeCategoryContainer);
         }
-      }
-
-      if (homeIconBar && _pageSlug === 'index') {
-        // Populate the quick icon filter bar above the product grid.
-        // renderCategoryFilters always renders at least the "All" button.
-        renderCategoryFilters(categories, homeIconBar);
       }
 
       dispatchReady();
