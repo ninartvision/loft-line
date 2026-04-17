@@ -389,10 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       allCards.forEach(card => {
         const cardFilters = (card.dataset.category || '').split(/\s+/).filter(Boolean);
-        // catMatch: no filter when none OR all checked; uncategorised products always pass
+        // catMatch: no filter when none OR all checked.
+        // Products with no category (empty data-category) must NOT pass a specific
+        // category filter — they should only appear when all categories are selected.
         const catAllChecked = allCatBoxes.length > 0 && activeCategories.length === allCatBoxes.length;
-        const catMatch = activeCategories.length === 0 || catAllChecked || !cardFilters.length ||
-                         activeCategories.some(value => cardFilters.includes(value));
+        const catMatch = activeCategories.length === 0 || catAllChecked ||
+                         (cardFilters.length > 0 && activeCategories.some(value => cardFilters.includes(value)));
         // styleMatch: no filter when none OR all checked; blank style always passes
         const styleAllChecked = allStyleBoxes.length > 0 && activeStyles.length === allStyleBoxes.length;
         const styleMatch = activeStyles.length === 0 || styleAllChecked || !card.dataset.style ||
@@ -468,17 +470,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const filter = btn.dataset.filter || 'all';
         const categoryCheckboxes = Array.from(getCategoryCheckboxes());
-        if (!categoryCheckboxes.length) return;
 
-        if (filter === 'all') {
-          categoryCheckboxes.forEach(cb => { cb.checked = true; });
+        if (categoryCheckboxes.length) {
+          // Drawer checkboxes exist — sync them so the full multi-axis filter runs.
+          if (filter === 'all') {
+            categoryCheckboxes.forEach(cb => { cb.checked = true; });
+          } else {
+            categoryCheckboxes.forEach(cb => {
+              cb.checked = cb.value === filter;
+            });
+          }
+          applyFilters();
         } else {
-          categoryCheckboxes.forEach(cb => {
-            cb.checked = cb.value === filter;
+          // No drawer checkboxes yet (CMS still loading or returned no categories).
+          // Apply a direct data-category filter so clicking icon buttons always works.
+          const allCards = getCards();
+          let visibleCount = 0;
+          allCards.forEach(card => {
+            const cardCats = (card.dataset.category || '').split(/\s+/).filter(Boolean);
+            // Products with no category only appear under "All", not in specific filters.
+            const show = filter === 'all' || cardCats.includes(filter);
+            if (show) {
+              visibleCount++;
+              card.classList.remove('filter-hidden');
+              card.classList.add('filter-visible');
+              card.removeAttribute('hidden');
+            } else {
+              card.classList.remove('filter-visible');
+              card.classList.add('filter-hidden');
+              card.setAttribute('hidden', '');
+            }
+          });
+          if (filterCount) filterCount.textContent = filterCountText(visibleCount);
+
+          // Keep icon bar active state in sync
+          homeIconFilterBar.setAttribute('data-current-filter', filter);
+          homeIconFilterBar.querySelectorAll('.ll-iconcat-btn').forEach(b => {
+            const isActive = (b.dataset.filter || 'all') === filter;
+            b.classList.toggle('active', isActive);
+            b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
           });
         }
-
-        applyFilters();
       });
     }
 

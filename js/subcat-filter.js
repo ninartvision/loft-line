@@ -79,7 +79,8 @@ function applyFilter(grid, filter) {
       showCard(card);
 
     } else if (!card.dataset.category) {
-      showCard(card);
+      // No category assigned in Sanity — hide in specific filters; "all" branch above handles visibility.
+      hideCard(card);
 
     } else if (cardFilters.includes(filter)) {
       showCard(card);
