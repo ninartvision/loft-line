@@ -78,27 +78,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // ── "შეკვეთა" order button → WhatsApp ──
-  document.querySelectorAll('.btn-order').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card     = btn.closest('.ll-product-card');
+  // ── "შეკვეთა" order button → WhatsApp (event delegation: works on CMS-injected cards) ──
+  document.body.addEventListener('click', e => {
+    const orderBtn = e.target.closest('.btn-order');
+    if (orderBtn) {
+      const card     = orderBtn.closest('.ll-product-card');
       const name     = card?.querySelector('.ll-prod-name')?.textContent?.trim() || 'პროდუქტი';
       const price    = card?.querySelector('.ll-prod-price')?.textContent?.trim() || '';
       const category = card?.querySelector('.ll-prod-cat')?.textContent?.trim()  || '';
       const text     = `გამარჯობა! მინდა შევუკვეთო:\n\n📦 ${name}\n${category ? '🏷 ' + category + '\n' : ''}💰 ${price}\n\nგთხოვთ, დამიკავშირდეთ.`;
       window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
-    });
-  });
+      return;
+    }
 
-  // ── WhatsApp product card icon buttons ──
-  document.querySelectorAll('.btn-wa').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card  = btn.closest('.ll-product-card');
+    // ── WhatsApp product card icon buttons ──
+    const waBtn = e.target.closest('.btn-wa');
+    if (waBtn) {
+      const card  = waBtn.closest('.ll-product-card');
       const name  = card?.querySelector('.ll-prod-name')?.textContent?.trim() || 'პროდუქტი';
       const price = card?.querySelector('.ll-prod-price')?.textContent?.trim() || '';
       const text  = `გამარჯობა! მაინტერესებს: ${name} — ${price}`;
       window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
-    });
+    }
   });
 
   // ── Highlight active nav ──

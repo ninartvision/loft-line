@@ -60,6 +60,7 @@
 
 .badge-sale { background: var(--color-sale); color: var(--color-white); }
 .badge-new { background: var(--color-dark); color: var(--color-white); }
+.badge-best { background: var(--color-gold); color: var(--color-dark); }
 
 /* Quick View */
 .product-quick-view {

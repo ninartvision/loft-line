@@ -840,6 +840,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 .ll-badge-new  { background: var(--gold); color: #0c0c0c; }
 .ll-badge-sale { background: var(--sale); color: #fff; }
+.ll-badge-best { background: var(--gold-h); color: #0c0c0c; }
 
 /* Quick view */
 .ll-quick-view {

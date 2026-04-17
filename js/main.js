@@ -313,10 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle button
     if (filterToggle) {
       filterToggle.addEventListener('click', () => {
-        const wasOpen = filterDrawer.classList.contains('is-open');
-        console.log('[filter-toggle] click fired. Drawer currently:', wasOpen ? 'OPEN' : 'CLOSED');
-        wasOpen ? closeDrawer() : openDrawer();
-        console.log('[filter-toggle] Drawer class after toggle:', filterDrawer.className);
+        filterDrawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
       });
     }
 
@@ -379,22 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxPrice = rangeMax ? parseInt(rangeMax.value, 10) : SLIDER_MAX;
       const allCards = getCards();
 
-      console.log('[filter] applyFilters cards=' + allCards.length,
-        'cat=' + JSON.stringify(activeCategories),
-        'style=' + JSON.stringify(activeStyles),
-        'mat=' + JSON.stringify(activeMaterials),
-        'price=' + minPrice + '-' + maxPrice
-      );
-      if (allCards.length > 0) {
-        const c = allCards[0];
-        console.log('[filter] card[0] data:', {
-          category: c.dataset.category,
-          style: c.dataset.style,
-          price: c.dataset.price,
-          material: c.dataset.material
-        });
-      }
-
       if (categoryContainer) {
         categoryContainer.setAttribute('data-selected-values', JSON.stringify(activeCategories));
       }
@@ -431,6 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           card.classList.remove('filter-visible');
           card.classList.add('filter-hidden');
+          card.setAttribute('hidden', '');
         }
       });
 
@@ -471,15 +453,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Checkbox change handlers
     document.addEventListener('change', (e) => {
-  if (!e.target.matches(
-    '#filterDrawer input[name="category"], ' +
-    '#filterDrawer input[name="style"], ' +
-    '#filterDrawer input[name="material"]'
-  )) return;
-
-  console.log('[filter] change →', e.target.name, e.target.value);
-  applyFilters();
-});
+      if (!e.target.matches(
+        '#filterDrawer input[name="category"], ' +
+        '#filterDrawer input[name="style"], ' +
+        '#filterDrawer input[name="material"]'
+      )) return;
+      applyFilters();
+    });
 
     if (homeIconFilterBar) {
       homeIconFilterBar.addEventListener('click', (e) => {
@@ -547,15 +527,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Cart Badge ──
-  let cartCount = 0;
+  const CART_STORAGE_KEY = 'loftline_cart_count';
+  function getCartCount() {
+    try { return Math.max(0, parseInt(localStorage.getItem(CART_STORAGE_KEY), 10) || 0); }
+    catch (e) { return 0; }
+  }
+  function saveCartCount(n) {
+    try { localStorage.setItem(CART_STORAGE_KEY, String(Math.max(0, n))); } catch (e) {}
+  }
+
+  let cartCount = getCartCount();
   const cartBadgeEl   = document.getElementById('cartBadge');
   const bottomBadgeEl = document.querySelector('.bottom-bar-badge');
+
+  // Restore badge from localStorage on page load
+  if (cartCount > 0) {
+    if (cartBadgeEl)   cartBadgeEl.textContent   = cartCount;
+    if (bottomBadgeEl) bottomBadgeEl.textContent = cartCount;
+  }
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-to-cart-btn');
     if (!btn) return;
 
     cartCount++;
+    saveCartCount(cartCount);
     if (cartBadgeEl)   cartBadgeEl.textContent   = cartCount;
     if (bottomBadgeEl) bottomBadgeEl.textContent = cartCount;
 

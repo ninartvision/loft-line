@@ -885,6 +885,8 @@
     } else if (product.badge === 'sale') {
       var pct = product.discount_pct ? ('-' + product.discount_pct + '%') : translate('badge_sale_word');
       badgeHtml = '<span class="ll-badge ll-badge-sale">' + pct + '</span>';
+    } else if (product.badge === 'best') {
+      badgeHtml = '<span class="ll-badge ll-badge-best">' + esc(translate('badge_best')) + '</span>';
     }
 
     var oldPriceHtml = (product.oldPrice && product.oldPrice > 0)

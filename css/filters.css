@@ -53,8 +53,7 @@
 
 /* Card filter-state transitions */
 .product-card.filter-hidden {
-  opacity: 0;
-  pointer-events: none;
+  display: none;
 }
 .product-card.filter-visible {
   opacity: 1;
