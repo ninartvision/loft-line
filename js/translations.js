@@ -151,7 +151,7 @@ const translations = {
 
     /* USP (index) */
     usp_guarantee_title: "ხარისხის გარანტია",
-    usp_guarantee_desc:  "5 წლიანი გარანტია ყველა ხის ავეჯზე",
+    usp_guarantee_desc:  "1 წლიანი გარანტია ყველა ხის ავეჯზე",
     usp_delivery_title:  "უფასო მიტანა",
     usp_delivery_desc:   "₾200+ შეკვეთაზე მთელი საქართველოს მასშტაბით",
     usp_handmade_title:  "ხელნაკეთი",
@@ -218,8 +218,9 @@ const translations = {
     pqv_secure:        "🔒 უსაფრთხო",
     pqv_delivery_200:  "უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე",
     pqv_delivery_300:  "უფასო მიტანა ₾200-ზე მეტ შეკვეთაზე &nbsp;•&nbsp; 3–7 სამუშაო დღე",
-    pqv_guarantee:     "5 წლის გარანტია",
+    pqv_guarantee:     "1 წლის გარანტია",
     pqv_guarantee_2y:  "2 წლის გარანტია",
+    pqv_guarantee_1y:  "1 წლის გარანტია",
     pqv_handmade:      "ხელნაკეთი",
     pqv_georgian:      "ქართული წარმოება",
     pqv_ergonomic:     "ერგონომიკული",
@@ -401,7 +402,7 @@ const translations = {
 
     /* USP (index) */
     usp_guarantee_title: "Quality Guarantee",
-    usp_guarantee_desc:  "5-year warranty on all wood furniture",
+    usp_guarantee_desc:  "1-year warranty on all wood furniture",
     usp_delivery_title:  "Free Delivery",
     usp_delivery_desc:   "On orders ₾200+ across all of Georgia",
     usp_handmade_title:  "Handcrafted",
@@ -468,8 +469,9 @@ const translations = {
     pqv_secure:        "🔒 Secure",
     pqv_delivery_200:  "Free delivery on orders over ₾200 &nbsp;•&nbsp; 3–7 business days",
     pqv_delivery_300:  "Free delivery on orders over ₾200 &nbsp;•&nbsp; 3–7 business days",
-    pqv_guarantee:     "5-Year Warranty",
+    pqv_guarantee:     "1-Year Warranty",
     pqv_guarantee_2y:  "2-Year Warranty",
+    pqv_guarantee_1y:  "1-Year Warranty",
     pqv_handmade:      "Handcrafted",
     pqv_georgian:      "Made in Georgia",
     pqv_ergonomic:     "Ergonomic",
