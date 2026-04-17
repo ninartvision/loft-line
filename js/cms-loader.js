@@ -418,7 +418,9 @@
       p.title_en = p.title_en || p.title_ka || '';
       // slug may arrive as object {_type:'slug',current:'...'} on some paths.
       p.slug     = (typeof p.slug === 'string' ? p.slug : (p.slug && p.slug.current)) || '';
-      p.style    = p.style || 'loft';
+      // Do NOT default style to 'loft' — products with no style in Sanity should have
+      // an empty data-style so applyFilters lets them pass any style filter.
+      p.style    = p.style || '';
       p.badge    = p.badge || '';
       p.category_ka = p.category_ka || p.category_en || '';
       p.category_en = p.category_en || p.category_ka || '';
@@ -473,7 +475,7 @@
     article.className  = 'product-card';
     article.setAttribute('data-category', filterValues(product).join(' '));
     article.setAttribute('data-price',    String(product.price));
-    article.setAttribute('data-style',    product.style);
+    article.setAttribute('data-style',    product.style || '');
     article.setAttribute('data-slug',     product.slug);
 
     /* Store all product images so the quick-view gallery can display them */
