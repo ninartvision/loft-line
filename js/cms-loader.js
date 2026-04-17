@@ -836,10 +836,7 @@
       return categories.some(function (category) { return category.filterKey === value; });
     });
 
-    if (!selected.length) {
-      selected = categories.map(function (category) { return category.filterKey; });
-    }
-
+    // Do not auto-select all categories — an empty selection means "show all"
     container.innerHTML = '';
 
     if (!categories.length) {

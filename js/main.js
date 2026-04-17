@@ -316,14 +316,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const allCatBoxes = Array.from(getCategoryCheckboxes());
       const allStyleBoxes = Array.from(getStyleCheckboxes());
       const activeMats = Array.from(getMaterialCheckboxes()).filter(cb => cb.checked);
-      const catPartial = allCatBoxes.length > 0 &&
-        Array.from(allCatBoxes).some(cb => !cb.checked);
-      const stylePartial = allStyleBoxes.length > 0 &&
-        Array.from(allStyleBoxes).some(cb => !cb.checked);
+      // "Active" means the user has selected one or more specific filters.
+      // Empty selection = show all (not an active filter state).
+      const catActive = allCatBoxes.length > 0 &&
+        Array.from(allCatBoxes).some(cb => cb.checked);
+      const styleActive = allStyleBoxes.length > 0 &&
+        Array.from(allStyleBoxes).some(cb => cb.checked);
       const matActive = activeMats.length > 0;
       const priceActive = (rangeMin && parseInt(rangeMin.value, 10) > 0) ||
                           (rangeMax && parseInt(rangeMax.value, 10) < SLIDER_MAX);
-      return catPartial || stylePartial || matActive || priceActive;
+      return catActive || styleActive || matActive || priceActive;
     }
 
     function syncFilterToggleState() {
@@ -337,9 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterToggle) {
       filterToggle.addEventListener('click', () => {
         if (hasActiveFilters()) {
-          // Filters are active — clear everything and show all products
-          getCategoryCheckboxes().forEach(cb => { cb.checked = true; });
-          getStyleCheckboxes().forEach(cb => { cb.checked = true; });
+          // Filters are active — uncheck all and show all products
+          getCategoryCheckboxes().forEach(cb => { cb.checked = false; });
+          getStyleCheckboxes().forEach(cb => { cb.checked = false; });
           getMaterialCheckboxes().forEach(cb => { cb.checked = false; });
           if (rangeMin) rangeMin.value = 0;
           if (rangeMax) rangeMax.value = SLIDER_MAX;
@@ -514,7 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (categoryCheckboxes.length) {
           // Drawer checkboxes exist — sync them so the full multi-axis filter runs.
           if (filter === 'all') {
-            categoryCheckboxes.forEach(cb => { cb.checked = true; });
+            // "All" means no specific category is selected — show everything
+            categoryCheckboxes.forEach(cb => { cb.checked = false; });
           } else {
             categoryCheckboxes.forEach(cb => {
               cb.checked = cb.value === filter;
@@ -579,8 +582,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear all filters
     if (filterClear) {
       filterClear.addEventListener('click', () => {
-        getCategoryCheckboxes().forEach(cb => { cb.checked = true; });
-        getStyleCheckboxes().forEach(cb => { cb.checked = true; });
+        // Uncheck all — empty selection means "show all products"
+        getCategoryCheckboxes().forEach(cb => { cb.checked = false; });
+        getStyleCheckboxes().forEach(cb => { cb.checked = false; });
         getMaterialCheckboxes().forEach(cb => { cb.checked = false; });
         if (rangeMin) { rangeMin.value = 0; }
         if (rangeMax) { rangeMax.value = SLIDER_MAX; }
